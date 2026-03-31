@@ -1535,7 +1535,32 @@
     });
     // -------------------------------------------------------
 
-return `
+const renderRaceTable = (results) => {
+    const posClass = (i) => i === 0 ? 'pos-gold' : i === 1 ? 'pos-silver' : i === 2 ? 'pos-bronze' : '';
+    const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
+
+    // 1. SZUKANIE NAJSZYBSZEGO CZASU (Zabezpieczone)
+    let bestIdx = -1;
+    let minMs = Infinity;
+
+    results.forEach((r, i) => {
+        if (r.best && r.best.includes('.') || r.best.includes(':')) {
+            const parts = r.best.split(/[:.]/);
+            let ms = 0;
+            if (parts.length === 3) {
+                ms = (parseInt(parts[0]) * 60000) + (parseInt(parts[1]) * 1000) + parseInt(parts[2]);
+            } else if (parts.length === 2) {
+                ms = (parseInt(parts[0]) * 1000) + parseInt(parts[1]);
+            }
+            if (ms > 0 && ms < minMs) {
+                minMs = ms;
+                bestIdx = i;
+            }
+        }
+    });
+
+    // 2. GENEROWANIE TABELI - WSZYSTKIE KOLUMNY MUSZĄ BYĆ TUTAJ
+    return `
         <table class="f1-table">
             <thead>
                 <tr>
@@ -1551,26 +1576,21 @@ return `
             </thead>
             <tbody>
                 ${results.map((r, i) => {
-                    // 1. Sprawdzamy czy ten konkretny wiersz to najszybsze okrążenie
-                    // bestTimeIndex musi być wyliczony przed returnem (tak jak w poprzedniej wiadomości)
-                    const isFastest = (typeof bestTimeIndex !== 'undefined' && i === bestTimeIndex);
-                    
-                    // 2. Ustalamy styl - jeśli nie najszybszy, to po prostu biały, gruby font
-                    const lapStyle = isFastest 
-                        ? 'color: #b350ff; font-weight: 900; text-shadow: 0 0 5px rgba(179,80,255,0.3);' 
-                        : 'color: #ffffff; font-weight: bold;';
+                    const isFastest = (i === bestIdx);
+                    // Fioletowy dla najszybszego, biały dla reszty
+                    const bestColor = isFastest ? '#b350ff' : '#ffffff';
 
                     return `
                     <tr class="${getTeamClass(r.team)}">
-                        <td class="col-pos ${posClass(i)}">${r.pos || i+1}</td>
-                        <td class="col-driver">${r.nick || '---'}</td>
-                        <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${r.team || '---'}</td>
+                        <td class="col-pos ${posClass(i)}">${r.pos || (i + 1)}</td>
+                        <td class="col-driver">${r.nick || ''}</td>
+                        <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${r.team || ''}</td>
                         <td style="text-align:center;">${clean(r.start)}</td>
                         <td style="text-align:center;">${clean(r.pit)}</td>
-                        <td style="${lapStyle}">
-                            ${isFastest ? '<span style="font-size:12px;">🟣</span> ' : ''}${r.best || '---'}
+                        <td style="color: ${bestColor}; font-weight: bold;">
+                            ${isFastest ? '🟣 ' : ''}${r.best || '-'}
                         </td>
-                        <td>${r.time || '---'}</td>
+                        <td>${r.time || '-'}</td>
                         <td class="col-pts">${r.pts || '0'}</td>
                     </tr>
                     `;
