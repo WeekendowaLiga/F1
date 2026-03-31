@@ -1508,97 +1508,42 @@
             return "";
         };
 
-      const renderRaceTable = (results) => {
-    const posClass = (i) => i === 0 ? 'pos-gold' : i === 1 ? 'pos-silver' : i === 2 ? 'pos-bronze' : '';
-    const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
+        const renderRaceTable = (results) => {
+            const posClass = (i) => i === 0 ? 'pos-gold' : i === 1 ? 'pos-silver' : i === 2 ? 'pos-bronze' : '';
+            // Normalize start/pit — strip "Start:" / "Pit:" prefixes if present
+            const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
+            return `
+                <table class="f1-table">
+                    <thead>
+                        <tr>
+                            <th class="col-pos">P</th>
+                            <th class="col-driver">Kierowca</th>
+                            <th>Zespół</th>
+                            <th style="text-align:center;width:70px;">Grid</th>
+                            <th style="text-align:center;width:60px;">Pit</th>
+                            <th>Najlepsze</th>
+                            <th>Czas</th>
+                            <th class="col-pts">PKT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${results.map((r, i) => `
+                            <tr class="${getTeamClass(r.team)}">
+                                <td class="col-pos ${posClass(i)}">${r.pos}</td>
+                                <td class="col-driver">${r.nick}</td>
+                                <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${r.team}</td>
+                                <td style="text-align:center;">${clean(r.start)}</td>
+                                <td style="text-align:center;">${clean(r.pit)}</td>
+                                <td style="color:#fffff; font-weight:bold;">${r.best}</td>
+                                <td>${r.time}</td>
+                                <td class="col-pts">${r.pts}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        };
 
-    // --- ALGORYTM SZUKANIA NAJLEPSZEGO CZASU (Purple Sector) ---
-    let bestTimeVal = Infinity;
-    let bestTimeIndex = -1;
-
-    results.forEach((r, idx) => {
-        if (r.best && r.best !== '-' && r.best !== '') {
-            // Zamiana formatu M:SS.ms na milisekundy do porównania
-            const parts = r.best.split(/[:.]/);
-            let ms = 0;
-            if (parts.length === 3) { // Format 1:30.500
-                ms = (parseInt(parts[0]) * 60000) + (parseInt(parts[1]) * 1000) + parseInt(parts[2]);
-            } else if (parts.length === 2) { // Format 30.500
-                ms = (parseInt(parts[0]) * 1000) + parseInt(parts[1]);
-            }
-            
-            if (ms > 0 && ms < bestTimeVal) {
-                bestTimeVal = ms;
-                bestTimeIndex = idx;
-            }
-        }
-    });
-    // -------------------------------------------------------
-
-const renderRaceTable = (results) => {
-    const posClass = (i) => i === 0 ? 'pos-gold' : i === 1 ? 'pos-silver' : i === 2 ? 'pos-bronze' : '';
-    const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
-
-    // 1. SZUKANIE NAJSZYBSZEGO CZASU (Zabezpieczone)
-    let bestIdx = -1;
-    let minMs = Infinity;
-
-    results.forEach((r, i) => {
-        if (r.best && r.best.includes('.') || r.best.includes(':')) {
-            const parts = r.best.split(/[:.]/);
-            let ms = 0;
-            if (parts.length === 3) {
-                ms = (parseInt(parts[0]) * 60000) + (parseInt(parts[1]) * 1000) + parseInt(parts[2]);
-            } else if (parts.length === 2) {
-                ms = (parseInt(parts[0]) * 1000) + parseInt(parts[1]);
-            }
-            if (ms > 0 && ms < minMs) {
-                minMs = ms;
-                bestIdx = i;
-            }
-        }
-    });
-
-    // 2. GENEROWANIE TABELI - WSZYSTKIE KOLUMNY MUSZĄ BYĆ TUTAJ
-    return `
-        <table class="f1-table">
-            <thead>
-                <tr>
-                    <th class="col-pos">P</th>
-                    <th class="col-driver">Kierowca</th>
-                    <th>Zespół</th>
-                    <th style="text-align:center;width:70px;">Grid</th>
-                    <th style="text-align:center;width:60px;">Pit</th>
-                    <th>Najlepsze</th>
-                    <th>Czas</th>
-                    <th class="col-pts">PKT</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${results.map((r, i) => {
-                    const isFastest = (i === bestIdx);
-                    // Fioletowy dla najszybszego, biały dla reszty
-                    const bestColor = isFastest ? '#b350ff' : '#ffffff';
-
-                    return `
-                    <tr class="${getTeamClass(r.team)}">
-                        <td class="col-pos ${posClass(i)}">${r.pos || (i + 1)}</td>
-                        <td class="col-driver">${r.nick || ''}</td>
-                        <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${r.team || ''}</td>
-                        <td style="text-align:center;">${clean(r.start)}</td>
-                        <td style="text-align:center;">${clean(r.pit)}</td>
-                        <td style="color: ${bestColor}; font-weight: bold;">
-                            ${isFastest ? '🟣 ' : ''}${r.best || '-'}
-                        </td>
-                        <td>${r.time || '-'}</td>
-                        <td class="col-pts">${r.pts || '0'}</td>
-                    </tr>
-                    `;
-                }).join('')}
-            </tbody>
-        </table>
-    `;
-};
         // --- DATA LISTENERS ---
         // 1. Config
         onValue(ref(db, 'config'), snap => {
