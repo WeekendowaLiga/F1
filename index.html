@@ -1536,6 +1536,34 @@
     // -------------------------------------------------------
 
     return `
+    
+        const renderRaceTable = (results) => {
+    const posClass = (i) => i === 0 ? 'pos-gold' : i === 1 ? 'pos-silver' : i === 2 ? 'pos-bronze' : '';
+    const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
+
+    // 1. NAJPIERW SZUKAMY NAJSZYBSZEGO OKRĄŻENIA W CAŁEJ GRUPIE
+    let fastestMs = Infinity;
+    let fastestIdx = -1;
+
+    results.forEach((r, i) => {
+        if (r.best && r.best !== '-' && r.best !== '') {
+            const parts = r.best.split(/[:.]/);
+            let ms = 0;
+            if (parts.length === 3) { // M:SS.ms
+                ms = (parseInt(parts[0]) * 60000) + (parseInt(parts[1]) * 1000) + parseInt(parts[2]);
+            } else if (parts.length === 2) { // SS.ms
+                ms = (parseInt(parts[0]) * 1000) + parseInt(parts[1]);
+            }
+            
+            if (ms > 0 && ms < fastestMs) {
+                fastestMs = ms;
+                fastestIdx = i;
+            }
+        }
+    });
+
+    // 2. GENERUJEMY TABELĘ (ZACHOWUJĄC WSZYSTKIE TWOJE KOLUMNY)
+    return `
         <table class="f1-table">
             <thead>
                 <tr>
@@ -1551,13 +1579,9 @@
             </thead>
             <tbody>
                 ${results.map((r, i) => {
-                    // Sprawdzamy czy to ten wiersz ma najlepszy czas
-                    const isFastestLap = (i === bestTimeIndex);
-                    // Styl: fioletowy dla najszybszego, biały dla reszty
-                    const bestStyle = isFastestLap 
-                        ? 'color: #b350ff; font-weight: 900; text-shadow: 0 0 5px rgba(179,80,255,0.4);' 
-                        : 'color: #ffffff; font-weight: bold;';
-
+                    // Sprawdzamy czy to ten wiersz jest najszybszy
+                    const isFastest = (i === fastestIdx);
+                    
                     return `
                     <tr class="${getTeamClass(r.team)}">
                         <td class="col-pos ${posClass(i)}">${r.pos}</td>
@@ -1565,9 +1589,11 @@
                         <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${r.team}</td>
                         <td style="text-align:center;">${clean(r.start)}</td>
                         <td style="text-align:center;">${clean(r.pit)}</td>
-                        <td style="${bestStyle}">
-                            ${isFastestLap ? '🟣 ' : ''}${r.best}
+                        
+                        <td style="font-weight:bold; color: ${isFastest ? '#b350ff' : '#ffffff'};">
+                            ${isFastest ? '🟣 ' : ''}${r.best}
                         </td>
+
                         <td>${r.time}</td>
                         <td class="col-pts">${r.pts}</td>
                     </tr>
