@@ -25,7 +25,6 @@
     --ls-label: 6px;
 }
 
-/* ===================== FIX 1: HTML background = czarny, żeby splash wyglądał spójnie ===================== */
 html {
     background: var(--f1-black);
     margin: 0;
@@ -50,8 +49,6 @@ body {
 }
 *::-webkit-scrollbar { display: none !important; }
 
-/* ===================== FIX 1 (cd.): Transform przeniesiony z body na #main-app
-   Dzięki temu splash (poza #main-app) ma poprawne position:fixed względem viewport ===================== */
 @media (min-width: 1025px) {
     #main-app {
         transform: scale(0.65);
@@ -158,7 +155,6 @@ body {
     animation: splashTitleIn 1s 0.5s cubic-bezier(0.19,1,0.22,1) both;
 }
 
-/* ODLICZANIE NA SPLASH */
 .splash-countdown {
     display: flex;
     justify-content: center;
@@ -227,7 +223,6 @@ body {
     50% { opacity: 0.7; }
 }
 
-/* ===================== FIX 2: Kontener zdjęć splash — do 10 zdjęć ===================== */
 #splash-images-container {
     width: 90%;
     max-width: 1100px;
@@ -250,7 +245,6 @@ body {
     display: block;
 }
 
-/* Stare pola tekstowe/obrazkowe (kompatybilność wsteczna) */
 .splash-image-area {
     max-width: 900px;
     width: 80%;
@@ -491,10 +485,11 @@ body {
 .editable-title { cursor: pointer; transition: color 0.2s; border-bottom: 2px solid transparent; }
 .editable-title:hover { color: var(--f1-red); border-bottom-color: rgba(225,6,0,0.3); }
 
-/* ===================== TABELA ===================== */
+/* ===================== TABELA — WYŻSZE WIERSZE ===================== */
 .f1-table { width: 100%; border-collapse: collapse; table-layout: auto; }
-.f1-table th { background: #111; color: #fff; padding: 25px; text-align: left; font-size: 16px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; }
-.f1-table td { padding: 22px 25px; font-family: var(--font-data); font-size: 36px; border-bottom: 1px solid #eee; vertical-align: middle; white-space: nowrap; letter-spacing: var(--ls-data); }
+.f1-table th { background: #111; color: #fff; padding: 28px; text-align: left; font-size: 16px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; }
+/* ZMIANA: większy padding w td = wyższe wiersze */
+.f1-table td { padding: 30px 25px; font-family: var(--font-data); font-size: 36px; border-bottom: 1px solid #eee; vertical-align: middle; white-space: nowrap; letter-spacing: var(--ls-data); }
 .f1-table tr:last-child td { border-bottom: none; }
 .f1-table tr:hover td { background: rgba(0,0,0,0.02); }
 .col-pos { width: 70px; text-align: center; font-family: var(--font-display); color: #999; font-size: 30px !important; }
@@ -504,7 +499,7 @@ body {
 .pos-silver { color: #b0b0b0 !important; font-weight: 900 !important; }
 .pos-bronze { color: #cd7f32 !important; font-weight: 900 !important; }
 
-/* ===================== FIX 3: LOGO ZESPOŁU ===================== */
+/* ===================== LOGO ZESPOŁU (kierowcy) ===================== */
 .team-logo-img {
     width: 38px;
     height: 28px;
@@ -513,17 +508,33 @@ body {
     margin-right: 10px;
     flex-shrink: 0;
 }
-.constructor-logo-img {
-    width: 50px;
-    height: 34px;
-    object-fit: contain;
-    vertical-align: middle;
-    margin-right: 12px;
-    flex-shrink: 0;
-    filter: brightness(0) invert(1);
+
+/* ===================== KONSTRUKTORZY — LOGO NA CAŁY WIERSZ ===================== */
+/* Wiersz konstruktora: logo jako background całego wiersza */
+.constructor-row {
+    border-left: none !important;
+    position: relative;
 }
-/* Kiedy mamy logo, etykieta tekstowa w konstruktorach staje się biała */
-.constructor-row td .team-name-wrap { display: flex; align-items: center; gap: 10px; }
+/* Logo-background: pseudo-element z obrazem rozciągniętym na cały wiersz */
+.constructor-logo-bg {
+    position: absolute;
+    inset: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center left 30px;
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 0;
+}
+/* Komórki muszą być relative z-index > 0 żeby być nad bg */
+.constructor-row td {
+    position: relative;
+    z-index: 1;
+}
+/* Pozycja i punkty w konstruktorach */
+.constructor-row .col-pos {
+    font-weight: 900 !important;
+}
 
 /* ===================== AWATAR KIEROWCY ===================== */
 .driver-cell { display: flex; align-items: center; gap: 18px; }
@@ -540,11 +551,9 @@ body {
 .team-williams { border-left: 15px solid #182cc4; } .txt-williams { color: #182cc4; }
 .team-sauber   { border-left: 15px solid #52e252; } .txt-sauber   { color: #52e252; }
 .team-haas     { border-left: 15px solid #bdb3b3; } .txt-haas     { color: #bdb3b3; }
-/* FIX 4: Racing Bulls — jeden spójny kolor #004cff wszędzie */
 .team-rb       { border-left: 15px solid #004cff; } .txt-rb       { color: #004cff; }
 
-/* ===================== TABELA KONSTRUKTORÓW ===================== */
-.constructor-row { border-left: none !important; }
+/* ===================== TABELA KONSTRUKTORÓW — tła gradientowe ===================== */
 .cteam-ferrari  { background: linear-gradient(90deg, #ef1a2d 0%, #c8101f 100%); }
 .cteam-ferrari td { color: #fff !important; }
 .cteam-mercedes { background: linear-gradient(90deg, #00d2be 0%, #00b5a4 100%); }
@@ -563,13 +572,11 @@ body {
 .cteam-sauber td { color: #fff !important; }
 .cteam-haas     { background: linear-gradient(90deg, #4a4a4a 0%, #666 100%); }
 .cteam-haas td { color: #fff !important; }
-/* FIX 4: Racing Bulls — spójna nazwa i kolor w konstruktorach */
 .cteam-rb       { background: linear-gradient(90deg, #004cff 0%, #1060ff 100%); }
 .cteam-rb td { color: #fff !important; }
 
 .cteam-pts-cell { background: rgba(255,255,255,0.92) !important; color: var(--f1-black) !important; font-weight: 900 !important; border-radius: 4px; padding: 8px 20px !important; display: inline-block; min-width: 60px; text-align: center; }
 .constructor-name-cell { display: flex; align-items: center; gap: 16px; }
-.constructor-stripe { width: 8px; height: 40px; border-radius: 2px; background: rgba(255,255,255,0.35); flex-shrink: 0; }
 
 /* ===================== SEPARATOR BOTY ===================== */
 .separator-row td { background: #fff !important; border-bottom: none !important; padding: 0 !important; }
@@ -618,7 +625,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .album-viewer-header { display: flex; align-items: center; gap: 30px; margin-bottom: 60px; padding-bottom: 30px; border-bottom: 4px solid var(--f1-black); }
 .album-viewer-title { font-family: var(--font-display); font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; }
 
-/* ===================== FIX 5: PANEL ADMINA — czytelniejszy ===================== */
+/* ===================== PANEL ADMINA ===================== */
 #admin-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0);
@@ -642,7 +649,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 }
 #admin-sidebar.open { transform: translateX(0); }
 
-/* Sticky header admina */
 .admin-header-bar {
     background: var(--f1-black);
     padding: 30px 50px;
@@ -657,7 +663,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 }
 .admin-header-bar h2 { font-family: var(--font-display); font-size: 36px; margin: 0; letter-spacing: 3px; color: var(--f1-white); }
 
-/* Mini-nawigacja TOC w adminie */
 .admin-toc {
     background: #1e1e2a;
     padding: 16px 50px;
@@ -681,10 +686,8 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 }
 .admin-toc a:hover { background: rgba(225,6,0,0.2); color: #fff; }
 
-/* Ciało admina */
 .admin-body { padding: 40px 50px 80px; flex: 1; }
 
-/* Sekcje admina */
 .admin-section {
     background: var(--f1-white);
     border-radius: 10px;
@@ -740,38 +743,66 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: #f9f9fb; border: 1px solid #e8e8ee; border-radius: 6px; margin-bottom: 8px; }
 .admin-list-item span { font-family: var(--font-data); font-size: 18px; letter-spacing: 1px; }
 
-/* Podgląd splash */
 .splash-preview { background: #111; color: #fff; padding: 24px; border-radius: 8px; margin-top: 16px; min-height: 80px; font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
 .splash-preview img { max-width: 100%; border-radius: 4px; }
 
-/* ===================== FIX 2: Lista zdjęć splash w adminie ===================== */
-#adm-splash-images-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+/* ===================== LISTA ZDJĘĆ SPLASH W ADMINIE ===================== */
+#adm-splash-images-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 .splash-img-entry {
     background: #f4f4f7;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 16px;
+    padding: 14px 16px;
     display: flex;
     gap: 10px;
     align-items: flex-end;
     flex-wrap: wrap;
+    /* drag and drop */
+    cursor: grab;
+    transition: box-shadow 0.2s, opacity 0.2s;
 }
-.splash-img-entry .sie-num {
+.splash-img-entry.dragging { opacity: 0.4; box-shadow: 0 8px 30px rgba(0,0,0,0.2); cursor: grabbing; }
+.splash-img-entry.drag-over { border: 2px dashed var(--f1-red); background: rgba(225,6,0,0.04); }
+.sie-drag-handle {
+    font-size: 20px;
+    color: #bbb;
+    cursor: grab;
+    padding-bottom: 6px;
+    flex-shrink: 0;
+    user-select: none;
+    align-self: flex-end;
+}
+.sie-num {
     font-family: var(--font-display);
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 900;
     color: var(--f1-red);
-    min-width: 30px;
+    min-width: 28px;
     padding-bottom: 4px;
+    flex-shrink: 0;
 }
-.splash-img-entry .sie-field { flex: 1; min-width: 180px; }
-.splash-img-entry .sie-field-sm { width: 140px; min-width: 110px; flex: none; }
-.splash-img-entry .sie-remove { background: #800; color: #fff; border: none; padding: 14px 18px; border-radius: 4px; cursor: pointer; font-size: 18px; transition: background 0.2s; flex-shrink: 0; align-self: flex-end; }
-.splash-img-entry .sie-remove:hover { background: #c00; }
+.sie-field { flex: 1; min-width: 160px; }
+.sie-field-sm { width: 130px; min-width: 100px; flex: none; }
+.sie-remove { background: #800; color: #fff; border: none; padding: 14px 16px; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background 0.2s; flex-shrink: 0; align-self: flex-end; }
+.sie-remove:hover { background: #c00; }
 .splash-img-preview-thumb { width: 60px; height: 42px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; flex-shrink: 0; align-self: flex-end; background: #eee; }
 .splash-img-entry select.f1-input { padding: 12px 10px; cursor: pointer; }
 
-/* ===================== FIX 3: Loga zespołów — siatka w adminie ===================== */
+/* Upload-or-URL toggle */
+.sie-source-toggle { display: flex; gap: 6px; margin-bottom: 6px; }
+.sie-source-btn {
+    padding: 5px 12px; border: 2px solid #ddd; border-radius: 4px; cursor: pointer;
+    font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    background: #fff; transition: all 0.2s;
+}
+.sie-source-btn.active { border-color: var(--f1-red); color: var(--f1-red); background: rgba(225,6,0,0.05); }
+
+/* ===================== LOGA ZESPOŁÓW — SIATKA W ADMINIE ===================== */
 .adm-logos-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -785,6 +816,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
 .adm-logo-item .logo-swatch {
     width: 14px;
@@ -803,7 +835,17 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     color: #333;
 }
 .adm-logo-item .f1-input { padding: 10px 12px; font-size: 13px; }
-.adm-logo-preview { width: 44px; height: 30px; object-fit: contain; flex-shrink: 0; background: #eee; border-radius: 3px; border: 1px solid #ddd; }
+.adm-logo-preview { width: 50px; height: 34px; object-fit: contain; flex-shrink: 0; background: #eee; border-radius: 3px; border: 1px solid #ddd; }
+/* Upload przycisk dla logo */
+.logo-upload-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 14px; background: #333; color: #fff;
+    border-radius: 4px; cursor: pointer; font-size: 12px;
+    font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    transition: background 0.2s; white-space: nowrap; flex-shrink: 0;
+}
+.logo-upload-label:hover { background: var(--f1-red); }
+.logo-upload-input { display: none; }
 
 /* ===================== AUTH MODAL ===================== */
 .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
@@ -811,13 +853,11 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .auth-card h2 { font-family: var(--font-display); font-size: 40px; text-align: center; margin-bottom: 50px; letter-spacing: 4px; }
 .hidden { display: none !important; }
 
-/* Przycisk logowania */
 #btn-open-login { font-size: 32px; padding: 20px 30px; background: transparent; border: 3px solid var(--f1-black); color: var(--f1-black); cursor: pointer; transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.2s; letter-spacing: 0; line-height: 1; border-radius: 4px; }
 #btn-open-login:hover { background: var(--f1-black); color: var(--f1-white); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
 
-/* ===================== FIX 6: MOBILNE — większe odstępy, mniejsze letter-spacing ===================== */
+/* ===================== MOBILNE ===================== */
 @media (max-width: 1024px) {
-    /* Zmniejszamy letter-spacing na mobile żeby nie zlewały się napisy */
     :root {
         --ls-nav: 1px;
         --ls-data: 0.5px;
@@ -842,7 +882,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     #view-standings > div { grid-template-columns: 1fr !important; }
     .f1-card-title { font-size: 22px; padding: 20px 20px; letter-spacing: 0; }
     .f1-table th { padding: 12px 10px; font-size: 11px; letter-spacing: 1px; }
-    .f1-table td { padding: 12px 10px; font-size: 20px; letter-spacing: 0.3px; }
+    .f1-table td { padding: 16px 10px; font-size: 20px; letter-spacing: 0.3px; }
     .col-driver { width: auto !important; font-size: 22px !important; }
     .col-pos { font-size: 16px !important; }
     .col-pts { padding-right: 15px !important; }
@@ -885,7 +925,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 </head>
 <body>
 
-<!-- ===================== STRONA STARTOWA (poza #main-app — position:fixed działa poprawnie) ===================== -->
+<!-- ===================== STRONA STARTOWA ===================== -->
 <div id="splash-screen" onclick="hideSplash()">
     <div class="splash-logo-wrap">
         <div class="splash-logo-box">
@@ -894,19 +934,10 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     </div>
     <div class="splash-title">Weekendowa<br>Liga F1</div>
     <div class="splash-subtitle">Sezon 2025</div>
-
-    <!-- ODLICZANIE NA SPLASH -->
     <div id="splash-countdown-section"></div>
-
-    <!-- ZDJĘCIA (nowy multi-image system) -->
     <div id="splash-images-container"></div>
-
-    <!-- Stare pole zdjęcia (kompatybilność) -->
     <div id="splash-image-area" class="splash-image-area" style="display:none;"></div>
-
-    <!-- TREŚĆ HTML -->
     <div id="splash-custom-content" class="splash-content-area"></div>
-
     <div class="splash-cta">KLIKNIJ ABY WEJŚĆ</div>
 </div>
 
@@ -977,7 +1008,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
             </div>
             <div class="f1-card">
                 <div class="f1-card-title">Klasyfikacja Konstruktorów</div>
-                <table class="f1-table" id="constructors-table">
+                <table class="f1-table" id="constructors-table" style="border-collapse:separate; border-spacing:0 3px;">
                     <thead><tr>
                         <th class="col-pos">P</th>
                         <th>Zespół</th>
@@ -1016,13 +1047,11 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 <div id="admin-overlay" onclick="ui.toggleAdmin(false)"></div>
 <div id="admin-sidebar">
 
-    <!-- Sticky header -->
     <div class="admin-header-bar">
         <h2>⚙ CENTRALNY PANEL</h2>
         <button class="btn-action" onclick="ui.toggleAdmin(false)">✕ ZAMKNIJ</button>
     </div>
 
-    <!-- TOC nawigacja -->
     <div class="admin-toc">
         <a href="#sec-splash" onclick="ui.openAdminSection('sec-splash')">🖼 Splash</a>
         <a href="#sec-news" onclick="ui.openAdminSection('sec-news')">📢 News</a>
@@ -1044,21 +1073,17 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
             <span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body open">
-            <!-- Zdjęcia na splash (do 10) -->
             <div class="form-group">
                 <label class="form-label">Zdjęcia na splash (do 10)
-                    <span class="form-hint">Ustaw URL, wyrównanie i szerokość każdego zdjęcia. Kliknij "+" aby dodać.</span>
+                    <span class="form-hint">Przeciągnij wiersze aby zmienić kolejność. Możesz wkleić URL lub przesłać plik.</span>
                 </label>
                 <div id="adm-splash-images-list"></div>
                 <button class="btn-action btn-secondary btn-sm" onclick="ui.addSplashImageRow()" id="btn-add-splash-img">＋ DODAJ ZDJĘCIE</button>
             </div>
-
-            <!-- Treść HTML -->
             <div class="form-group">
                 <label class="form-label">Treść HTML pod zdjęciami (opcjonalna)</label>
                 <textarea id="adm-splash-content" class="f1-textarea" rows="4" placeholder='np. <h2 style="color:#e10600">Sezon 2025 Już Trwa!</h2>'></textarea>
             </div>
-
             <div class="btn-row">
                 <button class="btn-action" onclick="dbCore.saveSplashContent()">💾 ZAPISZ SPLASH</button>
             </div>
@@ -1187,7 +1212,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 7. LOGA ZESPOŁÓW (NOWE) -->
+    <!-- 7. LOGA ZESPOŁÓW -->
     <div class="admin-section" id="sec-logos">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">🏎</span>
@@ -1195,10 +1220,10 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
             <span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
-            <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">Wklej URL logo PNG/SVG dla każdego zespołu. Loga pojawią się w tabelach klasyfikacji i wyników.</p>
-            <div class="adm-logos-grid" id="adm-logos-grid">
-                <!-- generowane przez JS -->
-            </div>
+            <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">
+                Wklej URL <b>lub prześlij plik</b> PNG/SVG dla każdego zespołu. Logo wyświetla się jako duży watermark w tle wiersza tabeli konstruktorów.
+            </p>
+            <div class="adm-logos-grid" id="adm-logos-grid"></div>
             <div class="btn-row">
                 <button class="btn-action" onclick="dbCore.saveTeamLogos()">💾 ZAPISZ LOGA</button>
             </div>
@@ -1213,7 +1238,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
             <span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
-            <!-- Utwórz album -->
             <div style="background:#f4f4f7;border:1px solid #ddd;border-radius:8px;padding:22px;margin-bottom:22px;">
                 <h4 style="margin:0 0 16px;font-family:var(--font-display);font-size:16px;letter-spacing:2px;color:#333;">1. UTWÓRZ ALBUM</h4>
                 <div class="form-group">
@@ -1228,7 +1252,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                     <button class="btn-action" onclick="dbCore.createAlbum()">＋ UTWÓRZ ALBUM</button>
                 </div>
             </div>
-            <!-- Dodaj wpis -->
             <div style="background:#f4f4f7;border:1px solid #ddd;border-radius:8px;padding:22px;margin-bottom:22px;">
                 <h4 style="margin:0 0 16px;font-family:var(--font-display);font-size:16px;letter-spacing:2px;color:#333;">2. DODAJ WPIS DO ALBUMU</h4>
                 <div class="form-group">
@@ -1265,7 +1288,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                     <span id="adm-entry-status" style="font-size:14px;color:#666;"></span>
                 </div>
             </div>
-            <!-- Usuń albumy -->
             <div>
                 <h4 style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:12px;">USUŃ ALBUMY:</h4>
                 <div id="adm-gallery-manager"></div>
@@ -1273,13 +1295,12 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- Wyloguj -->
     <div style="padding:20px 0 40px;">
         <button class="btn-action btn-danger" onclick="authCore.logout()" style="width:100%;justify-content:center;font-size:16px;">🚪 WYLOGUJ Z SYSTEMU</button>
     </div>
 
-    </div><!-- /admin-body -->
-</div><!-- /admin-sidebar -->
+    </div>
+</div>
 
 <div id="auth-modal" class="auth-overlay">
     <div class="auth-card">
@@ -1315,14 +1336,9 @@ const db = getDatabase(app);
 let isLoggedIn = false;
 let splashTimerInterval = null;
 let cachedHeroConfig = { mode: 'countdown', date: '', title: '' };
-
-// FIX 3: Loga zespołów — globalna mapa
 let teamLogos = {};
 
-// FIX 2: Zdjęcia splash — lokalna kopia do edycji w adminie
-let splashImagesLocal = [];
-
-// ===================== DEFINICJE ZESPOŁÓW (do logo admina) =====================
+// ===================== DEFINICJE ZESPOŁÓW =====================
 const TEAM_DEFS = [
     { key: 'ferrari',  label: 'Ferrari',       color: '#ef1a2d' },
     { key: 'mercedes', label: 'Mercedes',       color: '#00d2be' },
@@ -1336,20 +1352,29 @@ const TEAM_DEFS = [
     { key: 'rb',       label: 'Racing Bulls',   color: '#004cff' },
 ];
 
-// Buduj siatkę logo-teamów w adminie
+// ===================== LOGA GRID W ADMINIE =====================
 function buildLogosGrid() {
     const grid = document.getElementById('adm-logos-grid');
     if (!grid) return;
     grid.innerHTML = TEAM_DEFS.map(t => {
         const url = teamLogos[t.key] || '';
+        const isBase64 = url.startsWith('data:');
         return `
         <div class="adm-logo-item">
             <div class="logo-swatch" style="background:${t.color};"></div>
             <span class="logo-team-name">${t.label}</span>
-            <input type="text" class="f1-input" id="logo-url-${t.key}"
-                placeholder="URL logo..."
-                value="${url}"
-                oninput="ui.previewTeamLogo('${t.key}', this.value)">
+            <div style="flex:1;min-width:0;">
+                <input type="text" class="f1-input" id="logo-url-${t.key}"
+                    placeholder="URL logo lub prześlij plik →"
+                    value="${isBase64 ? '[plik lokalny]' : url}"
+                    oninput="ui.previewTeamLogo('${t.key}', this.value)"
+                    style="margin-bottom:6px;">
+                <label class="logo-upload-label">
+                    📁 PRZEŚLIJ PLIK
+                    <input type="file" class="logo-upload-input" accept="image/*"
+                        onchange="ui.handleLogoUpload('${t.key}', this)">
+                </label>
+            </div>
             <img class="adm-logo-preview" id="logo-prev-${t.key}"
                 src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}"
                 alt="${t.label}"
@@ -1375,7 +1400,6 @@ window.showSplash = function() {
     splash.classList.remove('hiding');
 };
 
-// FIX 2: Renderuj zdjęcia splash
 function renderSplashImages(images) {
     const container = document.getElementById('splash-images-container');
     if (!container) return;
@@ -1391,7 +1415,6 @@ function renderSplashImages(images) {
     }).filter(Boolean).join('');
 }
 
-// Odliczanie na splash
 function renderSplashCountdown(config) {
     const section = document.getElementById('splash-countdown-section');
     if (!section) return;
@@ -1424,6 +1447,44 @@ function renderSplashCountdown(config) {
     splashTimerInterval = setInterval(tickSplash, 1000);
 }
 
+// ===================== DRAG & DROP dla splash images =====================
+let dragSrcEl = null;
+
+function initSplashDragDrop() {
+    const list = document.getElementById('adm-splash-images-list');
+    list.querySelectorAll('.splash-img-entry').forEach(item => {
+        item.draggable = true;
+        item.addEventListener('dragstart', e => {
+            dragSrcEl = item;
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+            list.querySelectorAll('.splash-img-entry').forEach(i => i.classList.remove('drag-over'));
+            ui._renumberSplashRows();
+        });
+        item.addEventListener('dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            list.querySelectorAll('.splash-img-entry').forEach(i => i.classList.remove('drag-over'));
+            if (item !== dragSrcEl) item.classList.add('drag-over');
+            return false;
+        });
+        item.addEventListener('drop', e => {
+            e.stopPropagation();
+            if (dragSrcEl !== item) {
+                const allItems = [...list.querySelectorAll('.splash-img-entry')];
+                const srcIdx = allItems.indexOf(dragSrcEl);
+                const dstIdx = allItems.indexOf(item);
+                if (srcIdx < dstIdx) { list.insertBefore(dragSrcEl, item.nextSibling); }
+                else { list.insertBefore(dragSrcEl, item); }
+            }
+            return false;
+        });
+    });
+}
+
 // ===================== UI =====================
 window.ui = {
     switchPage(pageId, navEl) {
@@ -1442,8 +1503,6 @@ window.ui = {
     toggleAuth(show) {
         document.getElementById('auth-modal').style.display = show ? 'flex' : 'none';
     },
-
-    // Sekcje admina
     toggleAdminSection(header) {
         const body = header.nextElementSibling;
         const isOpen = body.classList.toggle('open');
@@ -1462,24 +1521,46 @@ window.ui = {
         return false;
     },
 
-    // FIX 2: Dodaj wiersz zdjęcia splash w adminie
+    // ---- SPLASH IMAGE ROWS ----
     addSplashImageRow(imgData) {
         const list = document.getElementById('adm-splash-images-list');
         const count = list.querySelectorAll('.splash-img-entry').length;
         if (count >= 10) { alert('Maksymalnie 10 zdjęć.'); return; }
-        const idx = Date.now();
         const url = imgData ? imgData.url : '';
         const width = imgData ? (imgData.width || '80%') : '80%';
         const align = imgData ? (imgData.align || 'center') : 'center';
+        const isBase64 = url.startsWith('data:');
+
         const entry = document.createElement('div');
         entry.className = 'splash-img-entry';
-        entry.dataset.idx = idx;
         entry.innerHTML = `
+            <span class="sie-drag-handle" title="Przeciągnij aby zmienić kolejność">⠿</span>
             <span class="sie-num">${count + 1}</span>
             <div class="sie-field">
-                <label class="form-label" style="font-size:10px;margin-bottom:4px;">URL ZDJĘCIA</label>
-                <input type="text" class="f1-input spl-url" placeholder="https://example.com/foto.jpg" value="${url}"
-                    oninput="ui.updateSplashThumb(this)">
+                <label class="form-label" style="font-size:10px;margin-bottom:4px;">ŹRÓDŁO</label>
+                <div class="sie-source-toggle">
+                    <button type="button" class="sie-source-btn ${!isBase64 ? 'active' : ''}"
+                        onclick="ui.sieSetMode(this,'url')">URL</button>
+                    <button type="button" class="sie-source-btn ${isBase64 ? 'active' : ''}"
+                        onclick="ui.sieSetMode(this,'file')">PLIK</button>
+                </div>
+                <div class="sie-url-wrap" style="display:${isBase64 ? 'none' : 'block'}">
+                    <input type="text" class="f1-input spl-url" placeholder="https://example.com/foto.jpg"
+                        value="${isBase64 ? '' : url}"
+                        oninput="ui.updateSplashThumb(this)">
+                </div>
+                <div class="sie-file-wrap" style="display:${isBase64 ? 'block' : 'none'}">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:#333;color:#fff;padding:10px 14px;border-radius:4px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:background 0.2s;"
+                        onmouseover="this.style.background='#e10600'" onmouseout="this.style.background='#333'">
+                        📁 WYBIERZ PLIK
+                        <input type="file" accept="image/*" style="display:none"
+                            onchange="ui.handleSplashFileUpload(this)">
+                    </label>
+                    <input type="hidden" class="spl-url spl-file-data" value="${isBase64 ? url : ''}">
+                    <span class="spl-file-name" style="font-size:11px;color:#888;margin-top:4px;display:block;">
+                        ${isBase64 ? 'Plik lokalny załadowany' : 'Brak pliku'}
+                    </span>
+                </div>
             </div>
             <div class="sie-field-sm">
                 <label class="form-label" style="font-size:10px;margin-bottom:4px;">WYRÓWNANIE</label>
@@ -1493,30 +1574,61 @@ window.ui = {
                 <label class="form-label" style="font-size:10px;margin-bottom:4px;">SZEROKOŚĆ</label>
                 <input type="text" class="f1-input spl-width" placeholder="80% lub 500px" value="${width}">
             </div>
-            <img class="splash-img-preview-thumb" src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}"
-                style="opacity:${url?1:0.2}" alt="thumb">
-            <button class="sie-remove" onclick="ui.removeSplashImageRow(this)" title="Usuń">✕</button>`;
+            <img class="splash-img-preview-thumb" 
+                src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}"
+                style="opacity:${url ? 1 : 0.2}" alt="thumb">
+            <button type="button" class="sie-remove" onclick="ui.removeSplashImageRow(this)" title="Usuń">✕</button>`;
         list.appendChild(entry);
         this._renumberSplashRows();
-        // Aktualizuj przycisk dodawania
-        const count2 = list.querySelectorAll('.splash-img-entry').length;
-        const btn = document.getElementById('btn-add-splash-img');
-        if (btn) btn.style.display = count2 >= 10 ? 'none' : '';
+        this._updateAddBtn();
+        initSplashDragDrop();
     },
+
+    sieSetMode(btn, mode) {
+        const entry = btn.closest('.splash-img-entry');
+        entry.querySelectorAll('.sie-source-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        entry.querySelector('.sie-url-wrap').style.display = mode === 'url' ? 'block' : 'none';
+        entry.querySelector('.sie-file-wrap').style.display = mode === 'file' ? 'block' : 'none';
+    },
+
+    handleSplashFileUpload(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const entry = input.closest('.splash-img-entry');
+        const reader = new FileReader();
+        reader.onload = e => {
+            const dataUrl = e.target.result;
+            const hidden = entry.querySelector('.spl-file-data');
+            const thumb = entry.querySelector('.splash-img-preview-thumb');
+            const nameSpan = entry.querySelector('.spl-file-name');
+            if (hidden) { hidden.value = dataUrl; }
+            if (thumb) { thumb.src = dataUrl; thumb.style.opacity = 1; }
+            if (nameSpan) nameSpan.textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+    },
+
     removeSplashImageRow(btn) {
         btn.closest('.splash-img-entry').remove();
         this._renumberSplashRows();
-        const list = document.getElementById('adm-splash-images-list');
-        const count = list.querySelectorAll('.splash-img-entry').length;
-        const addBtn = document.getElementById('btn-add-splash-img');
-        if (addBtn) addBtn.style.display = count >= 10 ? 'none' : '';
+        this._updateAddBtn();
     },
+
     _renumberSplashRows() {
         document.querySelectorAll('.splash-img-entry').forEach((row, i) => {
             const num = row.querySelector('.sie-num');
             if (num) num.textContent = i + 1;
         });
     },
+
+    _updateAddBtn() {
+        const list = document.getElementById('adm-splash-images-list');
+        const count = list.querySelectorAll('.splash-img-entry').length;
+        const btn = document.getElementById('btn-add-splash-img');
+        if (btn) btn.style.display = count >= 10 ? 'none' : '';
+    },
+
     updateSplashThumb(input) {
         const thumb = input.closest('.splash-img-entry').querySelector('.splash-img-preview-thumb');
         if (thumb) {
@@ -1525,12 +1637,31 @@ window.ui = {
         }
     },
 
-    // FIX 3: Podgląd logo teamu
+    // ---- LOGA TEAMÓW ----
     previewTeamLogo(teamKey, url) {
         const img = document.getElementById('logo-prev-' + teamKey);
         if (!img) return;
         img.src = url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
         img.style.opacity = url ? 1 : 0.2;
+        // Update local cache for this session
+        if (url && !url.startsWith('[')) teamLogos[teamKey] = url;
+    },
+
+    handleLogoUpload(teamKey, input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            const dataUrl = e.target.result;
+            // Zachowaj w session cache
+            teamLogos[teamKey] = dataUrl;
+            // Aktualizuj podgląd
+            const img = document.getElementById('logo-prev-' + teamKey);
+            if (img) { img.src = dataUrl; img.style.opacity = 1; }
+            const urlInput = document.getElementById('logo-url-' + teamKey);
+            if (urlInput) urlInput.value = '[plik lokalny]';
+        };
+        reader.readAsDataURL(file);
     },
 
     toggleArc(id) {
@@ -1670,18 +1801,28 @@ onAuthStateChanged(auth, user => {
 
 // ===================== DATABASE =====================
 window.dbCore = {
-    // FIX 2: Zapisz zdjęcia splash
     async saveSplashContent() {
         const snap = await new Promise(res => onValue(ref(db, 'config'), res, { onlyOnce: true }));
         const current = snap.val() || {};
 
-        // Zbierz zdjęcia z formularza
+        // Zbierz zdjęcia z formularza — obsługa URL i base64 z pliku
         const entries = document.querySelectorAll('.splash-img-entry');
         const images = [];
         entries.forEach(entry => {
-            const url = entry.querySelector('.spl-url')?.value?.trim() || '';
             const align = entry.querySelector('.spl-align')?.value || 'center';
             const width = entry.querySelector('.spl-width')?.value?.trim() || '80%';
+
+            // Sprawdź czy tryb URL czy plik
+            const fileData = entry.querySelector('.spl-file-data');
+            const urlInput = entry.querySelector('.sie-url-wrap .spl-url');
+            let url = '';
+
+            if (fileData && fileData.value && fileData.value.startsWith('data:')) {
+                url = fileData.value; // base64 z pliku
+            } else if (urlInput) {
+                url = urlInput.value?.trim() || '';
+            }
+
             if (url) images.push({ url, align, width });
         });
 
@@ -1689,7 +1830,6 @@ window.dbCore = {
             ...current,
             splashContent: document.getElementById('adm-splash-content').value,
             splashImages: images,
-            // zachowaj stare pole dla kompatybilności
             splashImage: images.length === 1 ? images[0].url : (current.splashImage || '')
         });
         alert("Strona startowa zapisana!");
@@ -1723,7 +1863,6 @@ window.dbCore = {
             results = dataLines.map(line => {
                 const p = line.split('\t').map(s => s.trim());
                 const best = (p[5] || '').replace(',', '.');
-                // FIX 4: Normalizuj nazwę Racing Bulls
                 return { pos: p[0], nick: p[1], team: normalizeTeamName(p[2]), start: p[3], pit: p[4], best, time: p[6] || '', pts: p[7] || '0' };
             });
         } else {
@@ -1736,7 +1875,6 @@ window.dbCore = {
         if (document.getElementById('pub-last').checked) await set(ref(db, 'lastRace'), raceObj);
         if (document.getElementById('pub-archive').checked) await push(ref(db, 'archive'), raceObj);
 
-        // AUTO-UPDATE STANDINGS
         const standSnap = await new Promise(res => onValue(ref(db, 'standings'), res, { onlyOnce: true }));
         const currentStandings = standSnap.val() || { drivers: [], teams: [] };
         const driverMap = {}; const teamMap = {};
@@ -1772,12 +1910,20 @@ window.dbCore = {
         alert("Klasyfikacje zaktualizowane!");
     },
 
-    // FIX 3: Zapisz loga teamów
+    // Zapisz loga — obsługuje zarówno URL jak i base64 z przesłanych plików
     async saveTeamLogos() {
         const logos = {};
         TEAM_DEFS.forEach(t => {
-            const input = document.getElementById('logo-url-' + t.key);
-            if (input && input.value.trim()) logos[t.key] = input.value.trim();
+            // Jeśli mamy base64 w session cache (z uploadu), użyj tego
+            if (teamLogos[t.key] && (teamLogos[t.key].startsWith('data:') || teamLogos[t.key].startsWith('http'))) {
+                logos[t.key] = teamLogos[t.key];
+            } else {
+                // Fallback na wartość inputa URL (o ile nie jest placeholder)
+                const input = document.getElementById('logo-url-' + t.key);
+                if (input && input.value.trim() && !input.value.includes('[')) {
+                    logos[t.key] = input.value.trim();
+                }
+            }
         });
         const snap = await new Promise(res => onValue(ref(db, 'config'), res, { onlyOnce: true }));
         const current = snap.val() || {};
@@ -1852,7 +1998,6 @@ const extractYtId = (url) => {
     return url;
 };
 
-// FIX 4: Normalizuj nazwę Racing Bulls (jeden spójny zapis)
 const normalizeTeamName = (name) => {
     if (!name) return name;
     const n = name.toLowerCase().trim();
@@ -1862,7 +2007,6 @@ const normalizeTeamName = (name) => {
     return name;
 };
 
-// FIX 4: Rozszerzone wykrywanie koloru Racing Bulls
 const getTeamClass = (teamName) => {
     const name = (teamName || "").toLowerCase().trim();
     if (name.includes("ferrari")) return "team-ferrari";
@@ -1874,7 +2018,6 @@ const getTeamClass = (teamName) => {
     if (name.includes("williams")) return "team-williams";
     if (name.includes("sauber") || name.includes("kick")) return "team-sauber";
     if (name.includes("haas")) return "team-haas";
-    // FIX 4: wszelkie warianty Racing Bulls
     if (name.includes("racing bull") || name.includes("visa cash") || name.includes("vcarb") || name === "rb" || name.startsWith("rb ") || name.endsWith(" rb")) return "team-rb";
     return "";
 };
@@ -1890,18 +2033,16 @@ const getConstructorClass = (teamName) => {
     if (name.includes("williams")) return "cteam-williams";
     if (name.includes("sauber") || name.includes("kick")) return "cteam-sauber";
     if (name.includes("haas")) return "cteam-haas";
-    // FIX 4: wszelkie warianty Racing Bulls
     if (name.includes("racing bull") || name.includes("visa cash") || name.includes("vcarb") || name === "rb" || name.startsWith("rb ") || name.endsWith(" rb")) return "cteam-rb";
     return "";
 };
 
-// Klucz do mapy logo
 const getTeamKey = (teamName) => {
     const tc = getTeamClass(teamName);
     return tc ? tc.replace('team-', '') : '';
 };
 
-// FIX 3: HTML logo teamu (jeśli istnieje)
+// Logo tylko dla tabeli kierowców (małe ikonki)
 const teamLogoHtml = (teamName, className = 'team-logo-img') => {
     const key = getTeamKey(teamName);
     if (key && teamLogos[key]) {
@@ -1962,6 +2103,53 @@ const renderRaceTable = (results) => {
         </table>`;
 };
 
+// ===================== KONSTRUKTORZY — renderowanie z logo-bg =====================
+function renderConstructorRow(r, i, isLoggedIn) {
+    const cClass = getConstructorClass(r.team);
+    const posClass = i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
+    const isDark = cClass.includes('mercedes') || cClass.includes('mclaren');
+    const posStyle = isDark ? 'color:#111 !important;' : 'color:#fff !important;';
+    const editable = isLoggedIn;
+
+    // Logo jako pełny background wiersza
+    const key = getTeamKey(r.team);
+    const logoUrl = key ? (teamLogos[key] || '') : '';
+    const logoBgHtml = logoUrl
+        ? `<td style="position:relative;padding:0;width:0;border:none;">
+               <div class="constructor-logo-bg"
+                   style="background-image:url('${logoUrl}');position:absolute;top:0;left:0;right:-9999px;bottom:0;"></div>
+           </td>`
+        : '';
+
+    // Pionowy pasek gdy brak logo
+    const stripeHtml = `<div style="width:8px;height:44px;background:rgba(255,255,255,0.35);border-radius:2px;flex-shrink:0;"></div>`;
+
+    return `
+        <tr class="constructor-row ${cClass}" style="position:relative;">
+            ${logoUrl ? `<td colspan="3" style="padding:0;position:relative;height:1px;overflow:visible;border:none;display:none;"></td>` : ''}
+            <td class="col-pos" style="${posStyle} font-weight:900; position:relative; z-index:1;">
+                ${logoUrl ? `<div class="constructor-logo-bg" style="background-image:url('${logoUrl}'); opacity:0.18; position:absolute; inset:0; background-size:contain; background-repeat:no-repeat; background-position:center left 30px; z-index:0; pointer-events:none;"></div>` : ''}
+                <span style="position:relative;z-index:1;">${i+1}</span>
+            </td>
+            <td style="font-weight:700;font-size:38px;letter-spacing:1.5px;position:relative;z-index:1;">
+                ${logoUrl ? `<div class="constructor-logo-bg" style="background-image:url('${logoUrl}'); opacity:0.18; position:absolute; inset:0; background-size:contain; background-repeat:no-repeat; background-position:center left 20px; z-index:0; pointer-events:none;"></div>` : ''}
+                <div style="display:flex;align-items:center;gap:16px;position:relative;z-index:1;">
+                    ${logoUrl
+                        ? `<img src="${logoUrl}" style="height:52px;width:auto;max-width:120px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.9;flex-shrink:0;" alt="${r.team}" onerror="this.style.display='none'">`
+                        : stripeHtml
+                    }
+                    ${r.team}
+                </div>
+            </td>
+            <td class="col-pts" style="padding-right:30px;position:relative;z-index:1;">
+                ${logoUrl ? `<div class="constructor-logo-bg" style="background-image:url('${logoUrl}'); opacity:0.18; position:absolute; inset:0; background-size:contain; background-repeat:no-repeat; background-position:center right 20px; z-index:0; pointer-events:none;"></div>` : ''}
+                <span class="cteam-pts-cell" style="position:relative;z-index:1;">
+                    ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>` : r.pts}
+                </span>
+            </td>
+        </tr>`;
+}
+
 // ===================== DATA LISTENERS =====================
 
 // 1. Config
@@ -1969,43 +2157,35 @@ onValue(ref(db, 'config'), snap => {
     const c = snap.val();
     if (!c) return;
 
-    // FIX 3: Loga teamów
     if (c.teamLogos) {
         teamLogos = c.teamLogos;
         buildLogosGrid();
     }
 
-    // Splash content
     if (c.splashContent) {
         document.getElementById('splash-custom-content').innerHTML = c.splashContent;
         document.getElementById('adm-splash-content').value = c.splashContent;
         document.getElementById('splash-preview-box').innerHTML = c.splashContent;
     }
 
-    // FIX 2: Nowe zdjęcia splash (array)
     if (c.splashImages && c.splashImages.length > 0) {
         renderSplashImages(c.splashImages);
-        // Załaduj do admina (czyść i odbuduj)
         const list = document.getElementById('adm-splash-images-list');
         if (list) {
             list.innerHTML = '';
             c.splashImages.forEach(img => ui.addSplashImageRow(img));
         }
-        // Ukryj stare pole
         document.getElementById('splash-image-area').style.display = 'none';
     } else if (c.splashImage) {
-        // Fallback na stare pojedyncze zdjęcie
         const imgArea = document.getElementById('splash-image-area');
         imgArea.style.display = 'block';
         imgArea.innerHTML = `<img src="${c.splashImage}" alt="Splash">`;
     }
 
-    // Sync admina textarea splash-content
     document.getElementById('adm-splash-content').addEventListener('input', function() {
         document.getElementById('splash-preview-box').innerHTML = this.value || '<em style="opacity:0.4;">Podgląd...</em>';
     });
 
-    // News bar
     const newsBar = document.getElementById('news-bar-container');
     newsBar.style.display = c.showNews ? 'flex' : 'none';
     const rawNews = c.newsContent || "";
@@ -2020,10 +2200,8 @@ onValue(ref(db, 'config'), snap => {
     clone.style.animation = 'f1-marquee 40s linear infinite';
     clone.style.animationDelay = '-20s';
 
-    // Hero title
     document.getElementById('display-hero-title').innerText = c.heroTitle || "NEXT GP EVENT";
 
-    // Hero mode
     const mode = c.heroMode || 'countdown';
     const timerSection = document.getElementById('hero-timer-section');
     const soonSection = document.getElementById('hero-soon-section');
@@ -2049,7 +2227,6 @@ onValue(ref(db, 'config'), snap => {
     }
     renderSplashCountdown(cachedHeroConfig);
 
-    // Sync admin fields
     if (c.heroTitle) document.getElementById('adm-hero-title').value = c.heroTitle;
     if (c.heroDate)  document.getElementById('adm-hero-date').value = c.heroDate;
     if (c.heroMode === 'soon') { document.getElementById('hero-mode-soon').checked = true; document.getElementById('hero-date-group').style.display = 'none'; }
@@ -2119,30 +2296,7 @@ onValue(ref(db, 'standings'), snap => {
     const tBody = document.getElementById('api-teams-list');
     const teams = data.teams || [];
     document.getElementById('adm-teams-raw').value = teams.map(t => `${t.team} | ${t.pts}`).join('\n');
-    tBody.innerHTML = teams.map((r, i) => {
-        const cClass = getConstructorClass(r.team);
-        const posClass = i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
-        const editable = isLoggedIn;
-        const isDark = cClass.includes('mercedes') || cClass.includes('mclaren');
-        const posStyle = isDark ? 'color:#111 !important;' : 'color:#fff !important;';
-        // FIX 3: Logo w konstruktorach
-        const logoHtml = teamLogoHtml(r.team, 'constructor-logo-img');
-        return `
-            <tr class="constructor-row ${cClass}">
-                <td class="col-pos" style="${posStyle} font-weight:900;">${i+1}</td>
-                <td style="font-weight:700;font-size:36px;letter-spacing:1.5px;">
-                    <div class="constructor-name-cell">
-                        ${logoHtml || '<div class="constructor-stripe"></div>'}
-                        ${r.team}
-                    </div>
-                </td>
-                <td class="col-pts" style="padding-right:30px;">
-                    <span class="cteam-pts-cell">
-                        ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>` : r.pts}
-                    </span>
-                </td>
-            </tr>`;
-    }).join('');
+    tBody.innerHTML = teams.map((r, i) => renderConstructorRow(r, i, isLoggedIn)).join('');
 });
 
 // 3. Last Race
@@ -2232,9 +2386,7 @@ document.querySelectorAll('input[name="hero-mode"]').forEach(r => {
     });
 });
 
-// Inicjalizacja siatki logo
 buildLogosGrid();
-
 </script>
 </body>
 </html>
