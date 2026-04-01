@@ -1,1741 +1,1267 @@
-
 <!DOCTYPE html>
-<html lang="pl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEEKENDOWA LIGA F1</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com/">
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-    <link rel="icon" type="image/png" href="Logo.png">
-    <!-- 
-        Czcionki agresywne z pełną obsługą polskich znaków (latin-ext):
-        - Saira Condensed: nagłówki, tytuły kart, nawigacja
-        - Barlow Condensed: tabele, liczby, dane wyścigowe  
-        - Exo 2: body text, opisy — mocna ale czytelna
-    -->
-    <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@300;400;500;600;700;800;900&family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap&subset=latin,latin-ext" rel="stylesheet">
-    <style>
-        /* Wymuszenie latin-ext — polskie znaki dla wszystkich czcionek */
-        :root {
-            --font-display: 'Saira Condensed', 'Barlow Condensed', sans-serif;
-            --font-data:    'Barlow Condensed', 'Saira Condensed', sans-serif;
-            --font-body:    'Exo 2', 'Barlow Condensed', sans-serif;
-        }
-    </style>
-    
-    <style>
-        /* ==========================================================================
-           1. KONFIGURACJA RDZENIA I SKALOWANIE (65%)
-           ==========================================================================
-        */
-        :root {
-            --f1-red: #e10600;
-            --f1-black: #15151e;
-            --f1-white: #ffffff;
-            --f1-bg: #f0f0f2;
-            --f1-dark-grey: #38383f;
-            --f1-light-grey: #d0d0d2;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            background-color: #e8e8ea;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(225,6,0,0.03) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(21,21,30,0.04) 0%, transparent 50%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2315151e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            color: var(--f1-black);
-            font-family: var(--font-body);
-            overflow-x: hidden;
-            min-height: 100vh;
-            scrollbar-width: none !important;
-        }
-
-        /* Globalne wyłączenie scrollbara dla estetyki F1 */
-        *::-webkit-scrollbar { display: none !important; }
-
-        /* SKALOWANIE STRONY DO 65% — tylko na dużych ekranach */
-        @media (min-width: 1025px) {
-            body {
-                transform: scale(0.65);
-                transform-origin: top center;
-                width: 153.84%;
-                left: -26.92%;
-                position: relative;
-            }
-        }
-
-        /* ==========================================================================
-           2. PASEK WIADOMOŚCI (BREAKING NEWS)
-           ==========================================================================
-        */
-        #news-bar-container {
-            background: var(--f1-red);
-            color: var(--f1-white);
-            height: 60px;
-            display: none; /* Sterowane przez JS */
-            align-items: center;
-            overflow: hidden;
-            border-bottom: 4px solid var(--f1-black);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 100;
-        }
-
-        .news-label {
-            background: var(--f1-black);
-            padding: 0 45px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 18px;
-            transform: skewX(-15deg);
-            margin-left: -15px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .news-track {
-            white-space: nowrap;
-            display: inline-block;
-            animation: f1-marquee 40s linear infinite;
-            font-family: var(--font-data);
-            font-size: 36px;
-            text-transform: uppercase;
-            padding-left: 50px;
-        }
-
-        /* Drugi klon dla seamless loop */
-        .news-track-clone {
-            white-space: nowrap;
-            display: inline-block;
-            animation: f1-marquee 40s linear infinite;
-            font-family: var(--font-data);
-            font-size: 36px;
-            text-transform: uppercase;
-            padding-left: 80px;
-        }
-
-        .news-marquee-box {
-            overflow: hidden;
-            display: flex;
-            flex: 1;
-            white-space: nowrap;
-        }
-
-        @keyframes f1-marquee {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* ==========================================================================
-           3. NAGŁÓWEK I NAWIGACJA
-           ==========================================================================
-        */
-        .f1-header {
-            background: var(--f1-white);
-            height: 260px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6%;
-            border-bottom: 10px solid var(--f1-black);
-            position: relative;
-            background-image: 
-                linear-gradient(135deg, rgba(225,6,0,0.03) 0%, transparent 50%),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 80px,
-                    rgba(21,21,30,0.018) 80px,
-                    rgba(21,21,30,0.018) 81px
-                ),
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 40px,
-                    rgba(21,21,30,0.012) 40px,
-                    rgba(21,21,30,0.012) 41px
-                );
-        }
-
-        .f1-brand {
-            display: flex;
-            align-items: center;
-        }
-
-        .f1-logo {
-            background: #08080d;
-            width: 260px;
-            height: 200px;
-            transform: skewX(-15deg);
-            box-shadow: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
-        
-        .f1-logo img {
-            width: auto;
-            height: auto;
-            max-width: 88%;
-            max-height: 88%;
-            object-fit: contain;
-            transform: skewX(15deg);
-            filter: none;
-        }
-
-        /* Ramka wokół całego bloku logo (nie samego skoszonego tła) */
-        .f1-brand {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        /* Usunięto .f1-brand::before — cień jest teraz tylko na kształcie .f1-logo */
-
-        .f1-title {
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 85px;
-            text-transform: uppercase;
-            margin-left: 50px;
-            line-height: 0.9;
-            letter-spacing: -4px;
-        }
-
-        .f1-nav {
-            background: var(--f1-black);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            background-image:
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 60px,
-                    rgba(255,255,255,0.015) 60px,
-                    rgba(255,255,255,0.015) 61px
-                ),
-                linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
-        }
-
-        .nav-item {
-            padding: 35px 70px;
-            color: #888;
-            text-decoration: none;
-            font-family: var(--font-data);
-            font-size: 45px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: var(--transition);
-            border-bottom: 8px solid transparent;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            color: var(--f1-white);
-            background: rgba(255,255,255,0.05);
-            border-bottom-color: var(--f1-red);
-        }
-
-        /* ==========================================================================
-           4. HERO SECTION & COUNTDOWN
-           ==========================================================================
-        */
-        /* ==========================================================================
-           5. TABELE I KARTY WYNIKÓW
-           ==========================================================================
-        */
-        .main-content {
-            max-width: 1900px;
-            margin: 0 auto;
-            padding: 0 40px 200px;
-        }
-
-        .page-view { display: none; }
-        .page-view.active { display: block; animation: pageEnter 0.5s ease-out forwards; }
-
-        @keyframes pageEnter {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes headerReveal {
-            0% { opacity: 0; transform: skewX(-15deg) scaleX(0.3); }
-            100% { opacity: 1; transform: skewX(-15deg) scaleX(1); }
-        }
-
-        @keyframes pulse-red {
-            0%, 100% { box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 0 rgba(225,6,0,0); }
-            50% { box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 20px 4px rgba(225,6,0,0.2); }
-        }
-
-        /* Nav item underline slide */
-        .nav-item {
-            position: relative;
-        }
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 100%; right: 0;
-            height: 8px;
-            background: var(--f1-red);
-            transition: left 0.35s cubic-bezier(0.19,1,0.22,1);
-        }
-        .nav-item:hover::after, .nav-item.active::after { left: 0; }
-
-        /* Wiersze tabeli wejście */
-        .f1-table tbody tr {
-            animation: slideInLeft 0.4s both;
-        }
-        .f1-table tbody tr:nth-child(1)  { animation-delay: 0.04s; }
-        .f1-table tbody tr:nth-child(2)  { animation-delay: 0.08s; }
-        .f1-table tbody tr:nth-child(3)  { animation-delay: 0.12s; }
-        .f1-table tbody tr:nth-child(4)  { animation-delay: 0.16s; }
-        .f1-table tbody tr:nth-child(5)  { animation-delay: 0.20s; }
-        .f1-table tbody tr:nth-child(6)  { animation-delay: 0.24s; }
-        .f1-table tbody tr:nth-child(7)  { animation-delay: 0.28s; }
-        .f1-table tbody tr:nth-child(8)  { animation-delay: 0.32s; }
-        .f1-table tbody tr:nth-child(9)  { animation-delay: 0.36s; }
-        .f1-table tbody tr:nth-child(n+10) { animation-delay: 0.40s; }
-
-        /* Karty hover */
-        .f1-card { transition: box-shadow 0.4s ease, transform 0.3s ease; }
-        .f1-card:hover {
-            box-shadow: 0 40px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(225,6,0,0.12);
-            transform: translateY(-3px);
-        }
-
-        .pos-gold   { color: #f5a623 !important; font-weight: 900 !important; }
-        .pos-silver { color: #b0b0b0 !important; font-weight: 900 !important; }
-        .pos-bronze { color: #cd7f32 !important; font-weight: 900 !important; }
-
-        /* Editable cells */
-        .editable-cell {
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 3px;
-            transition: background 0.2s, color 0.2s;
-            display: inline-block;
-        }
-        .editable-cell:hover {
-            background: rgba(225,6,0,0.08);
-            color: var(--f1-red);
-        }
-        .editable-cell:hover::after {
-            content: ' ✎';
-            font-size: 0.65em;
-            opacity: 0.5;
-        }
-
-        /* Nicer timer */
-        .f1-hero {
-            background: var(--f1-black);
-            padding: 100px 0;
-            text-align: center;
-            border-bottom: 2px solid #222;
-            margin-bottom: 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        .f1-hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: 
-                radial-gradient(ellipse at 50% 0%, rgba(225,6,0,0.18) 0%, transparent 65%),
-                repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.015) 80px, rgba(255,255,255,0.015) 81px),
-                repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(255,255,255,0.015) 120px, rgba(255,255,255,0.015) 121px);
-            pointer-events: none;
-        }
-        .f1-hero h1 {
-            font-family: var(--font-data);
-            font-size: 120px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin: 0 0 60px 0;
-            letter-spacing: -2px;
-            color: var(--f1-white);
-            position: relative;
-        }
-        .f1-timer-grid {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            position: relative;
-        }
-        .timer-unit {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-bottom: 4px solid var(--f1-red);
-            min-width: 180px;
-            padding: 40px 30px 36px;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-        .timer-unit::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(225,6,0,0.06) 0%, transparent 100%);
-            pointer-events: none;
-        }
-        .timer-unit:hover { transform: translateY(-6px); border-bottom-color: #fff; }
-        .timer-val {
-            font-family: var(--font-display);
-            font-size: 90px;
-            font-weight: 900;
-            display: block;
-            line-height: 1;
-            color: var(--f1-white);
-            letter-spacing: -3px;
-        }
-        .timer-label {
-            font-size: 14px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            margin-top: 14px;
-            font-weight: 800;
-            display: block;
-            letter-spacing: 5px;
-        }
-        /* Separator between timer units */
-        .timer-sep {
-            display: flex;
-            align-items: center;
-            font-family: var(--font-display);
-            font-size: 70px;
-            font-weight: 900;
-            color: var(--f1-red);
-            padding-bottom: 40px;
-            opacity: 0.6;
-        }
-
-        /* Archive smooth open */
-        .archive-body {
-            display: block !important;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.6s cubic-bezier(0.19,1,0.22,1), opacity 0.3s ease;
-        }
-        .archive-body.open { max-height: 4000px; opacity: 1; }
-
-        /* News bar fade edges */
-        #news-bar-container::after {
-            content: '';
-            position: absolute;
-            right: 0; top: 0; bottom: 0;
-            width: 100px;
-            background: linear-gradient(to right, transparent, var(--f1-red));
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .f1-card {
-            background: var(--f1-white);
-            border: 1px solid var(--f1-light-grey);
-            border-top: 20px solid var(--f1-black);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.07);
-            margin-bottom: 80px;
-            overflow: hidden;
-        }
-
-        .f1-card-title {
-            padding: 40px 50px;
-            background: #f8f8f9;
-            border-bottom: 2px solid #eee;
-            font-family: var(--font-display);
-            font-size: 40px;
-            text-transform: uppercase;
-            color: var(--f1-black);
-            display: flex;
-            align-items: center;
-        }
-
-        .f1-card-title::before {
-            content: "";
-            width: 10px;
-            height: 40px;
-            background: var(--f1-red);
-            margin-right: 25px;
-        }
-
-        /* STYLIZACJA TABELI */
-        .f1-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: auto;
-        }
-
-        .f1-table th {
-            background: #111;
-            color: #fff;
-            padding: 25px;
-            text-align: left;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
-
-        .f1-table td {
-            padding: 22px 25px;
-            font-family: var(--font-data);
-            font-size: 36px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .f1-table tr:last-child td { border-bottom: none; }
-        .f1-table tr:hover td { background: #fcfcfc; }
-
-        /* Specyficzne szerokości kolumn */
-        .col-pos { width: 70px; text-align: center; font-family: var(--font-display); color: #999; font-size: 30px !important; }
-        .col-pts { width: 110px; text-align: right; font-family: var(--font-display); font-weight: 900; color: var(--f1-red); padding-right: 45px !important; }
-        .col-driver { width: 450px; font-weight: 700; font-size: 40px !important; }
-
-        /* AKCENTY ZESPOŁÓW (BORDER LEFT) */
-        .team-ferrari { border-left: 15px solid #ef1a2d; } .txt-ferrari { color: #ef1a2d; }
-        .team-mercedes { border-left: 15px solid #00d2be; } .txt-mercedes { color: #00d2be; }
-        .team-redbull { border-left: 15px solid #131b45; } .txt-redbull { color: #131b45; }
-        .team-mclaren { border-left: 15px solid #ff8700; } .txt-mclaren { color: #ff8700; }
-        .team-aston { border-left: 15px solid #006f62; } .txt-aston { color: #006f62; }
-        .team-alpine { border-left: 15px solid #6088d6; } .txt-alpine { color: #6088d6; }
-        .team-williams { border-left: 15px solid #182cc4; } .txt-williams { color: #182cc4; }
-        .team-sauber { border-left: 15px solid #52e252; } .txt-sauber { color: #52e252; }
-        .team-haas { border-left: 15px solid #bdb3b3; } .txt-haas { color: #bdb3b3; }
-        .team-rb { border-left: 15px solid #004cff; } .txt-rb { color: #004cff; }
-
-        /* ==========================================================================
-           6. ARCHIWUM I GALERIA
-           ==========================================================================
-        */
-        .archive-item {
-            margin-bottom: 30px;
-            background: var(--f1-white);
-            border: 1px solid var(--f1-light-grey);
-            transition: var(--transition);
-        }
-
-        .archive-header { 
-            width: 100%; padding: 40px 50px; background: none; border: none;
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; font-family: var(--font-data); font-size: 50px;
-            text-transform: uppercase; text-align: left;
-            transition: background 0.3s ease, padding-left 0.3s ease, border-left 0.3s ease;
-            border-left: 8px solid transparent;
-        }
-        .archive-header:hover { background: #fafafa; padding-left: 65px; border-left: 8px solid var(--f1-red); }
-        .archive-header .arc-arrow { transition: transform 0.4s cubic-bezier(0.19,1,0.22,1); display: inline-block; }
-        .archive-header.open .arc-arrow { transform: rotate(180deg); }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
-            gap: 50px;
-        }
-
-        .album-card {
-            background: var(--f1-black);
-            height: 400px;
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-            border-bottom: 15px solid var(--f1-red);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        .album-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
-        .album-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.6s; }
-        .album-card:hover img { opacity: 0.8; transform: scale(1.07); }
-        .album-info { position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 10; }
-        .album-name { font-family: var(--font-data); font-size: 60px; color: var(--f1-white); text-transform: uppercase; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-
-        /* Media entries inside album */
-        .media-entries-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
-            gap: 40px;
-        }
-        .media-entry {
-            background: var(--f1-white);
-            border: 1px solid var(--f1-light-grey);
-            border-top: 8px solid var(--f1-black);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .media-entry:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.14); }
-        .media-entry-title {
-            padding: 20px 30px 16px;
-            font-family: var(--font-data);
-            font-size: 34px;
-            text-transform: uppercase;
-            color: var(--f1-black);
-            border-bottom: 2px solid #eee;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .media-entry-title::before { content: ''; width: 6px; height: 28px; background: var(--f1-red); flex-shrink: 0; }
-        .media-entry-body { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; }
-        .media-entry-body video { width: 100%; height: 100%; object-fit: contain; }
-        .media-entry-body iframe { width: 100%; height: 100%; border: none; }
-        .media-entry-body img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* Album viewer header */
-        .album-viewer-header {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 60px;
-            padding-bottom: 30px;
-            border-bottom: 4px solid var(--f1-black);
-        }
-        .album-viewer-title {
-            font-family: var(--font-display);
-            font-size: 50px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-
-        /* ==========================================================================
-           7. PANEL ADMINISTRATORA (UI)
-           ==========================================================================
-        */
-        /* Overlay za panelem admina */
-        #admin-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0);
-            z-index: 9998;
-            pointer-events: none;
-            transition: background 0.5s ease;
-        }
-        #admin-overlay.open {
-            background: rgba(0,0,0,0.6);
-            pointer-events: all;
-            backdrop-filter: blur(3px);
-        }
-
-        #admin-sidebar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 1200px;
-            height: 100vh;
-            background: var(--f1-white);
-            z-index: 9999;
-            box-shadow: -50px 0 120px rgba(0,0,0,0.5);
-            transition: transform 0.75s cubic-bezier(0.19, 1, 0.22, 1);
-            overflow-y: auto;
-            padding: 70px;
-            transform: translateX(110%);
-        }
-
-        #admin-sidebar.open { transform: translateX(0); }
-
-        .admin-section {
-            background: #f9f9fb;
-            padding: 50px;
-            border-radius: 8px;
-            border-left: 15px solid var(--f1-red);
-            margin-bottom: 50px;
-        }
-
-        .admin-section h3 {
-            font-family: var(--font-display);
-            font-size: 30px;
-            margin-top: 0;
-            margin-bottom: 35px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 15px;
-        }
-
-        .form-group { margin-bottom: 25px; }
-        .form-label { display: block; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; font-size: 14px; color: #555; }
-        
-        .f1-input {
-            width: 100%;
-            padding: 22px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 18px;
-            font-family: var(--font-body);
-            background: #fff;
-            box-sizing: border-box;
-        }
-
-        .f1-input:focus { border-color: var(--f1-red); outline: none; }
-
-        .f1-textarea {
-            width: 100%;
-            padding: 22px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            font-family: monospace;
-            min-height: 150px;
-            resize: vertical;
-            box-sizing: border-box;
-        }
-
-        .btn-action {
-            background: var(--f1-black);
-            color: var(--f1-white);
-            padding: 25px 50px;
-            border: none;
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 18px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: var(--transition);
-            display: inline-block;
-        }
-
-        .btn-action:hover { background: var(--f1-red); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(225,6,0,0.3); }
-        .btn-danger { background: #800; margin-left: 10px; }
-        .btn-danger:hover { background: #f00; }
-
-        .check-group { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; font-weight: 700; cursor: pointer; }
-        .check-group input { width: 25px; height: 25px; cursor: pointer; }
-
-        /* Lista zarzadzania w adminie */
-        .admin-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: #fff;
-            border: 1px solid #eee;
-            margin-bottom: 10px;
-        }
-
-        /* ==========================================================================
-           8. MODAL LOGOWANIA
-           ==========================================================================
-        */
-        .auth-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .auth-card {
-            background: var(--f1-white);
-            width: 600px;
-            padding: 70px;
-            border-top: 25px solid var(--f1-red);
-            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
-        }
-
-        .auth-card h2 { font-family: var(--font-display); font-size: 40px; text-align: center; margin-bottom: 50px; }
-
-        .hidden { display: none !important; }
-
-        /* ==========================================================================
-           9. RESPONSYWNOŚĆ MOBILNA
-           ==========================================================================
-        */
-        @media (max-width: 1024px) {
-            .f1-header {
-                height: auto;
-                padding: 20px 4%;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-            .f1-logo {
-                width: 120px;
-                height: 90px;
-            }
-            .f1-title {
-                font-size: 36px;
-                margin-left: 20px;
-                letter-spacing: -1px;
-            }
-            .f1-auth-zone {
-                width: 100%;
-                display: flex;
-                justify-content: flex-end;
-            }
-            .btn-action {
-                padding: 14px 24px;
-                font-size: 13px;
-            }
-            .f1-nav {
-                overflow-x: unset;
-                justify-content: stretch;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-            .nav-item {
-                padding: 16px 8px;
-                font-size: 22px;
-                white-space: nowrap;
-                text-align: center;
-                border-bottom: 4px solid transparent;
-            }
-            .f1-hero {
-                padding: 40px 20px;
-            }
-            .f1-hero h1 {
-                font-size: 40px;
-                margin-bottom: 30px;
-            }
-            .f1-timer-grid {
-                gap: 8px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .timer-unit {
-                min-width: 70px;
-                padding: 16px 12px 14px;
-            }
-            .timer-val {
-                font-size: 38px;
-            }
-            .timer-sep {
-                font-size: 32px;
-                padding-bottom: 20px;
-            }
-            .timer-label {
-                font-size: 10px;
-                letter-spacing: 2px;
-            }
-            .main-content {
-                padding: 0 16px 80px;
-            }
-            #view-standings > div {
-                grid-template-columns: 1fr !important;
-            }
-            .f1-card-title {
-                font-size: 22px;
-                padding: 20px 20px;
-            }
-            .f1-table th {
-                padding: 12px 10px;
-                font-size: 11px;
-            }
-            .f1-table td {
-                padding: 10px 10px;
-                font-size: 20px;
-            }
-            .col-driver {
-                width: auto !important;
-                font-size: 22px !important;
-            }
-            .col-pos {
-                font-size: 16px !important;
-            }
-            .col-pts {
-                padding-right: 15px !important;
-            }
-            .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .album-card {
-                height: 220px;
-            }
-            .album-name {
-                font-size: 36px;
-            }
-            .media-entries-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .archive-header {
-                font-size: 28px;
-                padding: 20px 20px;
-            }
-            #admin-sidebar {
-                width: 100%;
-                padding: 30px 20px;
-            }
-            .news-label {
-                padding: 0 20px;
-                font-size: 13px;
-            }
-            .news-track, .news-track-clone {
-                font-size: 22px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .f1-title {
-                font-size: 26px;
-            }
-            .f1-logo {
-                width: 80px;
-                height: 62px;
-            }
-            .f1-hero h1 {
-                font-size: 28px;
-            }
-            .timer-val {
-                font-size: 28px;
-            }
-            .timer-unit {
-                min-width: 52px;
-                padding: 10px 8px;
-            }
-            .f1-card-title {
-                font-size: 17px;
-            }
-        }
-    </style>
+<html lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEEKENDOWA LIGA F1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link rel="icon" type="image/png" href="Logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@300;400;500;600;700;800;900&family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap&subset=latin,latin-ext" rel="stylesheet">
+<style>
+:root {
+    --font-display: 'Saira Condensed', 'Barlow Condensed', sans-serif;
+    --font-data:    'Barlow Condensed', 'Saira Condensed', sans-serif;
+    --font-body:    'Exo 2', 'Barlow Condensed', sans-serif;
+    --f1-red: #e10600;
+    --f1-black: #15151e;
+    --f1-white: #ffffff;
+    --f1-bg: #f0f0f2;
+    --f1-dark-grey: #38383f;
+    --f1-light-grey: #d0d0d2;
+}
+html, body {
+    margin: 0; padding: 0;
+    background-color: #e8e8ea;
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(225,6,0,0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(21,21,30,0.04) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2315151e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    color: var(--f1-black);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    min-height: 100vh;
+    scrollbar-width: none !important;
+    letter-spacing: 0.03em;
+}
+*::-webkit-scrollbar { display: none !important; }
+
+@media (min-width: 1025px) {
+    body {
+        transform: scale(0.65);
+        transform-origin: top center;
+        width: 153.84%;
+        left: -26.92%;
+        position: relative;
+    }
+}
+
+/* ======= SPLASH ======= */
+#splash-screen {
+    position: fixed; inset: 0;
+    background: var(--f1-black);
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 60px 40px 80px;
+    overflow-y: auto;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    cursor: pointer;
+}
+#splash-screen::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(225,6,0,0.22) 0%, transparent 55%),
+        repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px),
+        repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(255,255,255,0.012) 120px, rgba(255,255,255,0.012) 121px);
+    pointer-events: none; z-index: 0;
+}
+#splash-screen.hiding { opacity: 0; transform: scale(1.04); pointer-events: none; }
+.splash-inner {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; width: 100%; max-width: 1300px;
+}
+.splash-top {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 40px;
+    animation: splashIn 1s cubic-bezier(0.19,1,0.22,1) forwards;
+}
+@keyframes splashIn {
+    from { opacity:0; transform: scale(0.78) translateY(40px); }
+    to   { opacity:1; transform: scale(1) translateY(0); }
+}
+.splash-logo-box {
+    background: #000000;
+    width: 280px; height: 210px;
+    transform: skewX(-15deg);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 0 80px rgba(225,6,0,0.4), 0 40px 80px rgba(0,0,0,0.6);
+    position: relative;
+    margin-bottom: 40px; flex-shrink: 0;
+}
+.splash-logo-box::after {
+    content: ''; position: absolute; inset: 0;
+    border: 2px solid rgba(225,6,0,0.35); border-radius: 10px; pointer-events: none;
+}
+.splash-logo-box img { width:auto; height:auto; max-width:85%; max-height:85%; object-fit:contain; transform:skewX(15deg); }
+.splash-title {
+    font-family: var(--font-display); font-weight: 900; font-size: 80px;
+    color: var(--f1-white); text-transform: uppercase; text-align: center;
+    letter-spacing: 4px; line-height: 0.92;
+    animation: splashFade 1s 0.2s cubic-bezier(0.19,1,0.22,1) both;
+}
+.splash-subtitle {
+    font-family: var(--font-data); font-size: 22px;
+    color: rgba(255,255,255,0.3); text-transform: uppercase;
+    letter-spacing: 10px; margin-top: 14px;
+    animation: splashFade 1s 0.4s cubic-bezier(0.19,1,0.22,1) both;
+}
+@keyframes splashFade {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+}
+/* Odliczanie na splash */
+.splash-countdown {
+    display: flex; justify-content: center; gap: 18px;
+    margin: 36px 0 28px;
+    animation: splashFade 1s 0.5s cubic-bezier(0.19,1,0.22,1) both;
+}
+.splash-timer-unit {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 4px solid var(--f1-red);
+    min-width: 130px; padding: 26px 18px 20px;
+    border-radius: 4px; text-align: center; position: relative; overflow: hidden;
+}
+.splash-timer-unit::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(225,6,0,0.07) 0%, transparent 100%);
+    pointer-events:none;
+}
+.splash-timer-val {
+    font-family: var(--font-display); font-size: 68px; font-weight: 900;
+    display: block; line-height: 1; color: var(--f1-white); letter-spacing: 3px;
+}
+.splash-timer-label {
+    font-size: 12px; text-transform: uppercase; color: rgba(255,255,255,0.35);
+    margin-top: 10px; font-weight: 800; display: block; letter-spacing: 5px;
+}
+.splash-timer-sep {
+    display: flex; align-items: center;
+    font-family: var(--font-display); font-size: 52px; font-weight: 900;
+    color: var(--f1-red); padding-bottom: 28px; opacity: 0.5;
+}
+.splash-soon-box {
+    font-family: var(--font-display); font-size: 110px; font-weight: 900;
+    color: var(--f1-red); letter-spacing: 10px;
+    animation: soonPulse 2s ease infinite; margin: 26px 0;
+}
+@keyframes soonPulse {
+    0%,100% { text-shadow: 0 0 40px rgba(225,6,0,0.3); }
+    50%      { text-shadow: 0 0 90px rgba(225,6,0,0.8); }
+}
+.splash-content-area {
+    width: 100%; max-width: 1100px; text-align: center;
+    color: var(--f1-white); font-family: var(--font-body);
+    font-size: 22px; line-height: 1.7; letter-spacing: 0.04em;
+    animation: splashFade 1s 0.65s cubic-bezier(0.19,1,0.22,1) both;
+    margin-bottom: 28px;
+}
+.splash-content-area img { max-width:100%; height:auto; border-radius:8px; margin:16px 0; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+.splash-content-area h1,.splash-content-area h2,.splash-content-area h3 { font-family:var(--font-display); text-transform:uppercase; letter-spacing:3px; }
+.splash-cta {
+    font-family: var(--font-data); font-size: 19px; letter-spacing: 8px;
+    color: rgba(255,255,255,0.2); text-transform: uppercase;
+    animation: splashPulse 2.5s 1.5s ease infinite both; margin-top: 8px;
+}
+@keyframes splashPulse {
+    0%,100% { opacity:0.2; }
+    50%      { opacity:0.6; }
+}
+
+/* ======= BREAKING NEWS ======= */
+#news-bar-container {
+    background: var(--f1-red); color: var(--f1-white);
+    height: 60px; display: none; align-items: center; overflow: hidden;
+    border-bottom: 4px solid var(--f1-black); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    position: relative; z-index: 100;
+}
+.news-label {
+    background: var(--f1-black); padding: 0 45px; height: 100%;
+    display: flex; align-items: center;
+    font-family: var(--font-display); font-weight: 900; font-size: 18px; letter-spacing: 3px;
+    transform: skewX(-15deg); margin-left: -15px; position: relative; z-index: 10;
+}
+.news-track, .news-track-clone {
+    white-space: nowrap; display: inline-block;
+    font-family: var(--font-data); font-size: 34px; text-transform: uppercase; letter-spacing: 2px;
+    padding-left: 60px; animation: f1-marquee 40s linear infinite;
+}
+.news-track-clone { padding-left: 80px; }
+.news-marquee-box { overflow: hidden; display: flex; flex: 1; white-space: nowrap; }
+@keyframes f1-marquee { 0% { transform:translateX(0); } 100% { transform:translateX(-100%); } }
+#news-bar-container::after {
+    content:''; position:absolute; right:0; top:0; bottom:0; width:100px;
+    background: linear-gradient(to right, transparent, var(--f1-red)); pointer-events:none; z-index:5;
+}
+
+/* ======= HEADER & NAV ======= */
+.f1-header {
+    background: var(--f1-white); height: 260px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6%; border-bottom: 10px solid var(--f1-black); position: relative;
+    background-image:
+        linear-gradient(135deg, rgba(225,6,0,0.03) 0%, transparent 50%),
+        repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(21,21,30,0.018) 80px, rgba(21,21,30,0.018) 81px),
+        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(21,21,30,0.012) 40px, rgba(21,21,30,0.012) 41px);
+}
+.f1-brand { display:flex; align-items:center; position:relative; }
+.f1-logo {
+    background: #000000; width: 260px; height: 200px;
+    transform: skewX(-15deg); display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border-radius: 8px; flex-shrink: 0;
+    cursor: pointer; transition: box-shadow 0.3s ease;
+}
+.f1-logo:hover { box-shadow: 0 0 50px rgba(225,6,0,0.45); }
+.f1-logo img { width:auto; height:auto; max-width:88%; max-height:88%; object-fit:contain; transform:skewX(15deg); }
+.f1-title {
+    font-family: var(--font-display); font-weight: 900; font-size: 85px;
+    text-transform: uppercase; margin-left: 50px; line-height: 0.9; letter-spacing: 2px;
+}
+.f1-nav {
+    background: var(--f1-black); position: sticky; top: 0; z-index: 1000;
+    display: flex; justify-content: center; box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+.nav-item {
+    padding: 35px 70px; color: #888;
+    font-family: var(--font-data); font-size: 44px; text-transform: uppercase;
+    letter-spacing: 3px; cursor: pointer; border-bottom: 8px solid transparent;
+    position: relative; transition: color 0.3s, background 0.3s;
+}
+.nav-item::after {
+    content:''; position:absolute; bottom:0; left:100%; right:0; height:8px;
+    background:var(--f1-red); transition: left 0.35s cubic-bezier(0.19,1,0.22,1);
+}
+.nav-item:hover::after, .nav-item.active::after { left:0; }
+.nav-item:hover, .nav-item.active { color:var(--f1-white); background:rgba(255,255,255,0.05); border-bottom-color:var(--f1-red); }
+
+/* ======= HERO / COUNTDOWN ======= */
+.f1-hero {
+    background: var(--f1-black); padding: 90px 0; text-align: center;
+    border-bottom: 2px solid #222; margin-bottom: 80px; position: relative; overflow: hidden;
+}
+.f1-hero::before {
+    content:''; position:absolute; inset:0;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(225,6,0,0.18) 0%, transparent 65%),
+        repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.015) 80px, rgba(255,255,255,0.015) 81px),
+        repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(255,255,255,0.015) 120px, rgba(255,255,255,0.015) 121px);
+    pointer-events:none;
+}
+.f1-hero h1 {
+    font-family: var(--font-data); font-size: 110px; font-weight: 700;
+    text-transform: uppercase; margin: 0 0 60px 0; letter-spacing: 5px;
+    color: var(--f1-white); position: relative;
+}
+.f1-timer-grid { display:flex; justify-content:center; gap:24px; position:relative; }
+.timer-unit {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 4px solid var(--f1-red); min-width: 180px; padding: 40px 30px 36px;
+    border-radius: 4px; position: relative; overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.timer-unit::before { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(225,6,0,0.06) 0%,transparent 100%); pointer-events:none; }
+.timer-unit:hover { transform: translateY(-6px); border-bottom-color: #fff; }
+.timer-val { font-family:var(--font-display); font-size:90px; font-weight:900; display:block; line-height:1; color:var(--f1-white); letter-spacing:4px; }
+.timer-label { font-size:14px; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-top:14px; font-weight:800; display:block; letter-spacing:6px; }
+.timer-sep { display:flex; align-items:center; font-family:var(--font-display); font-size:70px; font-weight:900; color:var(--f1-red); padding-bottom:40px; opacity:0.6; }
+.soon-box { display:inline-block; font-family:var(--font-display); font-size:130px; font-weight:900; color:var(--f1-red); letter-spacing:10px; animation:soonPulse 2s ease infinite; position:relative; }
+
+/* ======= MAIN CONTENT ======= */
+.main-content { max-width:1900px; margin:0 auto; padding:0 40px 200px; }
+.page-view { display:none; }
+.page-view.active { display:block; animation:pageEnter 0.5s ease-out forwards; }
+@keyframes pageEnter { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
+@keyframes slideInLeft { from{opacity:0;transform:translateX(-30px);} to{opacity:1;transform:translateX(0);} }
+.f1-table tbody tr { animation: slideInLeft 0.4s both; }
+.f1-table tbody tr:nth-child(1)  { animation-delay:.04s; }
+.f1-table tbody tr:nth-child(2)  { animation-delay:.08s; }
+.f1-table tbody tr:nth-child(3)  { animation-delay:.12s; }
+.f1-table tbody tr:nth-child(4)  { animation-delay:.16s; }
+.f1-table tbody tr:nth-child(5)  { animation-delay:.20s; }
+.f1-table tbody tr:nth-child(6)  { animation-delay:.24s; }
+.f1-table tbody tr:nth-child(7)  { animation-delay:.28s; }
+.f1-table tbody tr:nth-child(8)  { animation-delay:.32s; }
+.f1-table tbody tr:nth-child(9)  { animation-delay:.36s; }
+.f1-table tbody tr:nth-child(n+10){ animation-delay:.40s; }
+
+.f1-card {
+    background:var(--f1-white); border:1px solid var(--f1-light-grey);
+    border-top:20px solid var(--f1-black); box-shadow:0 30px 60px rgba(0,0,0,0.07);
+    margin-bottom:80px; overflow:hidden; transition:box-shadow 0.4s ease, transform 0.3s ease;
+}
+.f1-card:hover { box-shadow:0 40px 80px rgba(0,0,0,0.12),0 0 0 1px rgba(225,6,0,0.12); transform:translateY(-3px); }
+.f1-card-title {
+    padding:40px 50px; background:#f8f8f9; border-bottom:2px solid #eee;
+    font-family:var(--font-display); font-size:40px; text-transform:uppercase;
+    letter-spacing:3px; color:var(--f1-black); display:flex; align-items:center;
+}
+.f1-card-title::before { content:""; width:10px; height:40px; background:var(--f1-red); margin-right:25px; flex-shrink:0; }
+
+/* ======= TABELA ======= */
+.f1-table { width:100%; border-collapse:collapse; table-layout:auto; }
+.f1-table th { background:#111; color:#fff; padding:25px; text-align:left; font-size:15px; text-transform:uppercase; letter-spacing:3px; font-weight:700; }
+.f1-table td { padding:22px 25px; font-family:var(--font-data); font-size:36px; letter-spacing:1px; border-bottom:1px solid #eee; vertical-align:middle; white-space:nowrap; }
+.f1-table tr:last-child td { border-bottom:none; }
+.f1-table tr:hover td { background:rgba(0,0,0,0.015); }
+
+.col-pos  { width:70px; text-align:center; font-family:var(--font-display); color:#999; font-size:30px !important; }
+.col-pts  { width:120px; text-align:right; font-family:var(--font-display); font-weight:900; color:var(--f1-red); padding-right:45px !important; letter-spacing:1px; }
+.col-driver { width:420px; font-weight:700; font-size:40px !important; letter-spacing:1px; }
+.pos-gold   { color:#f5a623 !important; font-weight:900 !important; }
+.pos-silver { color:#b0b0b0 !important; font-weight:900 !important; }
+.pos-bronze { color:#cd7f32 !important; font-weight:900 !important; }
+
+/* ======= KOLORY ZESPOŁÓW ======= */
+.team-ferrari  { border-left:15px solid #ef1a2d; } .txt-ferrari  { color:#ef1a2d; }
+.team-mercedes { border-left:15px solid #00d2be; } .txt-mercedes { color:#00d2be; }
+.team-redbull  { border-left:15px solid #131b45; } .txt-redbull  { color:#131b45; }
+.team-mclaren  { border-left:15px solid #ff8700; } .txt-mclaren  { color:#ff8700; }
+.team-aston    { border-left:15px solid #006f62; } .txt-aston    { color:#006f62; }
+.team-alpine   { border-left:15px solid #6088d6; } .txt-alpine   { color:#6088d6; }
+.team-williams { border-left:15px solid #182cc4; } .txt-williams { color:#182cc4; }
+.team-sauber   { border-left:15px solid #52e252; } .txt-sauber   { color:#52e252; }
+.team-haas     { border-left:15px solid #bdb3b3; } .txt-haas     { color:#bdb3b3; }
+.team-rb       { border-left:15px solid #004cff; } .txt-rb       { color:#004cff; }
+
+/* ======= KONSTRUKTORZY — pełne tło ======= */
+.constructor-row { border-left:none !important; }
+.cteam-ferrari  { background:#ef1a2d; } .cteam-ferrari  td { color:#fff !important; }
+.cteam-mercedes { background:#00a99d; } .cteam-mercedes td { color:#fff !important; }
+.cteam-redbull  { background:#131b45; } .cteam-redbull  td { color:#fff !important; }
+.cteam-mclaren  { background:#e87600; } .cteam-mclaren  td { color:#fff !important; }
+.cteam-aston    { background:#006f62; } .cteam-aston    td { color:#fff !important; }
+.cteam-alpine   { background:#4a72c4; } .cteam-alpine   td { color:#fff !important; }
+.cteam-williams { background:#182cc4; } .cteam-williams td { color:#fff !important; }
+.cteam-sauber   { background:#1a7a1a; } .cteam-sauber   td { color:#fff !important; }
+.cteam-haas     { background:#555;    } .cteam-haas     td { color:#fff !important; }
+.cteam-rb       { background:#004cff; } .cteam-rb       td { color:#fff !important; }
+.constructor-row:hover td { background:rgba(255,255,255,0.07) !important; }
+
+/* Białe tło punktów konstruktorów */
+.cteam-pts-wrap {
+    display:inline-block; background:rgba(255,255,255,0.95);
+    color:#111 !important; font-weight:900; border-radius:4px; padding:6px 22px;
+    font-family:var(--font-display); font-size:38px; letter-spacing:1px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+/* Logo + nazwa konstruktora w jednej komórce */
+.constructor-name-cell { display:flex; align-items:center; gap:22px; }
+.constructor-name-cell img { width:90px; height:48px; object-fit:contain; filter:brightness(0) invert(1); opacity:0.92; flex-shrink:0; }
+.constructor-name-cell .team-name-text { font-weight:700; font-size:36px; letter-spacing:1px; }
+
+/* ======= SEPARATOR BOTY ======= */
+.separator-row td { background:#fff !important; border:none !important; padding:0 !important; animation:none !important; }
+.separator-row td > .sep-line { height:4px; background:var(--f1-red); margin:14px 0; position:relative; }
+.separator-row td > .sep-line::after {
+    content:'BOTY'; position:absolute; right:25px; top:50%; transform:translateY(-50%);
+    font-family:var(--font-display); font-size:17px; font-weight:900;
+    color:var(--f1-red); background:#fff; padding:0 12px; letter-spacing:4px;
+}
+.bot-row td { opacity:0.5; font-style:italic; }
+
+/* ======= NAJLEPSZY CZAS ======= */
+.fastest-lap { color:#9d4ccc !important; font-weight:900 !important; }
+.normal-lap  { color:#222 !important; }
+
+/* ======= EDITABLE CELL ======= */
+.editable-cell { cursor:pointer; padding:4px 8px; border-radius:3px; transition:background 0.2s,color 0.2s; display:inline-block; }
+.editable-cell:hover { background:rgba(225,6,0,0.08); color:var(--f1-red); }
+.editable-cell:hover::after { content:' ✎'; font-size:0.65em; opacity:0.5; }
+.race-title-editable { cursor:pointer; transition:color 0.2s; display:inline; }
+.race-title-editable:hover { color:var(--f1-red); }
+.race-title-editable:hover::after { content:' ✎'; font-size:0.6em; opacity:0.4; }
+
+/* ======= ARCHIWUM ======= */
+.archive-body { display:block !important; max-height:0; overflow:hidden; opacity:0; transition:max-height 0.6s cubic-bezier(0.19,1,0.22,1), opacity 0.3s ease; }
+.archive-body.open { max-height:5000px; opacity:1; }
+.archive-item { margin-bottom:30px; background:var(--f1-white); border:1px solid var(--f1-light-grey); }
+.archive-header {
+    width:100%; padding:40px 50px; background:none; border:none;
+    display:flex; justify-content:space-between; align-items:center;
+    cursor:pointer; font-family:var(--font-data); font-size:48px; letter-spacing:2px;
+    text-transform:uppercase; text-align:left;
+    transition:background 0.3s ease, padding-left 0.3s ease, border-left 0.3s ease;
+    border-left:8px solid transparent;
+}
+.archive-header:hover { background:#fafafa; padding-left:65px; border-left:8px solid var(--f1-red); }
+.archive-header .arc-arrow { transition:transform 0.4s cubic-bezier(0.19,1,0.22,1); display:inline-block; }
+.archive-header.open .arc-arrow { transform:rotate(180deg); }
+
+/* ======= GALERIA ======= */
+.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(550px,1fr)); gap:50px; }
+.album-card {
+    background:var(--f1-black); height:400px; position:relative; cursor:pointer;
+    overflow:hidden; border-bottom:15px solid var(--f1-red);
+    box-shadow:0 20px 40px rgba(0,0,0,0.3); transition:transform 0.4s ease, box-shadow 0.4s ease;
+}
+.album-card:hover { transform:translateY(-6px); box-shadow:0 30px 60px rgba(0,0,0,0.5); }
+.album-card > img { width:100%; height:100%; object-fit:cover; opacity:0.5; transition:opacity 0.6s,transform 0.6s; position:absolute; inset:0; }
+.album-card:hover > img { opacity:0.8; transform:scale(1.07); }
+.album-info { position:absolute; bottom:40px; left:40px; right:40px; z-index:10; }
+.album-name { font-family:var(--font-data); font-size:56px; letter-spacing:2px; color:var(--f1-white); text-transform:uppercase; line-height:1; text-shadow:0 4px 10px rgba(0,0,0,0.5); }
+
+.media-entries-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(480px,1fr)); gap:40px; }
+.media-entry { background:var(--f1-white); border:1px solid var(--f1-light-grey); border-top:8px solid var(--f1-black); overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.08); transition:transform 0.3s ease, box-shadow 0.3s ease; }
+.media-entry:hover { transform:translateY(-4px); box-shadow:0 20px 50px rgba(0,0,0,0.14); }
+.media-entry-title { padding:20px 30px 16px; font-family:var(--font-data); font-size:32px; letter-spacing:2px; text-transform:uppercase; color:var(--f1-black); border-bottom:2px solid #eee; display:flex; align-items:center; gap:14px; }
+.media-entry-title::before { content:''; width:6px; height:26px; background:var(--f1-red); flex-shrink:0; }
+.media-entry-body { position:relative; width:100%; aspect-ratio:16/9; background:#000; overflow:hidden; }
+.media-entry-body video  { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; }
+.media-entry-body iframe { position:absolute; inset:0; width:100%; height:100%; border:none; display:block; }
+.media-entry-body img    { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+
+.album-viewer-header { display:flex; align-items:center; gap:30px; margin-bottom:60px; padding-bottom:30px; border-bottom:4px solid var(--f1-black); }
+.album-viewer-title { font-family:var(--font-display); font-size:50px; font-weight:900; text-transform:uppercase; letter-spacing:3px; }
+
+/* ======= ADMIN PANEL ======= */
+#admin-overlay { position:fixed; inset:0; background:rgba(0,0,0,0); z-index:9998; pointer-events:none; transition:background 0.5s ease; }
+#admin-overlay.open { background:rgba(0,0,0,0.6); pointer-events:all; backdrop-filter:blur(3px); }
+#admin-sidebar { position:fixed; top:0; right:0; width:1200px; height:100vh; background:var(--f1-white); z-index:9999; box-shadow:-50px 0 120px rgba(0,0,0,0.5); transition:transform 0.75s cubic-bezier(0.19,1,0.22,1); overflow-y:auto; padding:70px; transform:translateX(110%); }
+#admin-sidebar.open { transform:translateX(0); }
+.admin-section { background:#f9f9fb; padding:50px; border-radius:8px; border-left:15px solid var(--f1-red); margin-bottom:50px; }
+.admin-section h3 { font-family:var(--font-display); font-size:30px; letter-spacing:3px; margin-top:0; margin-bottom:35px; border-bottom:2px solid #ddd; padding-bottom:15px; }
+.form-group { margin-bottom:25px; }
+.form-label { display:block; font-weight:800; margin-bottom:10px; text-transform:uppercase; font-size:14px; letter-spacing:2px; color:#555; }
+.f1-input { width:100%; padding:22px; border:2px solid #ddd; border-radius:4px; font-size:18px; font-family:var(--font-body); background:#fff; box-sizing:border-box; }
+.f1-input:focus { border-color:var(--f1-red); outline:none; }
+.f1-textarea { width:100%; padding:22px; border:2px solid #ddd; border-radius:4px; font-size:16px; font-family:monospace; min-height:150px; resize:vertical; box-sizing:border-box; }
+.btn-action { background:var(--f1-black); color:var(--f1-white); padding:25px 50px; border:none; font-family:var(--font-display); font-weight:900; font-size:18px; letter-spacing:3px; cursor:pointer; text-transform:uppercase; transition:background 0.3s,transform 0.2s,box-shadow 0.2s; display:inline-block; }
+.btn-action:hover { background:var(--f1-red); transform:translateY(-3px); box-shadow:0 10px 20px rgba(225,6,0,0.3); }
+.btn-danger { background:#800; margin-left:10px; }
+.btn-danger:hover { background:#f00; }
+.check-group { display:flex; align-items:center; gap:15px; margin-bottom:20px; font-weight:700; cursor:pointer; letter-spacing:1px; }
+.check-group input { width:25px; height:25px; cursor:pointer; }
+.admin-list-item { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#fff; border:1px solid #eee; margin-bottom:10px; }
+.splash-preview { background:#111; color:#fff; padding:30px; border-radius:6px; margin-top:15px; min-height:80px; font-family:var(--font-body); font-size:16px; line-height:1.7; }
+.splash-preview img { max-width:100%; border-radius:4px; }
+
+/* ======= AUTH MODAL ======= */
+.auth-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; display:none; align-items:center; justify-content:center; backdrop-filter:blur(10px); }
+.auth-card { background:var(--f1-white); width:600px; padding:70px; border-top:25px solid var(--f1-red); box-shadow:0 50px 100px rgba(0,0,0,0.5); }
+.auth-card h2 { font-family:var(--font-display); font-size:40px; letter-spacing:4px; text-align:center; margin-bottom:50px; }
+.hidden { display:none !important; }
+
+/* ======= MOBILE ======= */
+@media (max-width: 1024px) {
+    .f1-header { height:auto; padding:20px 4%; flex-wrap:wrap; gap:15px; }
+    .f1-logo { width:120px; height:90px; }
+    .f1-title { font-size:36px; margin-left:20px; }
+    .f1-auth-zone { width:100%; display:flex; justify-content:flex-end; }
+    .btn-action { padding:14px 24px; font-size:13px; }
+    .f1-nav { display:grid; grid-template-columns:1fr 1fr; }
+    .nav-item { padding:16px 8px; font-size:22px; white-space:nowrap; text-align:center; }
+    .f1-hero { padding:40px 20px; }
+    .f1-hero h1 { font-size:40px; margin-bottom:30px; }
+    .f1-timer-grid { gap:8px; flex-wrap:wrap; justify-content:center; }
+    .timer-unit { min-width:70px; padding:16px 12px 14px; }
+    .timer-val { font-size:38px; }
+    .timer-sep { font-size:32px; padding-bottom:20px; }
+    .timer-label { font-size:10px; letter-spacing:2px; }
+    .main-content { padding:0 16px 80px; }
+    #view-standings > div { grid-template-columns:1fr !important; }
+    .f1-card-title { font-size:22px; padding:20px 20px; }
+    .f1-table th { padding:12px 10px; font-size:11px; }
+    .f1-table td { padding:10px 10px; font-size:20px; }
+    .col-driver { width:auto !important; font-size:22px !important; }
+    .col-pos { font-size:16px !important; }
+    .col-pts { padding-right:15px !important; }
+    .gallery-grid { grid-template-columns:1fr; gap:20px; }
+    .album-card { height:220px; }
+    .album-name { font-size:32px; }
+    .media-entries-grid { grid-template-columns:1fr; gap:20px; }
+    .archive-header { font-size:26px; padding:20px 20px; }
+    #admin-sidebar { width:100%; padding:30px 20px; }
+    .news-label { padding:0 20px; font-size:13px; }
+    .news-track, .news-track-clone { font-size:22px; }
+    .splash-title { font-size:46px; }
+    .splash-logo-box { width:180px; height:140px; }
+    .splash-timer-val { font-size:40px; }
+    .splash-timer-unit { min-width:70px; padding:18px 12px 14px; }
+    .splash-countdown { gap:10px; }
+    .soon-box { font-size:70px; }
+    .splash-soon-box { font-size:70px; }
+    .constructor-name-cell img { width:60px; height:34px; }
+}
+@media (max-width: 480px) {
+    .f1-title { font-size:26px; }
+    .f1-logo { width:80px; height:62px; }
+    .f1-hero h1 { font-size:28px; }
+    .timer-val { font-size:28px; }
+    .timer-unit { min-width:52px; padding:10px 8px; }
+    .f1-card-title { font-size:17px; }
+    .splash-title { font-size:30px; }
+    .splash-timer-val { font-size:28px; }
+}
+</style>
 </head>
 <body>
 
-    <div id="news-bar-container">
-        <div class="news-label">BREAKING NEWS</div>
-        <div class="news-marquee-box">
-            <div class="news-track" id="api-news-content"></div>
-            <div class="news-track-clone" id="api-news-clone"></div>
+<!-- ======= SPLASH ======= -->
+<div id="splash-screen">
+    <div class="splash-inner">
+        <div class="splash-top">
+            <div class="splash-logo-box">
+                <img src="Logo.png" alt="Logo">
+            </div>
+            <div class="splash-title">Weekendowa<br>Liga F1</div>
+            <div class="splash-subtitle">Sezon 2025</div>
         </div>
+        <div id="splash-timer-section" class="splash-countdown">
+            <div class="splash-timer-unit"><span class="splash-timer-val" id="splash-timer-d">00</span><span class="splash-timer-label">DNI</span></div>
+            <div class="splash-timer-sep">:</div>
+            <div class="splash-timer-unit"><span class="splash-timer-val" id="splash-timer-h">00</span><span class="splash-timer-label">GODZ</span></div>
+            <div class="splash-timer-sep">:</div>
+            <div class="splash-timer-unit"><span class="splash-timer-val" id="splash-timer-m">00</span><span class="splash-timer-label">MIN</span></div>
+            <div class="splash-timer-sep">:</div>
+            <div class="splash-timer-unit"><span class="splash-timer-val" id="splash-timer-s">00</span><span class="splash-timer-label">SEK</span></div>
+        </div>
+        <div id="splash-soon-section" style="display:none;"><div class="splash-soon-box">SOON</div></div>
+        <div id="splash-custom-content" class="splash-content-area"></div>
+        <div class="splash-cta">— KLIKNIJ ABY WEJŚĆ —</div>
     </div>
+</div>
 
-    <header class="f1-header">
-        <div class="f1-brand">
-            <div class="f1-logo"><img src="Logo.png" alt="Logo"></div>
-            <div class="f1-title">Weekendowa<br>Liga F1</div>
-        </div>
-        <div class="f1-auth-zone">
-            <button class="btn-action hidden" id="btn-open-login" onclick="ui.toggleAuth(true)">LOGOWANIE</button>
-            <button class="btn-action" id="btn-open-admin" onclick="ui.toggleAdmin(true)">PANEL ADMINA</button>
-        </div>
-    </header>
+<!-- ======= MAIN APP ======= -->
+<div id="main-app" style="display:none;">
 
-    <nav class="f1-nav">
-        <div class="nav-item active" onclick="ui.switchPage('standings', this)">Klasyfikacje</div>
-        <div class="nav-item" onclick="ui.switchPage('last-race', this)">Ostatni Wyścig</div>
-        <div class="nav-item" onclick="ui.switchPage('archive', this)">Archiwum</div>
-        <div class="nav-item" onclick="ui.switchPage('gallery', this)">Galeria</div>
-    </nav>
+<div id="news-bar-container">
+    <div class="news-label">BREAKING NEWS</div>
+    <div class="news-marquee-box">
+        <div class="news-track" id="api-news-content"></div>
+        <div class="news-track-clone" id="api-news-clone"></div>
+    </div>
+</div>
 
-    <section class="f1-hero">
-        <h1 id="display-hero-title">NEXT GP EVENT</h1>
+<header class="f1-header">
+    <div class="f1-brand">
+        <div class="f1-logo" onclick="showSplash()" title="Strona startowa"><img src="Logo.png" alt="Logo"></div>
+        <div class="f1-title">Weekendowa<br>Liga F1</div>
+    </div>
+    <div class="f1-auth-zone">
+        <button class="btn-action hidden" id="btn-open-login" onclick="ui.toggleAuth(true)" title="Zaloguj się" style="font-size:28px;padding:20px 35px;line-height:1;">🔒</button>
+        <button class="btn-action hidden" id="btn-open-admin" onclick="ui.toggleAdmin(true)">PANEL ADMINA</button>
+    </div>
+</header>
+
+<nav class="f1-nav">
+    <div class="nav-item active" onclick="ui.switchPage('standings',this)">Klasyfikacje</div>
+    <div class="nav-item" onclick="ui.switchPage('last-race',this)">Ostatni Wyścig</div>
+    <div class="nav-item" onclick="ui.switchPage('archive',this)">Archiwum</div>
+    <div class="nav-item" onclick="ui.switchPage('gallery',this)">Galeria</div>
+</nav>
+
+<section class="f1-hero">
+    <h1 id="display-hero-title">NEXT GP EVENT</h1>
+    <div id="hero-timer-section">
         <div class="f1-timer-grid">
-            <div class="timer-unit">
-                <span class="timer-val" id="timer-d">00</span>
-                <span class="timer-label">DNI</span>
-            </div>
+            <div class="timer-unit"><span class="timer-val" id="timer-d">00</span><span class="timer-label">DNI</span></div>
             <div class="timer-sep">:</div>
-            <div class="timer-unit">
-                <span class="timer-val" id="timer-h">00</span>
-                <span class="timer-label">GODZIN</span>
-            </div>
+            <div class="timer-unit"><span class="timer-val" id="timer-h">00</span><span class="timer-label">GODZIN</span></div>
             <div class="timer-sep">:</div>
-            <div class="timer-unit">
-                <span class="timer-val" id="timer-m">00</span>
-                <span class="timer-label">MINUT</span>
-            </div>
+            <div class="timer-unit"><span class="timer-val" id="timer-m">00</span><span class="timer-label">MINUT</span></div>
             <div class="timer-sep">:</div>
-            <div class="timer-unit">
-                <span class="timer-val" id="timer-s">00</span>
-                <span class="timer-label">SEKUND</span>
-            </div>
+            <div class="timer-unit"><span class="timer-val" id="timer-s">00</span><span class="timer-label">SEKUND</span></div>
         </div>
-    </section>
+    </div>
+    <div id="hero-soon-section" style="display:none;"><div class="soon-box">SOON</div></div>
+</section>
 
-    <main class="main-content">
-        
-        <div id="view-standings" class="page-view active">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
-                <div class="f1-card">
-                    <div class="f1-card-title">Klasyfikacja Kierowców</div>
-                    <table class="f1-table">
-                        <thead>
-                            <tr>
-                                <th class="col-pos">P</th>
-                                <th class="col-driver">Kierowca</th>
-                                <th>Zespół</th>
-                                <th style="text-align:center; width:80px;">W</th>
-                                <th class="col-pts">PKT</th>
-                            </tr>
-                        </thead>
-                        <tbody id="api-drivers-list"></tbody>
-                    </table>
-                </div>
-                <div class="f1-card">
-                    <div class="f1-card-title">Klasyfikacja Konstruktorów</div>
-                    <table class="f1-table">
-                        <thead>
-                            <tr>
-                                <th class="col-pos">P</th>
-                                <th>Zespół</th>
-                                <th class="col-pts">PKT</th>
-                            </tr>
-                        </thead>
-                        <tbody id="api-teams-list"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-last-race" class="page-view">
+<main class="main-content">
+    <div id="view-standings" class="page-view active">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:50px;">
             <div class="f1-card">
-                <div class="f1-card-title" id="display-last-race-name">WYNIKI: OSTATNI WYŚCIG</div>
-                <div style="overflow-x: auto;" id="api-last-race-results"></div>
-            </div>
-        </div>
-
-        <div id="view-archive" class="page-view">
-            <div id="api-archive-list"></div>
-        </div>
-
-        <div id="view-gallery" class="page-view">
-            <div id="gallery-albums" class="gallery-grid"></div>
-            <div id="gallery-viewer" class="hidden">
-                <div class="album-viewer-header">
-                    <button class="btn-action" onclick="ui.closeAlbum()">← POWRÓT</button>
-                    <div class="album-viewer-title" id="gallery-viewer-title"></div>
-                </div>
-                <div id="album-content-grid" class="media-entries-grid"></div>
-            </div>
-        </div>
-
-    </main>
-
-    <div id="admin-overlay" onclick="ui.toggleAdmin(false)"></div>
-    <div id="admin-sidebar">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px;">
-            <h2 style="font-family: var(--font-display); font-size: 45px; margin: 0;">CENTRALNY PANEL</h2>
-            <button class="btn-action" onclick="ui.toggleAdmin(false)">ZAMKNIJ X</button>
-        </div>
-
-        <div class="admin-section">
-            <h3>BREAKING NEWS</h3>
-            <div class="form-group">
-                <label class="check-group">
-                    <input type="checkbox" id="adm-show-news"> POKAŻ PASEK BREAKING NEWS
-                </label>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Treść Newsa (Obsługuje HTML!):</label>
-                <textarea id="adm-news-content" class="f1-textarea" placeholder="np. <b>GP Monako</b> już wkrótce!"></textarea>
-            </div>
-            <button class="btn-action" onclick="dbCore.saveNewsConfig()">ZAPISZ NEWS</button>
-        </div>
-
-        <div class="admin-section">
-            <h3>ODLICZANIE DO GP</h3>
-            <div class="form-group">
-                <label class="form-label">Tytuł Sekcji Licznika:</label>
-                <input type="text" id="adm-hero-title" class="f1-input" placeholder="np. NASTĘPNY WYŚCIG: GP BELGII">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Data Licznika (YYYY-MM-DD HH:MM):</label>
-                <input type="text" id="adm-hero-date" class="f1-input" placeholder="2024-05-24 20:00">
-            </div>
-            <button class="btn-action" onclick="dbCore.saveCountdownConfig()">ZAPISZ ODLICZANIE</button>
-        </div>
-
-        <div class="admin-section">
-            <h3>DODAJ WYNIKI WYŚCIGU</h3>
-            <div class="form-group">
-                <label class="form-label">Pełna Nazwa Wyścigu:</label>
-                <input type="text" id="adm-race-title" class="f1-input" placeholder="np. GP Silverstone - Runda 5">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Dane (2 formaty obsługiwane):<br>
-                    <span style="font-weight:400;font-size:12px;">① Wklej tabelę z gry F1 25 (skopiuj Ctrl+A, Ctrl+C ze strony wyników — format z tabulatorami wykrywany automatycznie)<br>
-                    ② Ręczny: Nick | Zespół | Start | Pit | Najlepsze | Czas | Pkt</span>
-                </label>
-                <textarea id="adm-race-raw" class="f1-textarea" rows="10" placeholder="Wklej tutaj tabelę z gry lub wprowadź ręcznie..."></textarea>
-            </div>
-            <div style="background: #eee; padding: 20px; margin-bottom: 25px;">
-                <p style="font-weight: 800; margin-top: 0;">GDZIE OPUBLIKOWAĆ?</p>
-                <label class="check-group"><input type="checkbox" id="pub-last" checked> OSTATNI WYŚCIG</label>
-                <label class="check-group"><input type="checkbox" id="pub-archive" checked> ARCHIWUM WYŚCIGÓW</label>
-            </div>
-            <button class="btn-action" onclick="dbCore.publishRace()">PUBLIKUJ WYNIKI</button>
-        </div>
-
-        <div class="admin-section">
-            <h3>ZARZĄDZAJ ARCHIWUM</h3>
-            <div id="adm-archive-manager"></div>
-            <hr>
-            <button class="btn-action btn-danger" onclick="dbCore.deleteNode('lastRace')">WYCZYŚĆ OSTATNI WYŚCIG</button>
-        </div>
-
-        <div class="admin-section">
-            <h3>KLASYFIKACJE GENERALNE</h3>
-            <div class="form-group">
-                <label class="form-label">Kierowcy (Nick | Team | Wygrane | Pkt):</label>
-                <textarea id="adm-drivers-raw" class="f1-textarea" rows="8"></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Zespoły (Team | Pkt):</label>
-                <textarea id="adm-teams-raw" class="f1-textarea" rows="6"></textarea>
-            </div>
-            <button class="btn-action" onclick="dbCore.saveStandings()">ZAPISZ KLASYFIKACJE</button>
-        </div>
-
-        <div class="admin-section">
-            <h3>ZARZĄDZANIE GALERIĄ</h3>
-            <p style="color:#888;font-size:14px;margin-top:0;">Utwórz album, a następnie dodaj do niego wpisy z tytułem i filmem/linkiem.</p>
-
-            <!-- Tworzenie albumu -->
-            <div style="background:#fff;padding:30px;border:1px solid #ddd;margin-bottom:30px;">
-                <h4 style="margin-top:0;font-family:var(--font-display);font-size:18px;">1. UTWÓRZ ALBUM</h4>
-                <div class="form-group">
-                    <label class="form-label">Nazwa Albumu:</label>
-                    <input type="text" id="adm-gal-name" class="f1-input" placeholder="np. GP Monako 2025">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Link do okładki albumu (URL zdjęcia):</label>
-                    <input type="text" id="adm-gal-cover" class="f1-input" placeholder="https://...">
-                </div>
-                <button class="btn-action" onclick="dbCore.createAlbum()">UTWÓRZ ALBUM</button>
-            </div>
-
-            <!-- Dodawanie wpisów do istniejącego albumu -->
-            <div style="background:#fff;padding:30px;border:1px solid #ddd;margin-bottom:30px;">
-                <h4 style="margin-top:0;font-family:var(--font-display);font-size:18px;">2. DODAJ WPIS DO ALBUMU</h4>
-                <div class="form-group">
-                    <label class="form-label">Wybierz Album:</label>
-                    <select id="adm-entry-album" class="f1-input" style="cursor:pointer;">
-                        <option value="">— Wybierz album —</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tytuł wpisu:</label>
-                    <input type="text" id="adm-entry-title" class="f1-input" placeholder="np. Kwalifikacje — highlight">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Typ mediów:</label>
-                    <div style="display:flex;gap:20px;margin-top:10px;">
-                        <label class="check-group"><input type="radio" name="media-type" value="youtube" checked onchange="ui.switchMediaType(this.value)"> YouTube URL</label>
-                        <label class="check-group"><input type="radio" name="media-type" value="url" onchange="ui.switchMediaType(this.value)"> Bezpośredni URL</label>
-                        <label class="check-group"><input type="radio" name="media-type" value="upload" onchange="ui.switchMediaType(this.value)"> Prześlij plik</label>
-                    </div>
-                </div>
-                <div id="media-input-youtube" class="form-group">
-                    <label class="form-label">Link YouTube (np. https://youtu.be/ABC lub https://youtube.com/watch?v=ABC):</label>
-                    <input type="text" id="adm-entry-youtube" class="f1-input" placeholder="https://youtu.be/...">
-                </div>
-                <div id="media-input-url" class="form-group hidden">
-                    <label class="form-label">Bezpośredni URL do wideo/zdjęcia:</label>
-                    <input type="text" id="adm-entry-url" class="f1-input" placeholder="https://...">
-                </div>
-                <div id="media-input-upload" class="form-group hidden">
-                    <label class="form-label">Prześlij plik (wideo, zdjęcie, dowolny):</label>
-                    <input type="file" id="adm-entry-file" class="f1-input" accept="*/*" style="padding:15px;">
-                    <p style="color:#e10600;font-size:13px;margin:8px 0 0;">⚠ Duże pliki (base64) — zalecane do ~50MB. Dla dłuższych klipów użyj YouTube.</p>
-                </div>
-                <button class="btn-action" onclick="dbCore.addEntry()">DODAJ WPIS</button>
-                <span id="adm-entry-status" style="margin-left:20px;font-size:14px;color:#666;"></span>
-            </div>
-
-            <!-- Zarządzanie albumami -->
-            <h4 style="font-family:var(--font-display);font-size:18px;">USUŃ ALBUMY:</h4>
-            <div id="adm-gallery-manager"></div>
-        </div>
-
-        <div style="text-align: center; margin-top: 100px;">
-            <button class="btn-action btn-danger" onclick="authCore.logout()" style="width: 100%;">WYLOGUJ Z SYSTEMU</button>
-        </div>
-    </div>
-
-    <div id="auth-modal" class="auth-overlay">
-        <div class="auth-card">
-            <h2>AUTORYZACJA</h2>
-            <div class="form-group">
-                <input type="email" id="field-email" class="f1-input" placeholder="Adres E-mail">
-            </div>
-            <div class="form-group">
-                <input type="password" id="field-pass" class="f1-input" placeholder="Hasło">
-            </div>
-            <button class="btn-action" style="width: 100%;" onclick="authCore.login()">ZALOGUJ SIĘ</button>
-            <button class="btn-action btn-danger" style="width: 100%; margin: 20px 0 0 0;" onclick="ui.toggleAuth(false)">ANULUJ</button>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAGqYLPBR8UnOY3GdirJ-V4fkI-cygU8HA",
-            authDomain: "f1-liga-43d29.firebaseapp.com",
-            projectId: "f1-liga-43d29",
-            databaseURL: "https://f1-liga-43d29-default-rtdb.europe-west1.firebasedatabase.app"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-
-        // --- CORE UI ---
-        window.ui = {
-            switchPage(pageId, navEl) {
-                document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-                
-                document.getElementById('view-' + pageId).classList.add('active');
-                navEl.classList.add('active');
-
-                if(pageId === 'gallery') this.closeAlbum();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            },
-
-            toggleAdmin(show) {
-                const sidebar = document.getElementById('admin-sidebar');
-                const overlay = document.getElementById('admin-overlay');
-                sidebar.classList.toggle('open', show);
-                overlay.classList.toggle('open', show);
-            },
-
-            toggleAuth(show) {
-                const modal = document.getElementById('auth-modal');
-                modal.style.display = show ? 'flex' : 'none';
-            },
-
-            toggleArc(id) {
-                const body = document.getElementById('arc-body-' + id);
-                const btn  = document.getElementById('arc-btn-' + id);
-                const isOpen = body.classList.toggle('open');
-                if(btn) btn.classList.toggle('open', isOpen);
-            },
-
-            openAlbum(id) {
-                document.getElementById('gallery-albums').classList.add('hidden');
-                document.getElementById('gallery-viewer').classList.remove('hidden');
-                window._currentAlbumId = id;
-                
-                const album = window.galleryData[id];
-                document.getElementById('gallery-viewer-title').textContent = album.name;
-                const grid = document.getElementById('album-content-grid');
-                
-                const entries = album.entries ? Object.entries(album.entries) : [];
-                if (entries.length === 0) {
-                    grid.innerHTML = '<p style="font-family:Teko;font-size:30px;color:#999;">Brak wpisów w tym albumie.</p>';
-                    return;
-                }
-                const isAdmin = !document.getElementById('btn-open-admin').classList.contains('hidden');
-                grid.innerHTML = entries.map(([entryId, entry]) => {
-                    let mediaHtml = '';
-                    const src = entry.src || '';
-                    if (entry.type === 'youtube') {
-                        const ytId = extractYtId(src);
-                        mediaHtml = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-                    } else if (entry.type === 'upload' || src.startsWith('data:')) {
-                        mediaHtml = `<video controls preload="metadata"><source src="${src}">Twoja przeglądarka nie obsługuje wideo.</video>`;
-                    } else if (/\.(mp4|webm|mov|avi)$/i.test(src)) {
-                        mediaHtml = `<video controls preload="metadata"><source src="${src}">Twoja przeglądarka nie obsługuje wideo.</video>`;
-                    } else {
-                        mediaHtml = `<img src="${src}" alt="${entry.title || ''}" style="width:100%;height:100%;object-fit:cover;">`;
-                    }
-                    const deleteBtn = isAdmin ? `<button class="btn-action btn-danger" style="position:absolute;top:10px;right:10px;z-index:10;padding:10px 20px;font-size:14px;" onclick="dbCore.deleteNode('gallery/${id}/entries/${entryId}');ui.openAlbum('${id}')">✕ USUŃ</button>` : '';
-                    return `
-                        <div class="media-entry">
-                            ${entry.title ? `<div class="media-entry-title">${entry.title}</div>` : ''}
-                            <div class="media-entry-body" style="position:relative;">${mediaHtml}${deleteBtn}</div>
-                        </div>`;
-                }).join('');
-            },
-
-            closeAlbum() {
-                document.getElementById('gallery-albums').classList.remove('hidden');
-                document.getElementById('gallery-viewer').classList.add('hidden');
-            },
-
-            switchMediaType(type) {
-                document.getElementById('media-input-youtube').classList.toggle('hidden', type !== 'youtube');
-                document.getElementById('media-input-url').classList.toggle('hidden', type !== 'url');
-                document.getElementById('media-input-upload').classList.toggle('hidden', type !== 'upload');
-            },
-
-            async editCell(el, dbPath, type, idx, field) {
-                const current = el.textContent.trim();
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = current;
-                input.style.cssText = 'width:80px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
-                el.replaceWith(input);
-                input.focus(); input.select();
-                const save = async () => {
-                    const newVal = input.value.trim();
-                    const span = document.createElement('span');
-                    span.className = 'editable-cell';
-                    span.textContent = newVal;
-                    span.onclick = () => ui.editCell(span, dbPath, type, idx, field);
-                    input.replaceWith(span);
-                    // Save to Firebase
-                    const s = await new Promise(res => onValue(ref(db, dbPath), res, { onlyOnce: true }));
-                    const cur = s.val();
-                    cur[type][idx][field] = newVal;
-                    await set(ref(db, dbPath), cur);
-                };
-                input.addEventListener('blur', save);
-                input.addEventListener('keydown', e => { if(e.key === 'Enter') input.blur(); if(e.key === 'Escape') { input.value = current; input.blur(); }});
-            }
-        };
-
-        // --- AUTH ---
-        window.authCore = {
-            login() {
-                const email = document.getElementById('field-email').value;
-                const pass = document.getElementById('field-pass').value;
-                signInWithEmailAndPassword(auth, email, pass)
-                    .then(() => ui.toggleAuth(false))
-                    .catch(err => alert("Błąd logowania: " + err.message));
-            },
-            logout() {
-                signOut(auth).then(() => location.reload());
-            }
-        };
-
-        onAuthStateChanged(auth, user => {
-            const btnLogin = document.getElementById('btn-open-login');
-            const btnAdmin = document.getElementById('btn-open-admin');
-            if(user) {
-                btnLogin.classList.add('hidden');
-                btnAdmin.classList.remove('hidden');
-            } else {
-                btnLogin.classList.remove('hidden');
-                btnAdmin.classList.add('hidden');
-            }
-        });
-
-        // --- DATABASE OPERATIONS ---
-        window.dbCore = {
-            async saveNewsConfig() {
-                const snap = await new Promise(res => onValue(ref(db, 'config'), res, { onlyOnce: true }));
-                const current = snap.val() || {};
-                await set(ref(db, 'config'), {
-                    ...current,
-                    showNews: document.getElementById('adm-show-news').checked,
-                    newsContent: document.getElementById('adm-news-content').value
-                });
-                alert("News zapisany!");
-            },
-
-            async saveCountdownConfig() {
-                const snap = await new Promise(res => onValue(ref(db, 'config'), res, { onlyOnce: true }));
-                const current = snap.val() || {};
-                await set(ref(db, 'config'), {
-                    ...current,
-                    heroTitle: document.getElementById('adm-hero-title').value,
-                    heroDate: document.getElementById('adm-hero-date').value
-                });
-                alert("Odliczanie zapisane!");
-            },
-
-            async publishRace() {
-                const title = document.getElementById('adm-race-title').value;
-                const raw = document.getElementById('adm-race-raw').value;
-                const lines = raw.split('\n').filter(l => l.trim());
-                const isTabFormat = lines.length > 0 && lines[0].includes('\t') && !lines[0].includes('|');
-
-                let results;
-                if (isTabFormat) {
-                    const dataLines = lines.filter(l => /^\d/.test(l.trim()));
-                    results = dataLines.map(line => {
-                        const p = line.split('\t').map(s => s.trim());
-                        const best = (p[5] || '').replace(',', '.');
-                        return { pos: p[0], nick: p[1], team: p[2], start: p[3], pit: p[4], best, time: p[6] || '', pts: p[7] || '0' };
-                    });
-                } else {
-                    results = lines.map((line, index) => {
-                        const p = line.split('|').map(s => s.trim());
-                        return { pos: index + 1, nick: p[0], team: p[1], start: p[2], pit: p[3], best: p[4], time: p[5], pts: p[6] };
-                    });
-                }
-
-                const raceObj = { name: title, results, timestamp: Date.now() };
-
-                if(document.getElementById('pub-last').checked) await set(ref(db, 'lastRace'), raceObj);
-                if(document.getElementById('pub-archive').checked) await push(ref(db, 'archive'), raceObj);
-
-                // AUTO-UPDATE STANDINGS
-                const standSnap = await new Promise(res => onValue(ref(db, 'standings'), res, { onlyOnce: true }));
-                const currentStandings = standSnap.val() || { drivers: [], teams: [] };
-
-                const driverMap = {};
-                const teamMap = {};
-                (currentStandings.drivers || []).forEach(d => { driverMap[d.nick.toLowerCase()] = { ...d }; });
-                (currentStandings.teams || []).forEach(t => { teamMap[t.team.toLowerCase()] = { ...t }; });
-
-                results.forEach(r => {
-                    const pts = parseInt(r.pts) || 0;
-                    const nickKey = (r.nick || '').toLowerCase();
-                    const teamKey = (r.team || '').toLowerCase();
-                    const isWin = parseInt(r.pos) === 1;
-
-                    if (driverMap[nickKey]) {
-                        driverMap[nickKey].pts = (parseInt(driverMap[nickKey].pts) || 0) + pts;
-                        if (isWin) driverMap[nickKey].wins = (parseInt(driverMap[nickKey].wins) || 0) + 1;
-                    } else {
-                        driverMap[nickKey] = { nick: r.nick, team: r.team, pts, wins: isWin ? 1 : 0 };
-                    }
-                    if (teamKey) {
-                        if (teamMap[teamKey]) {
-                            teamMap[teamKey].pts = (parseInt(teamMap[teamKey].pts) || 0) + pts;
-                        } else {
-                            teamMap[teamKey] = { team: r.team, pts };
-                        }
-                    }
-                });
-
-                const drivers = Object.values(driverMap).sort((a, b) => (parseInt(b.pts) || 0) - (parseInt(a.pts) || 0));
-                const teams = Object.values(teamMap).sort((a, b) => (parseInt(b.pts) || 0) - (parseInt(a.pts) || 0));
-                await set(ref(db, 'standings'), { drivers, teams });
-
-                alert("Wyniki opublikowane i klasyfikacje zaktualizowane!");
-            },
-
-            async saveStandings() {
-                const dRaw = document.getElementById('adm-drivers-raw').value.split('\n').filter(l => l.trim());
-                const tRaw = document.getElementById('adm-teams-raw').value.split('\n').filter(l => l.trim());
-                const drivers = dRaw.map(l => { const p = l.split('|').map(s => s.trim()); return { nick: p[0], team: p[1], wins: p[2], pts: p[3] }; });
-                const teams = tRaw.map(l => { const p = l.split('|').map(s => s.trim()); return { team: p[0], pts: p[1] }; });
-                await set(ref(db, 'standings'), { drivers, teams });
-                alert("Klasyfikacje zaktualizowane!");
-            },
-
-            async createAlbum() {
-                const name = document.getElementById('adm-gal-name').value.trim();
-                const cover = document.getElementById('adm-gal-cover').value.trim();
-                if (!name) { alert("Podaj nazwę albumu."); return; }
-                await push(ref(db, 'gallery'), { name, cover, entries: {} });
-                document.getElementById('adm-gal-name').value = '';
-                document.getElementById('adm-gal-cover').value = '';
-                alert("Album utworzony!");
-            },
-
-            async addEntry() {
-                const albumId = document.getElementById('adm-entry-album').value;
-                const title = document.getElementById('adm-entry-title').value.trim();
-                const mediaType = document.querySelector('input[name="media-type"]:checked').value;
-                const status = document.getElementById('adm-entry-status');
-
-                if (!albumId) { alert("Wybierz album."); return; }
-
-                let entry = { title, type: mediaType };
-
-                if (mediaType === 'youtube') {
-                    const url = document.getElementById('adm-entry-youtube').value.trim();
-                    if (!url) { alert("Podaj link YouTube."); return; }
-                    entry.src = url;
-                } else if (mediaType === 'url') {
-                    const url = document.getElementById('adm-entry-url').value.trim();
-                    if (!url) { alert("Podaj URL."); return; }
-                    entry.src = url;
-                } else if (mediaType === 'upload') {
-                    const file = document.getElementById('adm-entry-file').files[0];
-                    if (!file) { alert("Wybierz plik."); return; }
-                    status.textContent = "Kodowanie pliku... proszę czekać.";
-                    entry.src = await new Promise((res, rej) => {
-                        const r = new FileReader();
-                        r.onload = e => res(e.target.result);
-                        r.onerror = () => rej(new Error("Błąd odczytu pliku"));
-                        r.readAsDataURL(file);
-                    });
-                    status.textContent = "Zapisywanie...";
-                }
-
-                await push(ref(db, `gallery/${albumId}/entries`), entry);
-                status.textContent = "✓ Wpis dodany!";
-                document.getElementById('adm-entry-title').value = '';
-                document.getElementById('adm-entry-youtube').value = '';
-                document.getElementById('adm-entry-url').value = '';
-                document.getElementById('adm-entry-file').value = '';
-                setTimeout(() => status.textContent = '', 3000);
-            },
-
-            async deleteNode(path) {
-                if(confirm("Czy na pewno chcesz to usunąć?")) {
-                    await remove(ref(db, path));
-                    alert("Usunięto pomyślnie.");
-                }
-            }
-        };
-
-        // --- HELPERS ---
-        const extractYtId = (url) => {
-            if (!url) return '';
-            // youtu.be/ID
-            let m = url.match(/youtu\.be\/([^?&]+)/);
-            if (m) return m[1];
-            // youtube.com/watch?v=ID
-            m = url.match(/[?&]v=([^?&]+)/);
-            if (m) return m[1];
-            // youtube.com/embed/ID
-            m = url.match(/embed\/([^?&]+)/);
-            if (m) return m[1];
-            return url; // fallback — already an ID
-        };
-        const getTeamClass = (teamName) => {
-            const name = (teamName || "").toLowerCase();
-            if(name.includes("ferrari")) return "team-ferrari";
-            if(name.includes("mercedes")) return "team-mercedes";
-            if(name.includes("red bull")) return "team-redbull";
-            if(name.includes("mclaren")) return "team-mclaren";
-            if(name.includes("aston")) return "team-aston";
-            if(name.includes("alpine")) return "team-alpine";
-            if(name.includes("williams")) return "team-williams";
-            if(name.includes("sauber")) return "team-sauber";
-            if(name.includes("haas")) return "team-haas";
-           if(name.includes("racing bulls")) return "team-rb";
-            return "";
-        };
-
-        const renderRaceTable = (results) => {
-            const posClass = (i) => i === 0 ? 'pos-gold' : i === 1 ? 'pos-silver' : i === 2 ? 'pos-bronze' : '';
-            // Normalize start/pit — strip "Start:" / "Pit:" prefixes if present
-            const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
-            return `
+                <div class="f1-card-title">Klasyfikacja Kierowców</div>
                 <table class="f1-table">
-                    <thead>
-                        <tr>
-                            <th class="col-pos">P</th>
-                            <th class="col-driver">Kierowca</th>
-                            <th>Zespół</th>
-                            <th style="text-align:center;width:70px;">Grid</th>
-                            <th style="text-align:center;width:60px;">Pit</th>
-                            <th>Najlepsze</th>
-                            <th>Czas</th>
-                            <th class="col-pts">PKT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${results.map((r, i) => `
-                            <tr class="${getTeamClass(r.team)}">
-                                <td class="col-pos ${posClass(i)}">${r.pos}</td>
-                                <td class="col-driver">${r.nick}</td>
-                                <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${r.team}</td>
-                                <td style="text-align:center;">${clean(r.start)}</td>
-                                <td style="text-align:center;">${clean(r.pit)}</td>
-                                <td style="color:#fffff; font-weight:bold;">${r.best}</td>
-                                <td>${r.time}</td>
-                                <td class="col-pts">${r.pts}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
+                    <thead><tr>
+                        <th class="col-pos">P</th>
+                        <th class="col-driver">Kierowca</th>
+                        <th>Zespół</th>
+                        <th style="text-align:center;width:80px;">W</th>
+                        <th class="col-pts">PKT</th>
+                    </tr></thead>
+                    <tbody id="api-drivers-list"></tbody>
                 </table>
-            `;
+            </div>
+            <div class="f1-card">
+                <div class="f1-card-title">Klasyfikacja Konstruktorów</div>
+                <table class="f1-table">
+                    <thead><tr>
+                        <th class="col-pos">P</th>
+                        <th>Zespół</th>
+                        <th class="col-pts">PKT</th>
+                    </tr></thead>
+                    <tbody id="api-teams-list"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="view-last-race" class="page-view">
+        <div class="f1-card">
+            <div class="f1-card-title" id="display-last-race-name">WYNIKI: OSTATNI WYŚCIG</div>
+            <div style="overflow-x:auto;" id="api-last-race-results"></div>
+        </div>
+    </div>
+    <div id="view-archive" class="page-view"><div id="api-archive-list"></div></div>
+    <div id="view-gallery" class="page-view">
+        <div id="gallery-albums" class="gallery-grid"></div>
+        <div id="gallery-viewer" class="hidden">
+            <div class="album-viewer-header">
+                <button class="btn-action" onclick="ui.closeAlbum()">← POWRÓT</button>
+                <div class="album-viewer-title" id="gallery-viewer-title"></div>
+            </div>
+            <div id="album-content-grid" class="media-entries-grid"></div>
+        </div>
+    </div>
+</main>
+
+<!-- ADMIN -->
+<div id="admin-overlay" onclick="ui.toggleAdmin(false)"></div>
+<div id="admin-sidebar">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:60px;">
+        <h2 style="font-family:var(--font-display);font-size:42px;letter-spacing:3px;margin:0;">CENTRALNY PANEL</h2>
+        <button class="btn-action" onclick="ui.toggleAdmin(false)">ZAMKNIJ ✕</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>STRONA STARTOWA</h3>
+        <p style="font-size:13px;color:#888;margin-top:-18px;">HTML: &lt;b&gt;, &lt;img src="URL"&gt;, &lt;h2 style="..."&gt;, &lt;p&gt;, &lt;span style="color:#e10600"&gt; itd.</p>
+        <div class="form-group">
+            <label class="form-label">Treść (HTML):</label>
+            <textarea id="adm-splash-content" class="f1-textarea" rows="8" placeholder='&lt;h2 style="color:#e10600"&gt;Sezon 2025!&lt;/h2&gt;&#10;&lt;img src="https://...jpg"&gt;&#10;&lt;p&gt;Witamy w lidze!&lt;/p&gt;'></textarea>
+        </div>
+        <button class="btn-action" onclick="dbCore.saveSplashContent()">ZAPISZ</button>
+        <div class="splash-preview" id="splash-preview-box"><em style="opacity:0.4">Podgląd...</em></div>
+    </div>
+
+    <div class="admin-section">
+        <h3>BREAKING NEWS</h3>
+        <div class="form-group"><label class="check-group"><input type="checkbox" id="adm-show-news"> POKAŻ PASEK</label></div>
+        <div class="form-group">
+            <label class="form-label">Treść (HTML):</label>
+            <textarea id="adm-news-content" class="f1-textarea" placeholder="np. GP Monako już wkrótce!"></textarea>
+        </div>
+        <button class="btn-action" onclick="dbCore.saveNewsConfig()">ZAPISZ NEWS</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>ODLICZANIE DO GP</h3>
+        <div class="form-group">
+            <label class="form-label">Tytuł:</label>
+            <input type="text" id="adm-hero-title" class="f1-input" placeholder="np. NASTĘPNY WYŚCIG: GP BELGII">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Tryb:</label>
+            <div style="display:flex;gap:30px;margin-top:10px;">
+                <label class="check-group"><input type="radio" name="hero-mode" value="countdown" id="hero-mode-countdown" checked> ODLICZANIE</label>
+                <label class="check-group"><input type="radio" name="hero-mode" value="soon" id="hero-mode-soon"> SOON</label>
+            </div>
+        </div>
+        <div id="hero-date-group" class="form-group">
+            <label class="form-label">Data (YYYY-MM-DD HH:MM):</label>
+            <input type="text" id="adm-hero-date" class="f1-input" placeholder="2025-05-24 20:00">
+        </div>
+        <button class="btn-action" onclick="dbCore.saveCountdownConfig()">ZAPISZ</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>DODAJ WYNIKI WYŚCIGU</h3>
+        <div class="form-group">
+            <label class="form-label">Nazwa Wyścigu:</label>
+            <input type="text" id="adm-race-title" class="f1-input" placeholder="np. GP Silverstone — Runda 5">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Dane:<br><span style="font-weight:400;font-size:12px;">① F1 25 tabulatory (auto) &nbsp; ② Nick | Zespół | Start | Pit | Najlepsze | Czas | Pkt</span></label>
+            <textarea id="adm-race-raw" class="f1-textarea" rows="10" placeholder="Wklej tutaj..."></textarea>
+        </div>
+        <div style="background:#eee;padding:20px;margin-bottom:25px;">
+            <p style="font-weight:800;margin-top:0;letter-spacing:1px;">GDZIE OPUBLIKOWAĆ?</p>
+            <label class="check-group"><input type="checkbox" id="pub-last" checked> OSTATNI WYŚCIG</label>
+            <label class="check-group"><input type="checkbox" id="pub-archive" checked> ARCHIWUM</label>
+        </div>
+        <button class="btn-action" onclick="dbCore.publishRace()">PUBLIKUJ WYNIKI</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>ZARZĄDZAJ ARCHIWUM</h3>
+        <div id="adm-archive-manager"></div>
+        <hr style="margin:20px 0;">
+        <button class="btn-action btn-danger" onclick="dbCore.deleteNode('lastRace')">WYCZYŚĆ OSTATNI WYŚCIG</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>KLASYFIKACJE GENERALNE</h3>
+        <div class="form-group">
+            <label class="form-label">Kierowcy ligi (Nick | Team | Wygrane | Pkt):</label>
+            <textarea id="adm-drivers-raw" class="f1-textarea" rows="8"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Boty (Nick | Team | Wygrane | Pkt):<br><span style="font-weight:400;font-size:12px;">Pojawią się pod czerwoną kreską z napisem BOTY</span></label>
+            <textarea id="adm-bots-raw" class="f1-textarea" rows="6" placeholder="Max Verstappen | Red Bull Racing | 0 | 0&#10;Lewis Hamilton | Ferrari | 0 | 0"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Zespoły (Team | Pkt):</label>
+            <textarea id="adm-teams-raw" class="f1-textarea" rows="6"></textarea>
+        </div>
+        <button class="btn-action" onclick="dbCore.saveStandings()">ZAPISZ KLASYFIKACJE</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>ZARZĄDZANIE GALERIĄ</h3>
+        <div style="background:#fff;padding:30px;border:1px solid #ddd;margin-bottom:30px;">
+            <h4 style="margin-top:0;font-family:var(--font-display);font-size:18px;letter-spacing:2px;">1. UTWÓRZ ALBUM</h4>
+            <div class="form-group"><label class="form-label">Nazwa:</label><input type="text" id="adm-gal-name" class="f1-input" placeholder="np. GP Monako 2025"></div>
+            <div class="form-group"><label class="form-label">URL okładki:</label><input type="text" id="adm-gal-cover" class="f1-input" placeholder="https://..."></div>
+            <button class="btn-action" onclick="dbCore.createAlbum()">UTWÓRZ</button>
+        </div>
+        <div style="background:#fff;padding:30px;border:1px solid #ddd;margin-bottom:30px;">
+            <h4 style="margin-top:0;font-family:var(--font-display);font-size:18px;letter-spacing:2px;">2. DODAJ WPIS</h4>
+            <div class="form-group"><label class="form-label">Album:</label><select id="adm-entry-album" class="f1-input" style="cursor:pointer;"><option value="">— Wybierz —</option></select></div>
+            <div class="form-group"><label class="form-label">Tytuł:</label><input type="text" id="adm-entry-title" class="f1-input" placeholder="np. Kwalifikacje"></div>
+            <div class="form-group">
+                <label class="form-label">Typ:</label>
+                <div style="display:flex;gap:20px;margin-top:10px;">
+                    <label class="check-group"><input type="radio" name="media-type" value="youtube" checked onchange="ui.switchMediaType(this.value)"> YouTube</label>
+                    <label class="check-group"><input type="radio" name="media-type" value="url" onchange="ui.switchMediaType(this.value)"> URL</label>
+                    <label class="check-group"><input type="radio" name="media-type" value="upload" onchange="ui.switchMediaType(this.value)"> Plik</label>
+                </div>
+            </div>
+            <div id="media-input-youtube" class="form-group"><label class="form-label">YouTube link:</label><input type="text" id="adm-entry-youtube" class="f1-input" placeholder="https://youtu.be/..."></div>
+            <div id="media-input-url" class="form-group hidden"><label class="form-label">URL:</label><input type="text" id="adm-entry-url" class="f1-input" placeholder="https://..."></div>
+            <div id="media-input-upload" class="form-group hidden">
+                <label class="form-label">Plik:</label>
+                <input type="file" id="adm-entry-file" class="f1-input" accept="*/*" style="padding:15px;">
+                <p style="color:#e10600;font-size:13px;margin:8px 0 0;">⚠ Do ~50MB. Dłuższe — YouTube.</p>
+            </div>
+            <button class="btn-action" onclick="dbCore.addEntry()">DODAJ</button>
+            <span id="adm-entry-status" style="margin-left:20px;font-size:14px;color:#666;"></span>
+        </div>
+        <h4 style="font-family:var(--font-display);font-size:18px;letter-spacing:2px;">USUŃ ALBUMY:</h4>
+        <div id="adm-gallery-manager"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:100px;">
+        <button class="btn-action btn-danger" onclick="authCore.logout()" style="width:100%;">WYLOGUJ</button>
+    </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div id="auth-modal" class="auth-overlay">
+    <div class="auth-card">
+        <h2>AUTORYZACJA</h2>
+        <div class="form-group"><input type="email" id="field-email" class="f1-input" placeholder="E-mail"></div>
+        <div class="form-group"><input type="password" id="field-pass" class="f1-input" placeholder="Hasło"></div>
+        <button class="btn-action" style="width:100%;" onclick="authCore.login()">ZALOGUJ SIĘ</button>
+        <button class="btn-action btn-danger" style="width:100%;margin:20px 0 0 0;" onclick="ui.toggleAuth(false)">ANULUJ</button>
+    </div>
+</div>
+
+</div><!-- /main-app -->
+
+<script>
+window.hideSplash = function() {
+    const s = document.getElementById('splash-screen');
+    s.classList.add('hiding');
+    setTimeout(() => {
+        s.style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+    }, 700);
+};
+window.showSplash = function() {
+    document.getElementById('main-app').style.display = 'none';
+    const s = document.getElementById('splash-screen');
+    s.style.display = 'flex';
+    s.classList.remove('hiding');
+};
+document.getElementById('splash-screen').addEventListener('click', function() { hideSplash(); });
+</script>
+
+<script type="module">
+import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAGqYLPBR8UnOY3GdirJ-V4fkI-cygU8HA",
+    authDomain: "f1-liga-43d29.firebaseapp.com",
+    projectId: "f1-liga-43d29",
+    databaseURL: "https://f1-liga-43d29-default-rtdb.europe-west1.firebasedatabase.app"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getDatabase(app);
+let isLoggedIn = false;
+
+/* ======= UI ======= */
+window.ui = {
+    switchPage(pageId, navEl) {
+        document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById('view-' + pageId).classList.add('active');
+        navEl.classList.add('active');
+        if (pageId === 'gallery') this.closeAlbum();
+        window.scrollTo({ top:0, behavior:'smooth' });
+    },
+    toggleAdmin(show) {
+        document.getElementById('admin-sidebar').classList.toggle('open', show);
+        document.getElementById('admin-overlay').classList.toggle('open', show);
+    },
+    toggleAuth(show) {
+        document.getElementById('auth-modal').style.display = show ? 'flex' : 'none';
+    },
+    toggleArc(id) {
+        const body = document.getElementById('arc-body-' + id);
+        const btn  = document.getElementById('arc-btn-' + id);
+        const open = body.classList.toggle('open');
+        if (btn) btn.classList.toggle('open', open);
+    },
+    editLastRaceName() {
+        if (!isLoggedIn) return;
+        const el = document.getElementById('display-last-race-name');
+        const current = el.textContent.replace(/^WYNIKI:\s*/i,'').trim();
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.value = current;
+        inp.style.cssText = 'font-family:var(--font-display);font-size:36px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:3px solid var(--f1-red);outline:none;width:65%;letter-spacing:2px;';
+        el.innerHTML = 'WYNIKI: '; el.appendChild(inp);
+        inp.focus(); inp.select();
+        const save = async () => {
+            const name = inp.value.trim() || current;
+            const editSpan = isLoggedIn ? `<span class="race-title-editable" onclick="ui.editLastRaceName()" title="Edytuj">${name}</span>` : name;
+            el.innerHTML = 'WYNIKI: ' + editSpan;
+            const snap = await new Promise(res => onValue(ref(db,'lastRace'), res, {onlyOnce:true}));
+            if (snap.val()) await update(ref(db,'lastRace'), {name});
         };
-
-        // --- DATA LISTENERS ---
-        // 1. Config
-        onValue(ref(db, 'config'), snap => {
-            const c = snap.val();
-            if(!c) return;
-            
-            const newsBar = document.getElementById('news-bar-container');
-            newsBar.style.display = c.showNews ? 'flex' : 'none';
-            
-            // Zamień spację na separator •  między wiadomościami
-            const rawNews = c.newsContent || "";
-            // Jeśli wiadomości są rozdzielone spacją (lub wieloma spacjami), zamień na ładny separator
-            const formattedNews = rawNews
-                .split(/\s{2,}/)  // dwie lub więcej spacji = nowa wiadomość
-                .filter(s => s.trim())
-                .join('  <span style="color:rgba(255,255,255,0.4);margin:0 20px;">•</span>  ');
-            
-            document.getElementById('api-news-content').innerHTML = formattedNews;
-            document.getElementById('api-news-clone').innerHTML = formattedNews;
-            
-            // Synchronizuj animacje — klon startuje dokładnie o połowę cyklu później
-            const track = document.getElementById('api-news-content');
-            const clone = document.getElementById('api-news-clone');
-            track.style.animation = 'none';
-            clone.style.animation = 'none';
-            // Wymuś reflow
-            void track.offsetWidth;
-            track.style.animation = 'f1-marquee 40s linear infinite';
-            clone.style.animation = 'f1-marquee 40s linear infinite';
-            clone.style.animationDelay = '-20s';
-            document.getElementById('display-hero-title').innerText = c.heroTitle || "NEXT GP EVENT";
-
-            // Timer logic
-            if(window.f1Timer) clearInterval(window.f1Timer);
-            const targetDate = new Date(c.heroDate).getTime();
-            
-            window.f1Timer = setInterval(() => {
-                const now = new Date().getTime();
-                const diff = targetDate - now;
-                
-                if(diff <= 0) {
-                    document.querySelectorAll('.timer-val').forEach(el => el.innerText = "00");
-                    return;
-                }
-
-                const d = Math.floor(diff / 86400000);
-                const h = Math.floor((diff % 86400000) / 3600000);
-                const m = Math.floor((diff % 3600000) / 60000);
-                const s = Math.floor((diff % 60000) / 1000);
-
-                document.getElementById('timer-d').innerText = d.toString().padStart(2, '0');
-                document.getElementById('timer-h').innerText = h.toString().padStart(2, '0');
-                document.getElementById('timer-m').innerText = m.toString().padStart(2, '0');
-                document.getElementById('timer-s').innerText = s.toString().padStart(2, '0');
-            }, 1000);
-        });
-
-        // 2. Standings
-        onValue(ref(db, 'standings'), snap => {
-            const data = snap.val();
-            if(!data) return;
-
-            const editPts = async (type, idx, field, newVal) => {
-                const s = await new Promise(res => onValue(ref(db, 'standings'), res, { onlyOnce: true }));
-                const cur = s.val();
-                cur[type][idx][field] = newVal;
-                await set(ref(db, 'standings'), cur);
-            };
-
-            // Drivers
-            const dBody = document.getElementById('api-drivers-list');
-            dBody.innerHTML = data.drivers.map((r, i) => `
-                <tr class="${getTeamClass(r.team)}">
-                    <td class="col-pos ${i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':''}">${i+1}</td>
-                    <td class="col-driver">${r.nick}</td>
-                    <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${r.team}</td>
-                    <td style="text-align:center">
-                        <span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'wins')">${r.wins || 0}</span>
-                    </td>
-                    <td class="col-pts">
-                        <span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'pts')">${r.pts}</span>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Teams
-            const tBody = document.getElementById('api-teams-list');
-            tBody.innerHTML = data.teams.map((r, i) => `
-                <tr class="${getTeamClass(r.team)}">
-                    <td class="col-pos ${i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':''}">${i+1}</td>
-                    <td class="col-driver">${r.team}</td>
-                    <td class="col-pts">
-                        <span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>
-                    </td>
-                </tr>
-            `).join('');
-        });
-
-        // 3. Last Race
-        onValue(ref(db, 'lastRace'), snap => {
-            const data = snap.val();
-            const container = document.getElementById('api-last-race-results');
-            const title = document.getElementById('display-last-race-name');
-            
-            if(!data) {
-                container.innerHTML = "<p style='padding:40px;'>Brak danych o ostatnim wyścigu.</p>";
-                return;
+        inp.addEventListener('blur', save);
+        inp.addEventListener('keydown', e => { if(e.key==='Enter') inp.blur(); if(e.key==='Escape'){inp.value=current;inp.blur();} });
+    },
+    editArchiveName(id, current) {
+        if (!isLoggedIn) return;
+        const el = document.getElementById('arc-name-' + id);
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.value = current;
+        inp.style.cssText = 'font-family:var(--font-data);font-size:44px;font-weight:700;color:var(--f1-red);background:transparent;border:none;border-bottom:3px solid var(--f1-red);outline:none;width:80%;letter-spacing:2px;';
+        el.replaceWith(inp);
+        inp.focus(); inp.select();
+        const save = async () => {
+            const name = inp.value.trim() || current;
+            const span = document.createElement('span');
+            span.id = 'arc-name-' + id;
+            span.className = 'race-title-editable';
+            span.textContent = name;
+            span.onclick = () => ui.editArchiveName(id, name);
+            span.title = 'Edytuj';
+            inp.replaceWith(span);
+            await update(ref(db,'archive/'+id), {name});
+        };
+        inp.addEventListener('blur', save);
+        inp.addEventListener('keydown', e => { if(e.key==='Enter') inp.blur(); if(e.key==='Escape'){inp.value=current;inp.blur();} });
+    },
+    openAlbum(id) {
+        document.getElementById('gallery-albums').classList.add('hidden');
+        document.getElementById('gallery-viewer').classList.remove('hidden');
+        window._currentAlbumId = id;
+        const album = window.galleryData[id];
+        document.getElementById('gallery-viewer-title').textContent = album.name;
+        const grid = document.getElementById('album-content-grid');
+        const entries = album.entries ? Object.entries(album.entries) : [];
+        if (!entries.length) {
+            grid.innerHTML = '<p style="font-family:var(--font-data);font-size:28px;color:#999;letter-spacing:2px;">Brak wpisów.</p>';
+            return;
+        }
+        grid.innerHTML = entries.map(([entryId, entry]) => {
+            const src  = entry.src  || '';
+            const type = entry.type || '';
+            let media = '';
+            if (type === 'youtube') {
+                const ytId = extractYtId(src);
+                media = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share" allowfullscreen loading="lazy"></iframe>`;
+            } else if (type === 'upload' || src.startsWith('data:video') || /\.(mp4|webm|mov|avi|mkv)$/i.test(src)) {
+                media = `<video controls preload="metadata"><source src="${src}">Przeglądarka nie obsługuje wideo.</video>`;
+            } else if (src.startsWith('data:image') || /\.(jpg|jpeg|png|gif|webp|svg|avif)$/i.test(src)) {
+                media = `<img src="${src}" alt="${entry.title||''}" loading="lazy">`;
+            } else if (src.startsWith('data:')) {
+                media = `<video controls preload="metadata"><source src="${src}"></video>`;
+            } else {
+                // Nieznane URL — sprawdź onerror
+                media = `<img src="${src}" alt="${entry.title||''}" loading="lazy" onerror="this.outerHTML='<video controls preload=\\'metadata\\'><source src=\\'${src.replace(/'/g,"\\'")}\\'>Brak podglądu.</video>'">`;
             }
-            title.innerText = "WYNIKI: " + data.name;
-            container.innerHTML = renderRaceTable(data.results);
+            const del = isLoggedIn
+                ? `<button class="btn-action btn-danger" style="position:absolute;top:10px;right:10px;z-index:20;padding:10px 20px;font-size:14px;" onclick="event.stopPropagation();dbCore.deleteNode('gallery/${id}/entries/${entryId}')">✕</button>`
+                : '';
+            return `<div class="media-entry">
+                ${entry.title ? `<div class="media-entry-title">${entry.title}</div>` : ''}
+                <div class="media-entry-body">${media}${del}</div>
+            </div>`;
+        }).join('');
+    },
+    closeAlbum() {
+        document.getElementById('gallery-albums').classList.remove('hidden');
+        document.getElementById('gallery-viewer').classList.add('hidden');
+    },
+    switchMediaType(type) {
+        ['youtube','url','upload'].forEach(t => document.getElementById('media-input-'+t).classList.toggle('hidden', t!==type));
+    },
+    async editCell(el, dbPath, type, idx, field) {
+        if (!isLoggedIn) return;
+        const cur = el.textContent.trim();
+        const inp = document.createElement('input');
+        inp.type='text'; inp.value=cur;
+        inp.style.cssText='width:80px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;letter-spacing:1px;';
+        el.replaceWith(inp); inp.focus(); inp.select();
+        const save = async () => {
+            const val = inp.value.trim();
+            const span = document.createElement('span');
+            span.className='editable-cell'; span.textContent=val;
+            span.onclick=()=>ui.editCell(span,dbPath,type,idx,field);
+            inp.replaceWith(span);
+            const s = await new Promise(res=>onValue(ref(db,dbPath),res,{onlyOnce:true}));
+            const d = s.val();
+            if(d && d[type] && d[type][idx]) { d[type][idx][field]=val; await set(ref(db,dbPath),d); }
+        };
+        inp.addEventListener('blur',save);
+        inp.addEventListener('keydown',e=>{ if(e.key==='Enter')inp.blur(); if(e.key==='Escape'){inp.value=cur;inp.blur();} });
+    }
+};
+
+/* ======= AUTH ======= */
+window.authCore = {
+    login() {
+        signInWithEmailAndPassword(auth, document.getElementById('field-email').value, document.getElementById('field-pass').value)
+            .then(()=>ui.toggleAuth(false)).catch(e=>alert("Błąd: "+e.message));
+    },
+    logout() { signOut(auth).then(()=>location.reload()); }
+};
+onAuthStateChanged(auth, user => {
+    isLoggedIn = !!user;
+    document.getElementById('btn-open-login').classList.toggle('hidden', !!user);
+    document.getElementById('btn-open-admin').classList.toggle('hidden', !user);
+});
+
+/* ======= DATABASE ======= */
+window.dbCore = {
+    async saveSplashContent() {
+        const snap = await new Promise(res=>onValue(ref(db,'config'),res,{onlyOnce:true}));
+        const val = document.getElementById('adm-splash-content').value;
+        await set(ref(db,'config'),{...(snap.val()||{}),splashContent:val});
+        document.getElementById('splash-custom-content').innerHTML = val;
+        document.getElementById('splash-preview-box').innerHTML = val||'<em style="opacity:0.4">Podgląd...</em>';
+        alert("Zapisano!");
+    },
+    async saveNewsConfig() {
+        const snap = await new Promise(res=>onValue(ref(db,'config'),res,{onlyOnce:true}));
+        await set(ref(db,'config'),{...(snap.val()||{}),showNews:document.getElementById('adm-show-news').checked,newsContent:document.getElementById('adm-news-content').value});
+        alert("News zapisany!");
+    },
+    async saveCountdownConfig() {
+        const snap = await new Promise(res=>onValue(ref(db,'config'),res,{onlyOnce:true}));
+        const mode = document.querySelector('input[name="hero-mode"]:checked').value;
+        await set(ref(db,'config'),{...(snap.val()||{}),heroTitle:document.getElementById('adm-hero-title').value,heroDate:document.getElementById('adm-hero-date').value,heroMode:mode});
+        alert("Zapisano!");
+    },
+    async publishRace() {
+        const title = document.getElementById('adm-race-title').value;
+        const raw   = document.getElementById('adm-race-raw').value;
+        const lines = raw.split('\n').filter(l=>l.trim());
+        const isTab = lines.length>0 && lines[0].includes('\t') && !lines[0].includes('|');
+        const results = isTab
+            ? lines.filter(l=>/^\d/.test(l.trim())).map(l=>{ const p=l.split('\t').map(s=>s.trim()); return {pos:p[0],nick:p[1],team:p[2],start:p[3],pit:p[4],best:(p[5]||'').replace(',','.'),time:p[6]||'',pts:p[7]||'0'}; })
+            : lines.map((l,i)=>{ const p=l.split('|').map(s=>s.trim()); return {pos:i+1,nick:p[0],team:p[1],start:p[2],pit:p[3],best:p[4],time:p[5],pts:p[6]}; });
+        const raceObj = {name:title,results,timestamp:Date.now()};
+        if(document.getElementById('pub-last').checked)    await set(ref(db,'lastRace'),raceObj);
+        if(document.getElementById('pub-archive').checked) await push(ref(db,'archive'),raceObj);
+        // Auto-update standings
+        const snap = await new Promise(res=>onValue(ref(db,'standings'),res,{onlyOnce:true}));
+        const cur = snap.val()||{drivers:[],bots:[],teams:[]};
+        const dM={},tM={};
+        (cur.drivers||[]).forEach(d=>{ dM[d.nick.toLowerCase()]={...d}; });
+        (cur.teams||[]).forEach(t=>{ tM[t.team.toLowerCase()]={...t}; });
+        results.forEach(r=>{
+            const pts=parseInt(r.pts)||0, nk=(r.nick||'').toLowerCase(), tk=(r.team||'').toLowerCase(), win=parseInt(r.pos)===1;
+            if(dM[nk]){ dM[nk].pts=(parseInt(dM[nk].pts)||0)+pts; if(win) dM[nk].wins=(parseInt(dM[nk].wins)||0)+1; }
+            else dM[nk]={nick:r.nick,team:r.team,pts,wins:win?1:0};
+            if(tk){ if(tM[tk]) tM[tk].pts=(parseInt(tM[tk].pts)||0)+pts; else tM[tk]={team:r.team,pts}; }
         });
+        await set(ref(db,'standings'),{drivers:Object.values(dM).sort((a,b)=>(parseInt(b.pts)||0)-(parseInt(a.pts)||0)),bots:cur.bots||[],teams:Object.values(tM).sort((a,b)=>(parseInt(b.pts)||0)-(parseInt(a.pts)||0))});
+        alert("Opublikowano!");
+    },
+    async saveStandings() {
+        const parse = raw => raw.split('\n').filter(l=>l.trim()).map(l=>{ const p=l.split('|').map(s=>s.trim()); return {nick:p[0]||'',team:p[1]||'',wins:p[2]||'0',pts:p[3]||'0'}; });
+        const parseT = raw => raw.split('\n').filter(l=>l.trim()).map(l=>{ const p=l.split('|').map(s=>s.trim()); return {team:p[0]||'',pts:p[1]||'0'}; });
+        await set(ref(db,'standings'),{drivers:parse(document.getElementById('adm-drivers-raw').value),bots:parse(document.getElementById('adm-bots-raw').value),teams:parseT(document.getElementById('adm-teams-raw').value)});
+        alert("Zapisano!");
+    },
+    async createAlbum() {
+        const name=document.getElementById('adm-gal-name').value.trim(), cover=document.getElementById('adm-gal-cover').value.trim();
+        if(!name){alert("Podaj nazwę.");return;}
+        await push(ref(db,'gallery'),{name,cover,entries:{}});
+        document.getElementById('adm-gal-name').value=''; document.getElementById('adm-gal-cover').value='';
+        alert("Album utworzony!");
+    },
+    async addEntry() {
+        const albumId=document.getElementById('adm-entry-album').value, title=document.getElementById('adm-entry-title').value.trim();
+        const mType=document.querySelector('input[name="media-type"]:checked').value;
+        const status=document.getElementById('adm-entry-status');
+        if(!albumId){alert("Wybierz album.");return;}
+        let entry={title,type:mType};
+        if(mType==='youtube'){
+            const url=document.getElementById('adm-entry-youtube').value.trim(); if(!url){alert("Podaj link.");return;} entry.src=url;
+        } else if(mType==='url'){
+            const url=document.getElementById('adm-entry-url').value.trim(); if(!url){alert("Podaj URL.");return;} entry.src=url;
+        } else {
+            const file=document.getElementById('adm-entry-file').files[0]; if(!file){alert("Wybierz plik.");return;}
+            status.textContent="Kodowanie...";
+            entry.src=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=()=>rej(); r.readAsDataURL(file); });
+            status.textContent="Zapisywanie...";
+        }
+        await push(ref(db,`gallery/${albumId}/entries`),entry);
+        status.textContent="✓ Dodano!"; ['adm-entry-title','adm-entry-youtube','adm-entry-url'].forEach(id=>document.getElementById(id).value='');
+        document.getElementById('adm-entry-file').value='';
+        setTimeout(()=>status.textContent='',3000);
+    },
+    async deleteNode(path) {
+        if(confirm("Usunąć?")) await remove(ref(db,path));
+    }
+};
 
-        // 4. Archive
-        onValue(ref(db, 'archive'), snap => {
-            const data = snap.val();
-            const arcList = document.getElementById('api-archive-list');
-            const manager = document.getElementById('adm-archive-manager');
-            
-            if(!data) {
-                arcList.innerHTML = "<p>Archiwum jest puste.</p>";
-                manager.innerHTML = "Brak wyścigów.";
-                return;
-            }
+/* ======= HELPERS ======= */
+const extractYtId = url => {
+    if(!url) return '';
+    let m=url.match(/youtu\.be\/([^?&\s]+)/); if(m) return m[1];
+    m=url.match(/[?&]v=([^?&\s]+)/); if(m) return m[1];
+    m=url.match(/embed\/([^?&\s]+)/); if(m) return m[1];
+    return url;
+};
+const getTC = n => {
+    n=(n||'').toLowerCase();
+    if(n.includes('ferrari'))   return 'team-ferrari';
+    if(n.includes('mercedes'))  return 'team-mercedes';
+    if(n.includes('red bull'))  return 'team-redbull';
+    if(n.includes('mclaren'))   return 'team-mclaren';
+    if(n.includes('aston'))     return 'team-aston';
+    if(n.includes('alpine'))    return 'team-alpine';
+    if(n.includes('williams'))  return 'team-williams';
+    if(n.includes('sauber')||n.includes('kick')) return 'team-sauber';
+    if(n.includes('haas'))      return 'team-haas';
+    if(n.includes('racing bulls')||n.match(/\brb\b/)) return 'team-rb';
+    return '';
+};
+const getCC = n => getTC(n).replace('team-','cteam-');
+const getLogoUrl = n => {
+    const m=(n||'').toLowerCase();
+    const L={ferrari:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Scuderia_Ferrari_Logo.svg/200px-Scuderia_Ferrari_Logo.svg.png',mercedes:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Mercedes_AMG_Logo.svg/200px-Mercedes_AMG_Logo.svg.png',redbull:'https://upload.wikimedia.org/wikipedia/en/thumb/5/5c/Red_Bull_Racing_logo.svg/200px-Red_Bull_Racing_logo.svg.png',mclaren:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/McLaren_Racing_logo.svg/200px-McLaren_Racing_logo.svg.png',aston:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Aston_Martin_Lagonda_Global_Holdings_logo.svg/200px-Aston_Martin_Lagonda_Global_Holdings_logo.svg.png',alpine:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/BWT_Alpine_F1_Team_Logo.svg/200px-BWT_Alpine_F1_Team_Logo.svg.png',williams:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Williams_Racing_logo.svg/200px-Williams_Racing_logo.svg.png',sauber:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Stake_F1_Team_Kick_Sauber_logo.svg/200px-Stake_F1_Team_Kick_Sauber_logo.svg.png',haas:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/MoneyGram_Haas_F1_Team_logo.svg/200px-MoneyGram_Haas_F1_Team_logo.svg.png',rb:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Racing_Bulls_Logo_2024.svg/200px-Racing_Bulls_Logo_2024.svg.png'};
+    if(m.includes('ferrari'))   return L.ferrari;
+    if(m.includes('mercedes'))  return L.mercedes;
+    if(m.includes('red bull'))  return L.redbull;
+    if(m.includes('mclaren'))   return L.mclaren;
+    if(m.includes('aston'))     return L.aston;
+    if(m.includes('alpine'))    return L.alpine;
+    if(m.includes('williams'))  return L.williams;
+    if(m.includes('sauber')||m.includes('kick')) return L.sauber;
+    if(m.includes('haas'))      return L.haas;
+    if(m.includes('racing bulls')||m.match(/\brb\b/)) return L.rb;
+    return null;
+};
+const fastestIdx = rs => {
+    const toS = t => {
+        if(!t||String(t).trim()===''||t==='-') return Infinity;
+        const c=String(t).trim();
+        const m=c.match(/^(\d+):(\d+)[.,](\d+)$/);
+        if(m) return +m[1]*60 + +m[2] + +m[3]/Math.pow(10,m[3].length);
+        const s=parseFloat(c.replace(',','.')); return isNaN(s)?Infinity:s;
+    };
+    let best=Infinity,idx=-1;
+    rs.forEach((r,i)=>{ const t=toS(r.best); if(t<best){best=t;idx=i;} });
+    return idx;
+};
+const cl = v=>(v||'').toString().replace(/^(Start:|Pit:)\s*/i,'').trim();
+const posC = i=>i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
 
-            const entries = Object.entries(data).reverse(); // Najnowsze u góry
+const renderRaceTable = rs => {
+    const fi = fastestIdx(rs);
+    return `<table class="f1-table">
+        <thead><tr>
+            <th class="col-pos">P</th><th class="col-driver">Kierowca</th><th>Zespół</th>
+            <th style="text-align:center;width:70px;">Grid</th><th style="text-align:center;width:60px;">Pit</th>
+            <th>Najlepsze</th><th>Czas</th><th class="col-pts">PKT</th>
+        </tr></thead>
+        <tbody>${rs.map((r,i)=>`
+            <tr class="${getTC(r.team)}">
+                <td class="col-pos ${posC(i)}">${r.pos}</td>
+                <td class="col-driver">${r.nick}</td>
+                <td class="${getTC(r.team).replace('team-','txt-')}">${r.team}</td>
+                <td style="text-align:center;">${cl(r.start)}</td>
+                <td style="text-align:center;">${cl(r.pit)}</td>
+                <td class="${i===fi?'fastest-lap':'normal-lap'}">${r.best}</td>
+                <td>${r.time}</td>
+                <td class="col-pts">${r.pts}</td>
+            </tr>`).join('')}
+        </tbody></table>`;
+};
 
-            arcList.innerHTML = entries.map(([id, race]) => `
-                <div class="archive-item">
-                    <button class="archive-header" id="arc-btn-${id}" onclick="ui.toggleArc('${id}')">
-                        ${race.name}
-                        <span>WYNIKI <span class="arc-arrow">▼</span></span>
-                    </button>
-                    <div class="archive-body" id="arc-body-${id}">
-                        <div style="padding:20px;border-top:2px solid #eee;overflow-x:auto;">
-                            ${renderRaceTable(race.results)}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+const startTimer = (dateStr, d, h, m, s) => {
+    const target = new Date(dateStr.replace(' ','T')).getTime();
+    const tick = () => {
+        const diff = target - Date.now();
+        if(diff<=0){ [d,h,m,s].forEach(e=>{if(e)e.innerText='00';}); return; }
+        if(d) d.innerText=String(Math.floor(diff/86400000)).padStart(2,'0');
+        if(h) h.innerText=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+        if(m) m.innerText=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+        if(s) s.innerText=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+    };
+    tick(); return setInterval(tick,1000);
+};
 
-            manager.innerHTML = entries.map(([id, race]) => `
-                <div class="admin-list-item">
-                    <span>${race.name}</span>
-                    <button class="btn-action btn-danger" onclick="dbCore.deleteNode('archive/${id}')">USUŃ</button>
-                </div>
-            `).join('');
+/* ======= LIVE ADMIN PREVIEWS ======= */
+document.getElementById('adm-splash-content').addEventListener('input', function(){
+    document.getElementById('splash-preview-box').innerHTML = this.value||'<em style="opacity:0.4">Podgląd...</em>';
+});
+document.querySelectorAll('input[name="hero-mode"]').forEach(r=>{
+    r.addEventListener('change', function(){
+        document.getElementById('hero-date-group').style.display = this.value==='soon'?'none':'block';
+    });
+});
+
+/* ======= DATA LISTENERS ======= */
+
+// 1. Config
+onValue(ref(db,'config'), snap=>{
+    const c=snap.val(); if(!c) return;
+    if(c.splashContent){
+        document.getElementById('splash-custom-content').innerHTML=c.splashContent;
+        const ta=document.getElementById('adm-splash-content'); if(ta) ta.value=c.splashContent;
+        document.getElementById('splash-preview-box').innerHTML=c.splashContent;
+    }
+    // News
+    const nb=document.getElementById('news-bar-container');
+    nb.style.display=c.showNews?'flex':'none';
+    const formatted=(c.newsContent||'').split(/\s{2,}/).filter(s=>s.trim()).join('  <span style="color:rgba(255,255,255,0.35);margin:0 18px;">•</span>  ');
+    document.getElementById('api-news-content').innerHTML=formatted;
+    document.getElementById('api-news-clone').innerHTML=formatted;
+    const track=document.getElementById('api-news-content'), clone=document.getElementById('api-news-clone');
+    track.style.animation=clone.style.animation='none'; void track.offsetWidth;
+    track.style.animation='f1-marquee 40s linear infinite';
+    clone.style.animation='f1-marquee 40s linear infinite'; clone.style.animationDelay='-20s';
+    // Hero
+    document.getElementById('display-hero-title').innerText=c.heroTitle||'NEXT GP EVENT';
+    const mode=c.heroMode||'countdown';
+    const tS=document.getElementById('hero-timer-section'), sS=document.getElementById('hero-soon-section');
+    const stS=document.getElementById('splash-timer-section'), ssS=document.getElementById('splash-soon-section');
+    if(window._t1)clearInterval(window._t1); if(window._t2)clearInterval(window._t2);
+    if(mode==='soon'){
+        tS.style.display='none'; sS.style.display='block'; stS.style.display='none'; ssS.style.display='block';
+    } else {
+        tS.style.display='block'; sS.style.display='none'; stS.style.display='flex'; ssS.style.display='none';
+        if(c.heroDate){
+            window._t1=startTimer(c.heroDate,document.getElementById('timer-d'),document.getElementById('timer-h'),document.getElementById('timer-m'),document.getElementById('timer-s'));
+            window._t2=startTimer(c.heroDate,document.getElementById('splash-timer-d'),document.getElementById('splash-timer-h'),document.getElementById('splash-timer-m'),document.getElementById('splash-timer-s'));
+        }
+    }
+    // Sync admin
+    const ht=document.getElementById('adm-hero-title'); if(ht) ht.value=c.heroTitle||'';
+    const hd=document.getElementById('adm-hero-date');  if(hd) hd.value=c.heroDate||'';
+    if(c.heroMode==='soon'){ const r=document.getElementById('hero-mode-soon'); if(r){r.checked=true; const g=document.getElementById('hero-date-group'); if(g) g.style.display='none';} }
+    const sn=document.getElementById('adm-show-news'); if(sn) sn.checked=!!c.showNews;
+    const nc=document.getElementById('adm-news-content'); if(nc&&c.newsContent) nc.value=c.newsContent;
+});
+
+// 2. Standings
+onValue(ref(db,'standings'), snap=>{
+    const data=snap.val(); if(!data) return;
+    const drivers=data.drivers||[], bots=data.bots||[], teams=data.teams||[];
+    // Kierowcy
+    let html='';
+    drivers.forEach((r,i)=>{
+        const pc=posC(i);
+        const pts = isLoggedIn?`<span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'pts')">${r.pts}</span>`:r.pts;
+        const wins= isLoggedIn?`<span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'wins')">${r.wins||0}</span>`:r.wins||0;
+        html+=`<tr class="${getTC(r.team)}"><td class="col-pos ${pc}">${i+1}</td><td class="col-driver">${r.nick}</td><td class="${getTC(r.team).replace('team-','txt-')}">${r.team}</td><td style="text-align:center;">${wins}</td><td class="col-pts">${pts}</td></tr>`;
+    });
+    if(bots.length){
+        html+=`<tr class="separator-row"><td colspan="5"><div class="sep-line"></div></td></tr>`;
+        bots.forEach((r,i)=>{
+            html+=`<tr class="${getTC(r.team)} bot-row"><td class="col-pos">${drivers.length+i+1}</td><td class="col-driver">${r.nick}</td><td class="${getTC(r.team).replace('team-','txt-')}">${r.team}</td><td style="text-align:center;">${r.wins||0}</td><td class="col-pts">${r.pts}</td></tr>`;
         });
+    }
+    document.getElementById('api-drivers-list').innerHTML=html;
 
-        // 5. Gallery
-        onValue(ref(db, 'gallery'), snap => {
-            const data = snap.val();
-            const albumsGrid = document.getElementById('gallery-albums');
-            const manager = document.getElementById('adm-gallery-manager');
-            const albumSelect = document.getElementById('adm-entry-album');
-            
-            if(!data) {
-                albumsGrid.innerHTML = "<p>Brak albumów w galerii.</p>";
-                manager.innerHTML = "Brak albumów.";
-                albumSelect.innerHTML = '<option value="">— Wybierz album —</option>';
-                return;
-            }
+    // Konstruktorzy
+    document.getElementById('api-teams-list').innerHTML=teams.map((r,i)=>{
+        const logo=getLogoUrl(r.team);
+        const pts = isLoggedIn?`<span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>`:r.pts;
+        return `<tr class="constructor-row ${getCC(r.team)}">
+            <td class="col-pos" style="color:#fff;font-weight:900;">${i+1}</td>
+            <td><div class="constructor-name-cell">${logo?`<img src="${logo}" alt="${r.team}" onerror="this.style.display='none'">`:''}<span class="team-name-text">${r.team}</span></div></td>
+            <td class="col-pts"><span class="cteam-pts-wrap">${pts}</span></td>
+        </tr>`;
+    }).join('');
 
-            window.galleryData = data;
-            const entries = Object.entries(data).reverse();
+    // Sync admin
+    const dr=document.getElementById('adm-drivers-raw'), br=document.getElementById('adm-bots-raw'), tr=document.getElementById('adm-teams-raw');
+    if(dr&&!dr.value) dr.value=drivers.map(d=>`${d.nick} | ${d.team} | ${d.wins||0} | ${d.pts}`).join('\n');
+    if(br&&!br.value) br.value=bots.map(d=>`${d.nick} | ${d.team} | ${d.wins||0} | ${d.pts}`).join('\n');
+    if(tr&&!tr.value) tr.value=teams.map(t=>`${t.team} | ${t.pts}`).join('\n');
+});
 
-            // Wypełnij dropdown albumów
-            albumSelect.innerHTML = '<option value="">— Wybierz album —</option>' +
-                entries.map(([id, gal]) => `<option value="${id}">${gal.name}</option>`).join('');
+// 3. Last Race
+onValue(ref(db,'lastRace'), snap=>{
+    const data=snap.val();
+    const cont=document.getElementById('api-last-race-results');
+    const titleEl=document.getElementById('display-last-race-name');
+    if(!data){ cont.innerHTML="<p style='padding:40px;font-family:var(--font-data);font-size:26px;letter-spacing:1px;'>Brak danych.</p>"; titleEl.textContent='WYNIKI: OSTATNI WYŚCIG'; return; }
+    const editSpan=isLoggedIn?`<span class="race-title-editable" onclick="ui.editLastRaceName()" title="Edytuj nazwę">${data.name}</span>`:data.name;
+    titleEl.innerHTML='WYNIKI: '+editSpan;
+    cont.innerHTML=renderRaceTable(data.results);
+});
 
-            // Karty albumów
-            albumsGrid.innerHTML = entries.map(([id, gal]) => {
-                const entryCount = gal.entries ? Object.keys(gal.entries).length : 0;
-                return `
-                <div class="album-card" onclick="ui.openAlbum('${id}')">
-                    ${gal.cover ? `<img src="${gal.cover}" alt="${gal.name}">` : ''}
-                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);"></div>
-                    <div class="album-info">
-                        <div class="album-name">${gal.name}</div>
-                        <div style="font-family:var(--font-body);font-size:16px;color:rgba(255,255,255,0.6);margin-top:6px;">${entryCount} ${entryCount === 1 ? 'wpis' : 'wpisów'}</div>
-                    </div>
-                </div>`;
-            }).join('');
+// 4. Archive
+onValue(ref(db,'archive'), snap=>{
+    const data=snap.val();
+    const arcList=document.getElementById('api-archive-list');
+    const manager=document.getElementById('adm-archive-manager');
+    if(!data){ arcList.innerHTML="<p style='font-family:var(--font-data);font-size:26px;letter-spacing:1px;'>Archiwum puste.</p>"; manager.innerHTML="Brak wyścigów."; return; }
+    const entries=Object.entries(data).reverse();
+    arcList.innerHTML=entries.map(([id,race])=>{
+        const safeName=(race.name||'').replace(/'/g,"\\'");
+        const nameHtml=isLoggedIn?`<span id="arc-name-${id}" class="race-title-editable" onclick="ui.editArchiveName('${id}','${safeName}')" title="Edytuj">${race.name}</span>`:`<span id="arc-name-${id}">${race.name}</span>`;
+        return `<div class="archive-item">
+            <button class="archive-header" id="arc-btn-${id}" onclick="ui.toggleArc('${id}')">
+                ${nameHtml}
+                <span>WYNIKI <span class="arc-arrow">▼</span></span>
+            </button>
+            <div class="archive-body" id="arc-body-${id}">
+                <div style="padding:20px;border-top:2px solid #eee;overflow-x:auto;">${renderRaceTable(race.results)}</div>
+            </div>
+        </div>`;
+    }).join('');
+    manager.innerHTML=entries.map(([id,race])=>`<div class="admin-list-item"><span>${race.name}</span><button class="btn-action btn-danger" onclick="dbCore.deleteNode('archive/${id}')">USUŃ</button></div>`).join('');
+});
 
-            // Panel zarządzania
-            manager.innerHTML = entries.map(([id, gal]) => `
-                <div class="admin-list-item">
-                    <span>${gal.name}</span>
-                    <button class="btn-action btn-danger" onclick="dbCore.deleteNode('gallery/${id}')">USUŃ</button>
-                </div>
-            `).join('');
-        });
-    </script>
-
-
-</body></html>
+// 5. Gallery
+onValue(ref(db,'gallery'), snap=>{
+    const data=snap.val();
+    const grid=document.getElementById('gallery-albums'), mgr=document.getElementById('adm-gallery-manager'), sel=document.getElementById('adm-entry-album');
+    if(!data){ grid.innerHTML="<p style='font-family:var(--font-data);font-size:26px;'>Brak albumów.</p>"; mgr.innerHTML="Brak."; sel.innerHTML='<option value="">— Wybierz —</option>'; return; }
+    window.galleryData=data;
+    const entries=Object.entries(data).reverse();
+    sel.innerHTML='<option value="">— Wybierz album —</option>'+entries.map(([id,g])=>`<option value="${id}">${g.name}</option>`).join('');
+    grid.innerHTML=entries.map(([id,g])=>{
+        const cnt=g.entries?Object.keys(g.entries).length:0;
+        return `<div class="album-card" onclick="ui.openAlbum('${id}')">
+            ${g.cover?`<img src="${g.cover}" alt="${g.name}">`:''} 
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,transparent 60%);"></div>
+            <div class="album-info">
+                <div class="album-name">${g.name}</div>
+                <div style="font-family:var(--font-body);font-size:16px;letter-spacing:2px;color:rgba(255,255,255,0.55);margin-top:8px;">${cnt} ${cnt===1?'wpis':'wpisów'}</div>
+            </div></div>`;
+    }).join('');
+    mgr.innerHTML=entries.map(([id,g])=>`<div class="admin-list-item"><span>${g.name}</span><button class="btn-action btn-danger" onclick="dbCore.deleteNode('gallery/${id}')">USUŃ</button></div>`).join('');
+});
+</script>
+</body>
+</html>
