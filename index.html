@@ -59,7 +59,7 @@ body {
 
 /* Social icons na splash - prawy górny róg (wewnątrz splash-screen, absolute) */
 #splash-social-icons {
-    position: absolute;
+    position: absolute !important;
     top: 24px;
     right: 28px;
     z-index: 100001;
@@ -981,10 +981,45 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 
 </div><!-- /main-app -->
 
+<!-- Krytyczne funkcje poza modułem — działają nawet jeśli Firebase zawiedzie -->
+<script>
+function hideSplash() {
+    var splash = document.getElementById('splash-screen');
+    if (!splash) return;
+    splash.classList.add('hiding');
+    splash.style.opacity = '0';
+    splash.style.transform = 'scale(1.05)';
+    setTimeout(function() {
+        splash.style.display = 'none';
+        var app = document.getElementById('main-app');
+        if (app) app.style.display = 'block';
+    }, 700);
+}
+function showSplash() {
+    var app = document.getElementById('main-app');
+    if (app) app.style.display = 'none';
+    var splash = document.getElementById('splash-screen');
+    if (!splash) return;
+    splash.style.display = 'flex';
+    splash.style.opacity = '1';
+    splash.style.transform = '';
+    splash.classList.remove('hiding');
+}
+// Fallback — jeśli Firebase nie załaduje się w 8 sek, odblokuj przynajmniej wejście
+setTimeout(function() {
+    var splash = document.getElementById('splash-screen');
+    if (splash && splash.style.display !== 'none') {
+        console.warn('Firebase timeout — strona działa w trybie offline');
+    }
+}, 8000);
+</script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+try {
 
 const firebaseConfig = {
     apiKey: "AIzaSyAGqYLPBR8UnOY3GdirJ-V4fkI-cygU8HA",
@@ -1057,6 +1092,10 @@ function renderSocialIcons() {
         }
     });
 
+    splashContainer.innerHTML = splashHtml;
+    headerContainer.innerHTML = headerHtml;
+}
+
 // ===================== LOGA GRID W ADMINIE =====================
 function buildLogosGrid() {
     const grid = document.getElementById('adm-logos-grid');
@@ -1090,20 +1129,7 @@ function buildLogosGrid() {
 }
 
 // ===================== SPLASH =====================
-window.hideSplash = function() {
-    const splash = document.getElementById('splash-screen');
-    splash.classList.add('hiding');
-    setTimeout(() => {
-        splash.style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-    }, 700);
-};
-window.showSplash = function() {
-    const splash = document.getElementById('splash-screen');
-    document.getElementById('main-app').style.display = 'none';
-    splash.style.display = 'flex';
-    splash.classList.remove('hiding');
-};
+// hideSplash i showSplash są zdefiniowane w osobnym <script> powyżej
 
 function renderSplashImages(images) {
     const container = document.getElementById('splash-images-container');
@@ -2292,6 +2318,11 @@ document.querySelectorAll('input[name="hero-mode"]').forEach(r => {
 
 buildLogosGrid();
 renderSocialIcons();
+
+} catch(err) {
+    console.error('Firebase/App error:', err);
+    // Nawet jeśli Firebase zawiedzie — strona startowa nadal klikalna
+}
 </script>
 </body>
 </html>
