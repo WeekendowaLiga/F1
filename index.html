@@ -213,7 +213,7 @@ body {
 .constructor-row { position: relative; }
 
 /* Tła gradientowe per team */
-.cteam-ferrari  { background: linear-gradient(90deg, #ef1a2d 50%, #c8101f 100%); }
+.cteam-ferrari  { background: linear-gradient(90deg, var(--f1-red) 0%, #c00500 100%); }
 .cteam-ferrari td { color: #fff !important; }
 .cteam-mercedes { background: linear-gradient(90deg, #00d2be 0%, #00b5a4 100%); }
 .cteam-mercedes td { color: #111 !important; }
@@ -266,11 +266,10 @@ body {
     align-items: center;
     gap: 24px;
 }
-}
 
 /* ===================== KOLORY BORDER kierowców ===================== */
-.team-ferrari { border-left: 15px solid #ef1a2d; }
-.txt-ferrari  { color: #ef1a2d; }
+.team-ferrari { border-left: 15px solid var(--f1-red); }
+.txt-ferrari  { color: var(--f1-red); }
 .team-mercedes { border-left: 15px solid #00d2be; } .txt-mercedes { color: #00d2be; }
 .team-redbull  { border-left: 15px solid #131b45; } .txt-redbull  { color: #131b45; }
 .team-mclaren  { border-left: 15px solid #ff8700; } .txt-mclaren  { color: #ff8700; }
@@ -1893,7 +1892,6 @@ const getConstructorClass = (teamName) => {
     if (name.includes("williams")) return "cteam-williams";
     if (name.includes("sauber") || name.includes("kick")) return "cteam-sauber";
     if (name.includes("haas")) return "cteam-haas";
-    if (name.includes("racing bull") || name.includes("visa cash") || name.includes("vcarb") || name === "rb" || name.startsWith("rb ") || name.endsWith(" rb")) return "cteam-rb";
     return "";
 };
 const getTeamKey = (teamName) => {
@@ -1990,10 +1988,10 @@ function renderConstructorRow(r, i, isLoggedIn) {
             <td class="col-pos" style="font-weight:900;">
                 <span class="${posClass}">${i+1}</span>
             </td>
-            <td style="font-weight:700;font-size:38px;letter-spacing:1.5px;">
+<td style="font-weight:700;font-size:38px;letter-spacing:1.5px;">
                 <div class="constructor-name-cell">
                     ${leftDecor}
-                    ${r.team}
+                    <span class="${getTeamClass(r.team).replace('team-', 'txt-')}" style="filter:brightness(0) invert(1);">${r.team}</span>
                 </div>
             </td>
             <td class="col-pts" style="padding-right:30px;">
