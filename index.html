@@ -248,24 +248,16 @@ body {
 
 /*
  * Logo konstruktora - DUŻE, z lewej strony nazwy, wyraźne.
- * Filtr invert(1) = białe logo na kolorowym tle.
- * NIE ma watermark - tylko jedno duże logo obok nazwy.
+ * Oryginalne kolory logo — bez filtrów.
  */
 .constructor-logo-main {
-    height: 64px;
+    height: 68px;
     width: auto;
-    max-width: 130px;
+    max-width: 140px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.92;
     flex-shrink: 0;
     display: block;
-}
-/* Mercedes i McLaren mają jasne tło — logo ciemne zamiast białego */
-.cteam-mercedes .constructor-logo-main,
-.cteam-mclaren  .constructor-logo-main {
-    filter: brightness(0);
-    opacity: 0.85;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
 }
 
 .constructor-name-cell {
@@ -294,7 +286,7 @@ body {
 /* ===================== SEPARATOR BOTY ===================== */
 .separator-row td { background: #fff !important; border-bottom: none !important; padding: 0 !important; }
 .separator-row td > div { height: 4px; background: var(--f1-red); margin: 15px 0; position: relative; }
-.separator-row td > div::after { content: 'BOTY'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 16px; font-weight: 900; color: var(--f1-red); background: #fff; padding: 0 10px; letter-spacing: 5px; }
+.separator-row td > div::after { content: 'KIEROWCY F1'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 16px; font-weight: 900; color: var(--f1-red); background: #fff; padding: 0 10px; letter-spacing: 5px; }
 .bot-row td { opacity: 0.55; font-style: italic; }
 
 /* ===================== FASTEST LAP ===================== */
@@ -1033,36 +1025,37 @@ const DEFAULT_YOUTUBE_SVG = `<svg viewBox="0 0 24 24" fill="#FF0000"><path d="M2
 
 // ===================== SOCIAL ICONS RENDER =====================
 function renderSocialIcons() {
-    // Splash - prawy górny róg
     const splashContainer = document.getElementById('splash-social-icons');
-    // Header - obok logo
     const headerContainer = document.getElementById('header-social-icons');
-
     if (!splashContainer || !headerContainer) return;
 
-    const platforms = ['discord', 'youtube'];
+    const platforms = [
+        { key: 'discord', defaultSvg: DEFAULT_DISCORD_SVG },
+        { key: 'youtube', defaultSvg: DEFAULT_YOUTUBE_SVG },
+    ];
     let splashHtml = '';
     let headerHtml = '';
 
-    platforms.forEach(p => {
-        const cfg = socialConfig[p] || {};
+    platforms.forEach(({ key, defaultSvg }) => {
+        const cfg = socialConfig[key] || {};
         const link = cfg.url || '';
         const iconSrc = cfg.icon || '';
-        const defaultSvg = p === 'discord' ? DEFAULT_DISCORD_SVG : DEFAULT_YOUTUBE_SVG;
+        const label = key.charAt(0).toUpperCase() + key.slice(1);
 
-        if (!link) return; // nie pokazuj jeśli brak linku
-
+        // Zawsze pokazuj ikonę — nawet bez skonfigurowanego linku
         const innerHtml = iconSrc
-            ? `<img src="${iconSrc}" alt="${p}">`
+            ? `<img src="${iconSrc}" alt="${key}" style="width:28px;height:28px;object-fit:contain;">`
             : defaultSvg;
 
-        splashHtml += `<a class="splash-social-btn" href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${p.charAt(0).toUpperCase()+p.slice(1)}">${innerHtml}</a>`;
-        headerHtml += `<a class="header-social-btn" href="${link}" target="_blank" rel="noopener" title="${p.charAt(0).toUpperCase()+p.slice(1)}">${innerHtml}</a>`;
+        // Jeśli brak linku — ikona nieaktywna (szara, bez href)
+        if (link) {
+            splashHtml += `<a class="splash-social-btn" href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${label}">${innerHtml}</a>`;
+            headerHtml += `<a class="header-social-btn" href="${link}" target="_blank" rel="noopener" title="${label}">${innerHtml}</a>`;
+        } else {
+            splashHtml += `<span class="splash-social-btn" style="opacity:0.35;cursor:default;" title="${label} (brak linku)">${innerHtml}</span>`;
+            headerHtml += `<span class="header-social-btn" style="opacity:0.35;cursor:default;" title="${label} (brak linku)">${innerHtml}</span>`;
+        }
     });
-
-    splashContainer.innerHTML = splashHtml;
-    headerContainer.innerHTML = headerHtml;
-}
 
 // ===================== LOGA GRID W ADMINIE =====================
 function buildLogosGrid() {
@@ -1938,10 +1931,7 @@ const renderRaceTable = (results, raceId = null, isLastRace = false) => {
                         <td class="col-pos ${posClass(i)}">${cellHtml(r.pos, i, 'pos')}</td>
                         <td class="col-driver">${cellHtml(r.nick, i, 'nick')}</td>
                         <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                ${teamLogoHtml(r.team)}
-                                ${cellHtml(r.team, i, 'team')}
-                            </div>
+                            ${cellHtml(r.team, i, 'team')}
                         </td>
                         <td style="text-align:center;">${cellHtml(clean(r.start), i, 'start')}</td>
                         <td style="text-align:center;">${cellHtml(clean(r.pit), i, 'pit')}</td>
@@ -1985,6 +1975,37 @@ function renderConstructorRow(r, i, isLoggedIn) {
             </td>
         </tr>`;
 }
+
+// ===================== LISTA PRAWDZIWYCH KIEROWCÓW F1 =====================
+// Kierowcy z tej listy są automatycznie traktowani jako "boty" (pod czerwoną linią)
+const REAL_F1_DRIVERS = new Set([
+    // Pełne imiona i nazwiska
+    'max verstappen','liam lawson','charles leclerc','lewis hamilton',
+    'george russell','andrea kimi antonelli','kimi antonelli',
+    'lando norris','oscar piastri','fernando alonso','lance stroll',
+    'pierre gasly','jack doohan','alex albon','carlos sainz',
+    'yuki tsunoda','isack hadjar','nico hulkenberg','nico hülkenberg',
+    'esteban ocon','oliver bearman','gabriel bortoleto',
+    'kevin magnussen','valtteri bottas','zhou guanyu','guanyu zhou',
+    'sergio perez','sergio pérez','daniel ricciardo','logan sargeant',
+    'nyck de vries','mick schumacher','robert kubica',
+    // Tylko nazwiska (dla pewności)
+    'verstappen','lawson','leclerc','hamilton','russell','antonelli',
+    'norris','piastri','alonso','stroll','gasly','doohan',
+    'albon','sainz','tsunoda','hadjar','hulkenberg','hülkenberg',
+    'ocon','bearman','bortoleto','magnussen','bottas','zhou',
+    'perez','pérez','ricciardo','sargeant',
+]);
+
+const isRealF1Driver = (name) => {
+    if (!name) return false;
+    const n = name.toLowerCase().trim();
+    // Sprawdź dokładne dopasowanie
+    if (REAL_F1_DRIVERS.has(n)) return true;
+    // Sprawdź czy któreś słowo z imienia/nazwiska pasuje
+    const words = n.split(/\s+/);
+    return words.some(w => w.length > 3 && REAL_F1_DRIVERS.has(w));
+};
 
 // ===================== DATA LISTENERS =====================
 
@@ -2097,10 +2118,16 @@ onValue(ref(db, 'standings'), snap => {
     const data = snap.val();
     if (!data) return;
     const allDrivers = data.drivers || [];
-    const humanDrivers = allDrivers.filter(d => !d.isBot);
-    const botDrivers = allDrivers.filter(d => d.isBot);
 
-    const allForAdmin = allDrivers.map(d => `${d.isBot ? 'BOT:' : ''}${d.nick} | ${d.team} | ${d.photo || ''} | ${d.wins || 0} | ${d.pts}`).join('\n');
+    // Auto-wykrywanie: jeśli nick to prawdziwy kierowca F1 → traktuj jak bota (pod linią)
+    // Manualne BOT: prefix ma pierwszeństwo; auto-detekcja jest drugą warstwą
+    const humanDrivers = allDrivers.filter(d => !d.isBot && !isRealF1Driver(d.nick));
+    const botDrivers   = allDrivers.filter(d =>  d.isBot ||  isRealF1Driver(d.nick));
+
+    const allForAdmin = allDrivers.map(d => {
+        const autoBot = !d.isBot && isRealF1Driver(d.nick);
+        return `${(d.isBot || autoBot) ? 'BOT:' : ''}${d.nick} | ${d.team} | ${d.photo || ''} | ${d.wins || 0} | ${d.pts}`;
+    }).join('\n');
     document.getElementById('adm-drivers-raw').value = allForAdmin;
 
     const dBody = document.getElementById('api-drivers-list');
@@ -2116,10 +2143,7 @@ onValue(ref(db, 'standings'), snap => {
                     <div class="driver-cell">${avatarHtml}<span class="driver-name">${r.nick}</span></div>
                 </td>
                 <td class="${getTeamClass(r.team).replace('team-','txt-')}">
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        ${teamLogoHtml(r.team)}
-                        ${r.team}
-                    </div>
+                    ${r.team}
                 </td>
                 <td style="text-align:center">
                     ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'wins')">${r.wins||0}</span>` : `${r.wins||0}`}
@@ -2139,9 +2163,7 @@ onValue(ref(db, 'standings'), snap => {
                 <tr class="${getTeamClass(r.team)} bot-row">
                     <td class="col-pos">${totalIdx+1}</td>
                     <td class="col-driver"><div class="driver-cell">${avatarHtml}<span class="driver-name">${r.nick}</span></div></td>
-                    <td class="${getTeamClass(r.team).replace('team-','txt-')}">
-                        <div style="display:flex;align-items:center;gap:8px;">${teamLogoHtml(r.team)}${r.team}</div>
-                    </td>
+                    <td class="${getTeamClass(r.team).replace('team-','txt-')}">${r.team}</td>
                     <td style="text-align:center">${r.wins||0}</td>
                     <td class="col-pts">${r.pts}</td>
                 </tr>`;
