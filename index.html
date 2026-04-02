@@ -57,9 +57,9 @@ body {
 #splash-screen > * { position: relative; z-index: 1; }
 #splash-screen.hiding { opacity: 0; transform: scale(1.05); pointer-events: none; }
 
-/* Social icons na splash - prawy górny róg */
+/* Social icons na splash - prawy górny róg (wewnątrz splash-screen, absolute) */
 #splash-social-icons {
-    position: fixed;
+    position: absolute;
     top: 24px;
     right: 28px;
     z-index: 100001;
@@ -246,37 +246,32 @@ body {
     text-align: center;
 }
 
-/* Logo konstruktora - duże, w tle wiersza (watermark) */
-.constructor-logo-watermark {
-    position: absolute;
-    right: 140px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 70px;
+/*
+ * Logo konstruktora - DUŻE, z lewej strony nazwy, wyraźne.
+ * Filtr invert(1) = białe logo na kolorowym tle.
+ * NIE ma watermark - tylko jedno duże logo obok nazwy.
+ */
+.constructor-logo-main {
+    height: 64px;
     width: auto;
-    max-width: 160px;
-    object-fit: contain;
-    opacity: 0.22;
-    pointer-events: none;
-    filter: brightness(0) invert(1);
-    z-index: 0;
-}
-/* Logo z lewej strony nazwy - małe, widoczne */
-.constructor-logo-inline {
-    height: 48px;
-    width: auto;
-    max-width: 110px;
+    max-width: 130px;
     object-fit: contain;
     filter: brightness(0) invert(1);
-    opacity: 0.9;
+    opacity: 0.92;
     flex-shrink: 0;
+    display: block;
 }
+/* Mercedes i McLaren mają jasne tło — logo ciemne zamiast białego */
+.cteam-mercedes .constructor-logo-main,
+.cteam-mclaren  .constructor-logo-main {
+    filter: brightness(0);
+    opacity: 0.85;
+}
+
 .constructor-name-cell {
     display: flex;
     align-items: center;
-    gap: 16px;
-    position: relative;
-    z-index: 1;
+    gap: 20px;
 }
 
 /* ===================== KOLORY BORDER kierowców ===================== */
@@ -520,7 +515,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     .splash-img-entry { flex-direction: column; gap: 8px; }
     .splash-img-entry .sie-field-sm { width: 100%; }
     .admin-toc { padding: 12px 20px; }
-    #splash-social-icons { top: 14px; right: 14px; gap: 10px; }
+    #splash-social-icons { top: 14px; right: 14px; gap: 10px; position: absolute; }
     .splash-social-btn { width: 40px; height: 40px; border-radius: 9px; }
     .splash-social-btn img, .splash-social-btn svg { width: 22px; height: 22px; }
     .header-social-btn { width: 48px; height: 48px; }
@@ -544,10 +539,9 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 <body>
 
 <!-- ===================== STRONA STARTOWA ===================== -->
-<!-- Social icons - prawy górny róg splasha -->
-<div id="splash-social-icons"></div>
-
 <div id="splash-screen" onclick="hideSplash()">
+    <!-- Social icons - prawy górny róg splasha (wewnątrz splash, znika razem z nim) -->
+    <div id="splash-social-icons"></div>
     <div class="splash-logo-wrap">
         <div class="splash-logo-box">
             <img src="Logo.png" alt="Logo">
@@ -555,6 +549,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     </div>
     <div class="splash-title">Weekendowa<br>Liga F1</div>
     <div class="splash-subtitle">Sezon 1 - 2026</div>
+    <div id="splash-gp-name" style="font-family:var(--font-data);font-size:22px;color:rgba(255,255,255,0.45);letter-spacing:6px;text-transform:uppercase;margin-top:18px;margin-bottom:-10px;animation:splashTitleIn 1s 0.55s cubic-bezier(0.19,1,0.22,1) both;"></div>
     <div id="splash-countdown-section"></div>
     <div id="splash-images-container"></div>
     <div id="splash-image-area" class="splash-image-area" style="display:none;"></div>
@@ -1967,24 +1962,23 @@ function renderConstructorRow(r, i, isLoggedIn) {
     const logoUrl = key ? (teamLogos[key] || '') : '';
     const editable = isLoggedIn;
 
-    // Pasek boczny gdy brak logo
+    // Jeśli nie ma logo — pionowy pasek zamiast
     const leftDecor = logoUrl
-        ? `<img src="${logoUrl}" class="constructor-logo-inline" alt="${r.team}" onerror="this.style.display='none'">`
-        : `<div style="width:8px;height:44px;background:rgba(255,255,255,0.35);border-radius:2px;flex-shrink:0;"></div>`;
+        ? `<img src="${logoUrl}" class="constructor-logo-main" alt="${r.team}" onerror="this.style.display='none'">`
+        : `<div style="width:6px;height:50px;background:rgba(255,255,255,0.4);border-radius:3px;flex-shrink:0;"></div>`;
 
     return `
-        <tr class="constructor-row ${cClass}" style="position:relative;">
-            <td class="col-pos" style="font-weight:900;position:relative;z-index:1;">
-                ${posClass ? `<span class="${posClass}">${i+1}</span>` : i+1}
+        <tr class="constructor-row ${cClass}">
+            <td class="col-pos" style="font-weight:900;">
+                <span class="${posClass}">${i+1}</span>
             </td>
-            <td style="font-weight:700;font-size:38px;letter-spacing:1.5px;position:relative;z-index:1;">
-                ${logoUrl ? `<img src="${logoUrl}" class="constructor-logo-watermark" alt="${r.team}" onerror="this.style.display='none'">` : ''}
+            <td style="font-weight:700;font-size:38px;letter-spacing:1.5px;">
                 <div class="constructor-name-cell">
                     ${leftDecor}
                     ${r.team}
                 </div>
             </td>
-            <td class="col-pts" style="padding-right:30px;position:relative;z-index:1;">
+            <td class="col-pts" style="padding-right:30px;">
                 <span class="cteam-pts-cell">
                     ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>` : r.pts}
                 </span>
@@ -2056,6 +2050,15 @@ onValue(ref(db, 'config'), snap => {
     clone.style.animationDelay = '-20s';
 
     document.getElementById('display-hero-title').innerText = c.heroTitle || "NEXT GP EVENT";
+
+    // Nazwa GP nad licznikiem na stronie startowej
+    const splashGpName = document.getElementById('splash-gp-name');
+    if (splashGpName && c.heroTitle) {
+        splashGpName.textContent = c.heroTitle;
+        splashGpName.style.display = '';
+    } else if (splashGpName) {
+        splashGpName.style.display = 'none';
+    }
 
     const mode = c.heroMode || 'countdown';
     const timerSection = document.getElementById('hero-timer-section');
