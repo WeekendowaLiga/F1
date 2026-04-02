@@ -1869,15 +1869,15 @@ const normalizeTeamName = (name) => {
 
 const getTeamClass = (teamName) => {
     const name = (teamName || "").toLowerCase().trim();
-    if (name.includes("ferrari")) return "team-ferrari";
+    if (name.includes("ferrari") || name.includes("scuderia")) return "team-ferrari";
     if (name.includes("mercedes")) return "team-mercedes";
-    if (name.includes("red bull") && !name.includes("racing")) return "team-redbull";
+    if (name.includes("red bull")) return "team-redbull";
     if (name.includes("mclaren")) return "team-mclaren";
     if (name.includes("aston")) return "team-aston";
     if (name.includes("alpine")) return "team-alpine";
     if (name.includes("williams")) return "team-williams";
-    if (name.includes("sauber") || name.includes("kick")) return "team-sauber";
-    if (name.includes("haas")) return "team-haas";
+    if (name.includes("sauber") || name.includes("kick") || name.includes("stake")) return "team-sauber";
+    if (name.includes("haas") || name.includes("moneygram")) return "team-haas";
     if (name.includes("racing bull") || name.includes("visa cash") || name.includes("vcarb") || name === "rb" || name.startsWith("rb ") || name.endsWith(" rb")) return "team-rb";
     return "";
 };
@@ -1896,7 +1896,6 @@ const getConstructorClass = (teamName) => {
     if (name.includes("racing bull") || name.includes("visa cash") || name.includes("vcarb") || name === "rb" || name.startsWith("rb ") || name.endsWith(" rb")) return "cteam-rb";
     return "";
 };
-
 const getTeamKey = (teamName) => {
     const tc = getTeamClass(teamName);
     return tc ? tc.replace('team-', '') : '';
