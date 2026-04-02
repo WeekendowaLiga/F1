@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -25,22 +24,8 @@
     --ls-data: 1.5px;
     --ls-label: 6px;
 }
-
-html {
-    background: var(--f1-black);
-    margin: 0;
-    padding: 0;
-}
-
-html, body {
-    margin: 0; padding: 0;
-    color: var(--f1-black);
-    font-family: var(--font-body);
-    letter-spacing: var(--ls-data);
-    overflow-x: hidden;
-    min-height: 100vh;
-    scrollbar-width: none !important;
-}
+html { background: var(--f1-black); margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; color: var(--f1-black); font-family: var(--font-body); letter-spacing: var(--ls-data); overflow-x: hidden; min-height: 100vh; scrollbar-width: none !important; }
 body {
     background-color: #e8e8ea;
     background-image:
@@ -51,390 +36,130 @@ body {
 *::-webkit-scrollbar { display: none !important; }
 
 @media (min-width: 1025px) {
-    #main-app {
-        transform: scale(0.65);
-        transform-origin: top center;
-        width: 153.84%;
-        left: -26.92%;
-        position: relative;
-    }
+    #main-app { transform: scale(0.65); transform-origin: top center; width: 153.84%; left: -26.92%; position: relative; }
 }
 
-/* ===================== STRONA STARTOWA ===================== */
+/* ===================== SPLASH ===================== */
 #splash-screen {
-    position: fixed;
-    inset: 0;
-    background: var(--f1-black);
-    z-index: 99999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 60px;
-    padding-bottom: 60px;
-    cursor: pointer;
-    overflow-y: auto;
-    overflow-x: hidden;
+    position: fixed; inset: 0; background: var(--f1-black); z-index: 99999;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding-top: 60px; padding-bottom: 60px; cursor: pointer;
+    overflow-y: auto; overflow-x: hidden;
     transition: opacity 0.7s ease, transform 0.7s ease;
 }
 #splash-screen::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(ellipse at 50% 30%, rgba(225,6,0,0.25) 0%, transparent 60%),
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(225,6,0,0.25) 0%, transparent 60%),
         repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px),
         repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(255,255,255,0.012) 120px, rgba(255,255,255,0.012) 121px);
-    pointer-events: none;
-    z-index: 0;
+    pointer-events: none; z-index: 0;
 }
 #splash-screen > * { position: relative; z-index: 1; }
-#splash-screen.hiding {
-    opacity: 0;
-    transform: scale(1.05);
-    pointer-events: none;
-}
+#splash-screen.hiding { opacity: 0; transform: scale(1.05); pointer-events: none; }
 
-.splash-logo-wrap {
-    position: relative;
-    margin-bottom: 40px;
-    animation: splashLogoIn 1s cubic-bezier(0.19,1,0.22,1) forwards;
-}
-@keyframes splashLogoIn {
-    from { opacity: 0; transform: scale(0.7) translateY(40px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-.splash-logo-box {
-    background: #000000;
-    width: 320px;
-    height: 240px;
-    transform: skewX(-15deg);
-    border-radius: 10px;
+/* Social icons na splash - prawy górny róg */
+#splash-social-icons {
+    position: fixed;
+    top: 24px;
+    right: 28px;
+    z-index: 100001;
     display: flex;
+    gap: 14px;
     align-items: center;
-    justify-content: center;
+}
+.splash-social-btn {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.14);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.25s, border-color 0.25s, transform 0.2s;
     overflow: hidden;
-    box-shadow: 0 0 80px rgba(225,6,0,0.35), 0 40px 80px rgba(0,0,0,0.6);
-    position: relative;
 }
-.splash-logo-box::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border: 2px solid rgba(225,6,0,0.3);
-    border-radius: 10px;
-    pointer-events: none;
-}
-.splash-logo-box img {
-    width: auto; height: auto;
-    max-width: 85%; max-height: 85%;
-    object-fit: contain;
-    transform: skewX(15deg);
-}
-.splash-title {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 90px;
-    color: var(--f1-white);
-    text-transform: uppercase;
-    text-align: center;
-    letter-spacing: 4px;
-    line-height: 0.9;
-    animation: splashTitleIn 1s 0.2s cubic-bezier(0.19,1,0.22,1) both;
-}
-@keyframes splashTitleIn {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.splash-subtitle {
-    font-family: var(--font-data);
-    font-size: 28px;
-    color: rgba(255,255,255,0.35);
-    text-transform: uppercase;
-    letter-spacing: 12px;
-    margin-top: 20px;
-    animation: splashTitleIn 1s 0.5s cubic-bezier(0.19,1,0.22,1) both;
-}
+.splash-social-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.35); transform: translateY(-2px); }
+.splash-social-btn img { width: 28px; height: 28px; object-fit: contain; }
+.splash-social-btn svg { width: 28px; height: 28px; }
 
-.splash-countdown {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 40px;
-    animation: splashTitleIn 1s 0.6s cubic-bezier(0.19,1,0.22,1) both;
+.splash-logo-wrap { position: relative; margin-bottom: 40px; animation: splashLogoIn 1s cubic-bezier(0.19,1,0.22,1) forwards; }
+@keyframes splashLogoIn { from { opacity: 0; transform: scale(0.7) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.splash-logo-box {
+    background: #000; width: 320px; height: 240px; transform: skewX(-15deg); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    box-shadow: 0 0 80px rgba(225,6,0,0.35), 0 40px 80px rgba(0,0,0,0.6); position: relative;
 }
-.splash-timer-unit {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-bottom: 3px solid var(--f1-red);
-    min-width: 100px;
-    padding: 18px 16px 14px;
-    border-radius: 4px;
-    text-align: center;
-}
-.splash-timer-val {
-    font-family: var(--font-display);
-    font-size: 52px;
-    font-weight: 900;
-    display: block;
-    line-height: 1;
-    color: var(--f1-white);
-    letter-spacing: 2px;
-}
-.splash-timer-label {
-    font-family: var(--font-data);
-    font-size: 11px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
-    margin-top: 8px;
-    font-weight: 800;
-    display: block;
-    letter-spacing: 4px;
-}
-.splash-timer-sep {
-    display: flex;
-    align-items: center;
-    padding-bottom: 20px;
-    font-family: var(--font-display);
-    font-size: 40px;
-    font-weight: 900;
-    color: var(--f1-red);
-    opacity: 0.6;
-}
-.splash-soon {
-    font-family: var(--font-display);
-    font-size: 80px;
-    font-weight: 900;
-    color: var(--f1-red);
-    letter-spacing: 8px;
-    margin-top: 40px;
-    animation: splashTitleIn 1s 0.6s cubic-bezier(0.19,1,0.22,1) both, soonPulse 2s 1.6s ease infinite both;
-}
-.splash-cta {
-    margin-top: 40px;
-    font-family: var(--font-data);
-    font-size: 22px;
-    letter-spacing: 8px;
-    color: rgba(255,255,255,0.25);
-    text-transform: uppercase;
-    animation: splashPulse 2s 1.2s ease infinite both;
-}
-@keyframes splashPulse {
-    0%, 100% { opacity: 0.25; }
-    50% { opacity: 0.7; }
-}
+.splash-logo-box::after { content: ''; position: absolute; inset: 0; border: 2px solid rgba(225,6,0,0.3); border-radius: 10px; pointer-events: none; }
+.splash-logo-box img { width: auto; height: auto; max-width: 85%; max-height: 85%; object-fit: contain; transform: skewX(15deg); }
+.splash-title { font-family: var(--font-display); font-weight: 900; font-size: 90px; color: var(--f1-white); text-transform: uppercase; text-align: center; letter-spacing: 4px; line-height: 0.9; animation: splashTitleIn 1s 0.2s cubic-bezier(0.19,1,0.22,1) both; }
+@keyframes splashTitleIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.splash-subtitle { font-family: var(--font-data); font-size: 28px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 12px; margin-top: 20px; animation: splashTitleIn 1s 0.5s cubic-bezier(0.19,1,0.22,1) both; }
 
-#splash-images-container {
-    width: 90%;
-    max-width: 1100px;
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    animation: splashTitleIn 1s 0.7s cubic-bezier(0.19,1,0.22,1) both;
-}
-.splash-img-row {
-    display: flex;
-    width: 100%;
-}
-.splash-img-row img {
-    border-radius: 6px;
-    border: 2px solid rgba(255,255,255,0.08);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
+.splash-countdown { display: flex; justify-content: center; gap: 20px; margin-top: 40px; animation: splashTitleIn 1s 0.6s cubic-bezier(0.19,1,0.22,1) both; }
+.splash-timer-unit { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-bottom: 3px solid var(--f1-red); min-width: 100px; padding: 18px 16px 14px; border-radius: 4px; text-align: center; }
+.splash-timer-val { font-family: var(--font-display); font-size: 52px; font-weight: 900; display: block; line-height: 1; color: var(--f1-white); letter-spacing: 2px; }
+.splash-timer-label { font-family: var(--font-data); font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 8px; font-weight: 800; display: block; letter-spacing: 4px; }
+.splash-timer-sep { display: flex; align-items: center; padding-bottom: 20px; font-family: var(--font-display); font-size: 40px; font-weight: 900; color: var(--f1-red); opacity: 0.6; }
+.splash-soon { font-family: var(--font-display); font-size: 80px; font-weight: 900; color: var(--f1-red); letter-spacing: 8px; margin-top: 40px; animation: splashTitleIn 1s 0.6s cubic-bezier(0.19,1,0.22,1) both, soonPulse 2s 1.6s ease infinite both; }
+.splash-cta { margin-top: 40px; font-family: var(--font-data); font-size: 22px; letter-spacing: 8px; color: rgba(255,255,255,0.25); text-transform: uppercase; animation: splashPulse 2s 1.2s ease infinite both; }
+@keyframes splashPulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.7; } }
 
-.splash-image-area {
-    max-width: 900px;
-    width: 80%;
-    margin-top: 20px;
-    text-align: center;
-    color: var(--f1-white);
-    animation: splashTitleIn 1s 0.7s cubic-bezier(0.19,1,0.22,1) both;
-}
+#splash-images-container { width: 90%; max-width: 1100px; margin-top: 30px; display: flex; flex-direction: column; gap: 20px; animation: splashTitleIn 1s 0.7s cubic-bezier(0.19,1,0.22,1) both; }
+.splash-img-row { display: flex; width: 100%; }
+.splash-img-row img { border-radius: 6px; border: 2px solid rgba(255,255,255,0.08); box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 100%; height: auto; display: block; }
+.splash-image-area { max-width: 900px; width: 80%; margin-top: 20px; text-align: center; color: var(--f1-white); animation: splashTitleIn 1s 0.7s cubic-bezier(0.19,1,0.22,1) both; }
 .splash-image-area img { max-width: 100%; height: auto; border-radius: 6px; border: 2px solid rgba(255,255,255,0.08); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-.splash-content-area {
-    max-width: 1200px;
-    width: 80%;
-    margin-top: 10px;
-    text-align: center;
-    color: var(--f1-white);
-    animation: splashTitleIn 1s 0.75s cubic-bezier(0.19,1,0.22,1) both;
-}
+.splash-content-area { max-width: 1200px; width: 80%; margin-top: 10px; text-align: center; color: var(--f1-white); animation: splashTitleIn 1s 0.75s cubic-bezier(0.19,1,0.22,1) both; }
 .splash-content-area img { max-width: 100%; height: auto; border-radius: 6px; }
 
-/* ===================== BREAKING NEWS ===================== */
-#news-bar-container {
-    background: var(--f1-red);
-    color: var(--f1-white);
-    height: 60px;
-    display: none;
-    align-items: center;
-    overflow: hidden;
-    border-bottom: 4px solid var(--f1-black);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    position: relative;
-    z-index: 100;
-}
-.news-label {
-    background: var(--f1-black);
-    padding: 0 45px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 18px;
-    letter-spacing: 4px;
-    transform: skewX(-15deg);
-    margin-left: -15px;
-    position: relative;
-    z-index: 10;
-}
-.news-track {
-    white-space: nowrap;
-    display: inline-block;
-    animation: f1-marquee 40s linear infinite;
-    font-family: var(--font-data);
-    font-size: 36px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding-left: 50px;
-}
-.news-track-clone {
-    white-space: nowrap;
-    display: inline-block;
-    animation: f1-marquee 40s linear infinite;
-    font-family: var(--font-data);
-    font-size: 36px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding-left: 80px;
-}
+/* ===================== NEWS BAR ===================== */
+#news-bar-container { background: var(--f1-red); color: var(--f1-white); height: 60px; display: none; align-items: center; overflow: hidden; border-bottom: 4px solid var(--f1-black); box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; z-index: 100; }
+.news-label { background: var(--f1-black); padding: 0 45px; height: 100%; display: flex; align-items: center; font-family: var(--font-display); font-weight: 900; font-size: 18px; letter-spacing: 4px; transform: skewX(-15deg); margin-left: -15px; position: relative; z-index: 10; }
+.news-track { white-space: nowrap; display: inline-block; animation: f1-marquee 40s linear infinite; font-family: var(--font-data); font-size: 36px; text-transform: uppercase; letter-spacing: 2px; padding-left: 50px; }
+.news-track-clone { white-space: nowrap; display: inline-block; animation: f1-marquee 40s linear infinite; font-family: var(--font-data); font-size: 36px; text-transform: uppercase; letter-spacing: 2px; padding-left: 80px; }
 .news-marquee-box { overflow: hidden; display: flex; flex: 1; white-space: nowrap; }
-@keyframes f1-marquee {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-}
-#news-bar-container::after {
-    content: '';
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 100px;
-    background: linear-gradient(to right, transparent, var(--f1-red));
-    pointer-events: none;
-    z-index: 5;
-}
+@keyframes f1-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+#news-bar-container::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 100px; background: linear-gradient(to right, transparent, var(--f1-red)); pointer-events: none; z-index: 5; }
 
-/* ===================== HEADER & NAV ===================== */
-.f1-header {
-    background: var(--f1-white);
-    height: 260px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 6%;
-    border-bottom: 10px solid var(--f1-black);
-    position: relative;
-    background-image:
-        linear-gradient(135deg, rgba(225,6,0,0.03) 0%, transparent 50%),
-        repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(21,21,30,0.018) 80px, rgba(21,21,30,0.018) 81px),
-        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(21,21,30,0.012) 40px, rgba(21,21,30,0.012) 41px);
-}
+/* ===================== HEADER ===================== */
+.f1-header { background: var(--f1-white); height: 260px; display: flex; align-items: center; justify-content: space-between; padding: 0 6%; border-bottom: 10px solid var(--f1-black); position: relative; background-image: linear-gradient(135deg, rgba(225,6,0,0.03) 0%, transparent 50%), repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(21,21,30,0.018) 80px, rgba(21,21,30,0.018) 81px), repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(21,21,30,0.012) 40px, rgba(21,21,30,0.012) 41px); }
 .f1-brand { display: flex; align-items: center; position: relative; }
-.f1-logo {
-    background: #000000;
-    width: 260px;
-    height: 200px;
-    transform: skewX(-15deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 8px;
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: box-shadow 0.3s ease;
-}
+.f1-logo { background: #000; width: 260px; height: 200px; transform: skewX(-15deg); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; flex-shrink: 0; cursor: pointer; transition: box-shadow 0.3s ease; }
 .f1-logo:hover { box-shadow: 0 0 40px rgba(225,6,0,0.4); }
 .f1-logo img { width: auto; height: auto; max-width: 88%; max-height: 88%; object-fit: contain; transform: skewX(15deg); }
 .f1-title { font-family: var(--font-display); font-weight: 900; font-size: 85px; text-transform: uppercase; margin-left: 50px; line-height: 0.9; letter-spacing: 2px; }
-.f1-nav {
-    background: var(--f1-black);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    background-image:
-        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px),
-        linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+
+/* Social icons w headerze */
+.header-right { display: flex; align-items: center; gap: 20px; }
+.header-social-icons { display: flex; gap: 12px; align-items: center; }
+.header-social-btn {
+    width: 62px; height: 62px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; cursor: pointer;
+    border: 2px solid rgba(21,21,30,0.15);
+    background: rgba(21,21,30,0.04);
+    transition: background 0.25s, border-color 0.25s, transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    flex-shrink: 0;
 }
-.nav-item {
-    padding: 35px 70px;
-    color: #888;
-    text-decoration: none;
-    font-family: var(--font-data);
-    font-size: 45px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-bottom: 8px solid transparent;
-    position: relative;
-    transition: color 0.3s, background 0.3s;
-    letter-spacing: var(--ls-nav);
-}
-.nav-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 100%; right: 0;
-    height: 8px;
-    background: var(--f1-red);
-    transition: left 0.35s cubic-bezier(0.19,1,0.22,1);
-}
+.header-social-btn:hover { background: rgba(21,21,30,0.10); border-color: var(--f1-red); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(225,6,0,0.18); }
+.header-social-btn img { width: 34px; height: 34px; object-fit: contain; }
+.header-social-btn svg { width: 34px; height: 34px; }
+
+/* ===================== NAV ===================== */
+.f1-nav { background: var(--f1-black); position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; box-shadow: 0 15px 30px rgba(0,0,0,0.2); background-image: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px), linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%); }
+.nav-item { padding: 35px 70px; color: #888; text-decoration: none; font-family: var(--font-data); font-size: 45px; text-transform: uppercase; cursor: pointer; border-bottom: 8px solid transparent; position: relative; transition: color 0.3s, background 0.3s; letter-spacing: var(--ls-nav); }
+.nav-item::after { content: ''; position: absolute; bottom: 0; left: 100%; right: 0; height: 8px; background: var(--f1-red); transition: left 0.35s cubic-bezier(0.19,1,0.22,1); }
 .nav-item:hover::after, .nav-item.active::after { left: 0; }
 .nav-item:hover, .nav-item.active { color: var(--f1-white); background: rgba(255,255,255,0.05); border-bottom-color: var(--f1-red); }
 
-/* ===================== HERO / COUNTDOWN ===================== */
-.f1-hero {
-    background: var(--f1-black);
-    padding: 100px 0;
-    text-align: center;
-    border-bottom: 2px solid #222;
-    margin-bottom: 80px;
-    position: relative;
-    overflow: hidden;
-}
-.f1-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-        radial-gradient(ellipse at 50% 0%, rgba(225,6,0,0.18) 0%, transparent 65%),
-        repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.015) 80px, rgba(255,255,255,0.015) 81px),
-        repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(255,255,255,0.015) 120px, rgba(255,255,255,0.015) 121px);
-    pointer-events: none;
-}
+/* ===================== HERO ===================== */
+.f1-hero { background: var(--f1-black); padding: 100px 0; text-align: center; border-bottom: 2px solid #222; margin-bottom: 80px; position: relative; overflow: hidden; }
+.f1-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(225,6,0,0.18) 0%, transparent 65%), repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.015) 80px, rgba(255,255,255,0.015) 81px), repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(255,255,255,0.015) 120px, rgba(255,255,255,0.015) 121px); pointer-events: none; }
 .f1-hero h1 { font-family: var(--font-data); font-size: 120px; font-weight: 700; text-transform: uppercase; margin: 0 0 60px 0; letter-spacing: 4px; color: var(--f1-white); position: relative; }
 .f1-timer-grid { display: flex; justify-content: center; gap: 24px; position: relative; }
-.timer-unit {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-bottom: 4px solid var(--f1-red);
-    min-width: 180px;
-    padding: 40px 30px 36px;
-    border-radius: 4px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-}
-.timer-unit::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(225,6,0,0.06) 0%, transparent 100%);
-    pointer-events: none;
-}
+.timer-unit { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-bottom: 4px solid var(--f1-red); min-width: 180px; padding: 40px 30px 36px; border-radius: 4px; position: relative; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; }
+.timer-unit::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(225,6,0,0.06) 0%, transparent 100%); pointer-events: none; }
 .timer-unit:hover { transform: translateY(-6px); border-bottom-color: #fff; }
 .timer-val { font-family: var(--font-display); font-size: 90px; font-weight: 900; display: block; line-height: 1; color: var(--f1-white); letter-spacing: 2px; }
 .timer-label { font-size: 14px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 14px; font-weight: 800; display: block; letter-spacing: var(--ls-label); }
@@ -460,36 +185,16 @@ body {
 .f1-table tbody tr:nth-child(9)  { animation-delay: 0.36s; }
 .f1-table tbody tr:nth-child(n+10) { animation-delay: 0.40s; }
 
-.f1-card {
-    background: var(--f1-white);
-    border: 1px solid var(--f1-light-grey);
-    border-top: 20px solid var(--f1-black);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.07);
-    margin-bottom: 80px;
-    overflow: hidden;
-    transition: box-shadow 0.4s ease, transform 0.3s ease;
-}
+.f1-card { background: var(--f1-white); border: 1px solid var(--f1-light-grey); border-top: 20px solid var(--f1-black); box-shadow: 0 30px 60px rgba(0,0,0,0.07); margin-bottom: 80px; overflow: hidden; transition: box-shadow 0.4s ease, transform 0.3s ease; }
 .f1-card:hover { box-shadow: 0 40px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(225,6,0,0.12); transform: translateY(-3px); }
-.f1-card-title {
-    padding: 40px 50px;
-    background: #f8f8f9;
-    border-bottom: 2px solid #eee;
-    font-family: var(--font-display);
-    font-size: 40px;
-    text-transform: uppercase;
-    color: var(--f1-black);
-    display: flex;
-    align-items: center;
-    letter-spacing: var(--ls-heading);
-}
+.f1-card-title { padding: 40px 50px; background: #f8f8f9; border-bottom: 2px solid #eee; font-family: var(--font-display); font-size: 40px; text-transform: uppercase; color: var(--f1-black); display: flex; align-items: center; letter-spacing: var(--ls-heading); }
 .f1-card-title::before { content: ""; width: 10px; height: 40px; background: var(--f1-red); margin-right: 25px; flex-shrink: 0; }
 .editable-title { cursor: pointer; transition: color 0.2s; border-bottom: 2px solid transparent; }
 .editable-title:hover { color: var(--f1-red); border-bottom-color: rgba(225,6,0,0.3); }
 
-/* ===================== TABELA — WYŻSZE WIERSZE ===================== */
+/* ===================== TABELA ===================== */
 .f1-table { width: 100%; border-collapse: collapse; table-layout: auto; }
 .f1-table th { background: #111; color: #fff; padding: 28px; text-align: left; font-size: 16px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; }
-/* ZMIANA: większy padding w td = wyższe wiersze */
 .f1-table td { padding: 30px 25px; font-family: var(--font-data); font-size: 36px; border-bottom: 1px solid #eee; vertical-align: middle; white-space: nowrap; letter-spacing: var(--ls-data); }
 .f1-table tr:last-child td { border-bottom: none; }
 .f1-table tr:hover td { background: rgba(0,0,0,0.02); }
@@ -500,61 +205,14 @@ body {
 .pos-silver { color: #b0b0b0 !important; font-weight: 900 !important; }
 .pos-bronze { color: #cd7f32 !important; font-weight: 900 !important; }
 
-/* ===================== LOGO ZESPOŁU (kierowcy) ===================== */
-.team-logo-img {
-    width: 38px;
-    height: 28px;
-    object-fit: contain;
-    vertical-align: middle;
-    margin-right: 10px;
-    flex-shrink: 0;
-}
+/* ===================== LOGO ZESPOŁU (kierowcy — małe ikonki) ===================== */
+.team-logo-img { width: 38px; height: 28px; object-fit: contain; vertical-align: middle; margin-right: 10px; flex-shrink: 0; }
 
-/* ===================== KONSTRUKTORZY — LOGO NA CAŁY WIERSZ ===================== */
-/* Wiersz konstruktora: logo jako background całego wiersza */
-.constructor-row {
-    border-left: none !important;
-    position: relative;
-}
-/* Logo-background: pseudo-element z obrazem rozciągniętym na cały wiersz */
-.constructor-logo-bg {
-    position: absolute;
-    inset: 0;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center left 30px;
-    opacity: 0.18;
-    pointer-events: none;
-    z-index: 0;
-}
-/* Komórki muszą być relative z-index > 0 żeby być nad bg */
-.constructor-row td {
-    position: relative;
-    z-index: 1;
-}
-/* Pozycja i punkty w konstruktorach */
-.constructor-row .col-pos {
-    font-weight: 900 !important;
-}
+/* ===================== KONSTRUKTORZY — NOWY STYL Z LOGO ===================== */
+/* Każdy wiersz konstruktora ma kolorowe tło + logo */
+.constructor-row { position: relative; }
 
-/* ===================== AWATAR KIEROWCY ===================== */
-.driver-cell { display: flex; align-items: center; gap: 18px; }
-.driver-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(0,0,0,0.12); flex-shrink: 0; background: #eee; }
-.driver-name { font-weight: 700; font-size: 40px; letter-spacing: 1px; }
-
-/* ===================== KOLORY ZESPOŁÓW ===================== */
-.team-ferrari  { border-left: 15px solid #ef1a2d; } .txt-ferrari  { color: #ef1a2d; }
-.team-mercedes { border-left: 15px solid #00d2be; } .txt-mercedes { color: #00d2be; }
-.team-redbull  { border-left: 15px solid #131b45; } .txt-redbull  { color: #131b45; }
-.team-mclaren  { border-left: 15px solid #ff8700; } .txt-mclaren  { color: #ff8700; }
-.team-aston    { border-left: 15px solid #006f62; } .txt-aston    { color: #006f62; }
-.team-alpine   { border-left: 15px solid #6088d6; } .txt-alpine   { color: #6088d6; }
-.team-williams { border-left: 15px solid #182cc4; } .txt-williams { color: #182cc4; }
-.team-sauber   { border-left: 15px solid #52e252; } .txt-sauber   { color: #52e252; }
-.team-haas     { border-left: 15px solid #bdb3b3; } .txt-haas     { color: #bdb3b3; }
-.team-rb       { border-left: 15px solid #004cff; } .txt-rb       { color: #004cff; }
-
-/* ===================== TABELA KONSTRUKTORÓW — tła gradientowe ===================== */
+/* Tła gradientowe per team */
 .cteam-ferrari  { background: linear-gradient(90deg, #ef1a2d 0%, #c8101f 100%); }
 .cteam-ferrari td { color: #fff !important; }
 .cteam-mercedes { background: linear-gradient(90deg, #00d2be 0%, #00b5a4 100%); }
@@ -576,8 +234,67 @@ body {
 .cteam-rb       { background: linear-gradient(90deg, #004cff 0%, #1060ff 100%); }
 .cteam-rb td { color: #fff !important; }
 
-.cteam-pts-cell { background: rgba(255,255,255,0.92) !important; color: var(--f1-black) !important; font-weight: 900 !important; border-radius: 4px; padding: 8px 20px !important; display: inline-block; min-width: 60px; text-align: center; }
-.constructor-name-cell { display: flex; align-items: center; gap: 16px; }
+/* Komórka z punktami - biały badge */
+.cteam-pts-cell {
+    background: rgba(255,255,255,0.92) !important;
+    color: var(--f1-black) !important;
+    font-weight: 900 !important;
+    border-radius: 4px;
+    padding: 8px 20px !important;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Logo konstruktora - duże, w tle wiersza (watermark) */
+.constructor-logo-watermark {
+    position: absolute;
+    right: 140px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 70px;
+    width: auto;
+    max-width: 160px;
+    object-fit: contain;
+    opacity: 0.22;
+    pointer-events: none;
+    filter: brightness(0) invert(1);
+    z-index: 0;
+}
+/* Logo z lewej strony nazwy - małe, widoczne */
+.constructor-logo-inline {
+    height: 48px;
+    width: auto;
+    max-width: 110px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+    flex-shrink: 0;
+}
+.constructor-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===================== KOLORY BORDER kierowców ===================== */
+.team-ferrari  { border-left: 15px solid #ef1a2d; } .txt-ferrari  { color: #ef1a2d; }
+.team-mercedes { border-left: 15px solid #00d2be; } .txt-mercedes { color: #00d2be; }
+.team-redbull  { border-left: 15px solid #131b45; } .txt-redbull  { color: #131b45; }
+.team-mclaren  { border-left: 15px solid #ff8700; } .txt-mclaren  { color: #ff8700; }
+.team-aston    { border-left: 15px solid #006f62; } .txt-aston    { color: #006f62; }
+.team-alpine   { border-left: 15px solid #6088d6; } .txt-alpine   { color: #6088d6; }
+.team-williams { border-left: 15px solid #182cc4; } .txt-williams { color: #182cc4; }
+.team-sauber   { border-left: 15px solid #52e252; } .txt-sauber   { color: #52e252; }
+.team-haas     { border-left: 15px solid #bdb3b3; } .txt-haas     { color: #bdb3b3; }
+.team-rb       { border-left: 15px solid #004cff; } .txt-rb       { color: #004cff; }
+
+/* ===================== DRIVER ===================== */
+.driver-cell { display: flex; align-items: center; gap: 18px; }
+.driver-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(0,0,0,0.12); flex-shrink: 0; background: #eee; }
+.driver-name { font-weight: 700; font-size: 40px; letter-spacing: 1px; }
 
 /* ===================== SEPARATOR BOTY ===================== */
 .separator-row td { background: #fff !important; border-bottom: none !important; padding: 0 !important; }
@@ -585,7 +302,7 @@ body {
 .separator-row td > div::after { content: 'BOTY'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 16px; font-weight: 900; color: var(--f1-red); background: #fff; padding: 0 10px; letter-spacing: 5px; }
 .bot-row td { opacity: 0.55; font-style: italic; }
 
-/* ===================== NAJLEPSZY CZAS ===================== */
+/* ===================== FASTEST LAP ===================== */
 .fastest-lap { color: #a855f7 !important; font-weight: 900 !important; letter-spacing: 1.5px; }
 td.col-best-lap { color: #222 !important; font-weight: 500; }
 
@@ -608,12 +325,28 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 
 /* ===================== GALERIA ===================== */
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(550px, 1fr)); gap: 50px; }
-.album-card { background: var(--f1-black); height: 400px; position: relative; cursor: pointer; overflow: hidden; border-bottom: 15px solid var(--f1-red); box-shadow: 0 20px 40px rgba(0,0,0,0.3); transition: transform 0.4s ease, box-shadow 0.4s ease; }
+.album-card { background: var(--f1-black); height: 400px; position: relative; overflow: hidden; border-bottom: 15px solid var(--f1-red); box-shadow: 0 20px 40px rgba(0,0,0,0.3); transition: transform 0.4s ease, box-shadow 0.4s ease; }
 .album-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
-.album-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.6s; }
-.album-card:hover img { opacity: 0.8; transform: scale(1.07); }
+.album-card-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.6s; }
+.album-card:hover .album-card-img { opacity: 0.8; transform: scale(1.07); }
 .album-info { position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 10; }
 .album-name { font-family: var(--font-data); font-size: 60px; color: var(--f1-white); text-transform: uppercase; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); letter-spacing: 2px; }
+/* Album click zone - only cover area, not edit icon */
+.album-click-zone { position: absolute; inset: 0; cursor: pointer; z-index: 5; }
+/* Album edit button */
+.album-edit-btn {
+    position: absolute; top: 16px; right: 16px; z-index: 20;
+    background: rgba(0,0,0,0.6); border: 1.5px solid rgba(255,255,255,0.2);
+    color: #fff; border-radius: 8px; padding: 8px 14px;
+    font-family: var(--font-data); font-size: 18px; font-weight: 700;
+    cursor: pointer; letter-spacing: 1px; text-transform: uppercase;
+    opacity: 0; transition: opacity 0.2s, background 0.2s;
+    display: none;
+}
+.album-card:hover .album-edit-btn { opacity: 1; }
+.album-edit-btn.visible { display: block; }
+.album-edit-btn:hover { background: var(--f1-red); }
+
 .media-entries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 40px; }
 .media-entry { background: var(--f1-white); border: 1px solid var(--f1-light-grey); border-top: 8px solid var(--f1-black); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .media-entry:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.14); }
@@ -624,104 +357,30 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .media-entry-body iframe { width: 100%; height: 100%; border: none; display: block; }
 .media-entry-body img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .album-viewer-header { display: flex; align-items: center; gap: 30px; margin-bottom: 60px; padding-bottom: 30px; border-bottom: 4px solid var(--f1-black); }
-.album-viewer-title { font-family: var(--font-display); font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; }
+.album-viewer-title { font-family: var(--font-display); font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; flex: 1; }
+.album-viewer-title-editable { cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+.album-viewer-title-editable:hover { color: var(--f1-red); border-bottom-color: rgba(225,6,0,0.3); }
 
 /* ===================== PANEL ADMINA ===================== */
-#admin-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0);
-    z-index: 9998;
-    pointer-events: none;
-    transition: background 0.5s ease;
-}
+#admin-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 9998; pointer-events: none; transition: background 0.5s ease; }
 #admin-overlay.open { background: rgba(0,0,0,0.6); pointer-events: all; backdrop-filter: blur(3px); }
-
-#admin-sidebar {
-    position: fixed; top: 0; right: 0;
-    width: 1200px; height: 100vh;
-    background: #f4f4f7;
-    z-index: 9999;
-    box-shadow: -50px 0 120px rgba(0,0,0,0.5);
-    transition: transform 0.75s cubic-bezier(0.19, 1, 0.22, 1);
-    overflow-y: auto;
-    transform: translateX(110%);
-    display: flex;
-    flex-direction: column;
-}
+#admin-sidebar { position: fixed; top: 0; right: 0; width: 1200px; height: 100vh; background: #f4f4f7; z-index: 9999; box-shadow: -50px 0 120px rgba(0,0,0,0.5); transition: transform 0.75s cubic-bezier(0.19, 1, 0.22, 1); overflow-y: auto; transform: translateX(110%); display: flex; flex-direction: column; }
 #admin-sidebar.open { transform: translateX(0); }
-
-.admin-header-bar {
-    background: var(--f1-black);
-    padding: 30px 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    flex-shrink: 0;
-}
+.admin-header-bar { background: var(--f1-black); padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.4); flex-shrink: 0; }
 .admin-header-bar h2 { font-family: var(--font-display); font-size: 36px; margin: 0; letter-spacing: 3px; color: var(--f1-white); }
-
-.admin-toc {
-    background: #1e1e2a;
-    padding: 16px 50px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    border-bottom: 3px solid var(--f1-red);
-    flex-shrink: 0;
-}
-.admin-toc a {
-    color: rgba(255,255,255,0.55);
-    text-decoration: none;
-    font-family: var(--font-data);
-    font-size: 14px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border-radius: 3px;
-    transition: background 0.2s, color 0.2s;
-    white-space: nowrap;
-}
+.admin-toc { background: #1e1e2a; padding: 16px 50px; display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 3px solid var(--f1-red); flex-shrink: 0; }
+.admin-toc a { color: rgba(255,255,255,0.55); text-decoration: none; font-family: var(--font-data); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border-radius: 3px; transition: background 0.2s, color 0.2s; white-space: nowrap; }
 .admin-toc a:hover { background: rgba(225,6,0,0.2); color: #fff; }
-
 .admin-body { padding: 40px 50px 80px; flex: 1; }
-
-.admin-section {
-    background: var(--f1-white);
-    border-radius: 10px;
-    border-left: 6px solid var(--f1-red);
-    margin-bottom: 30px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-}
-.admin-section-header {
-    background: var(--f1-black);
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.2s;
-}
+.admin-section { background: var(--f1-white); border-radius: 10px; border-left: 6px solid var(--f1-red); margin-bottom: 30px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.admin-section-header { background: var(--f1-black); padding: 20px 30px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.2s; }
 .admin-section-header:hover { background: #2a2a3a; }
 .admin-section-icon { font-size: 22px; flex-shrink: 0; }
-.admin-section-title {
-    font-family: var(--font-display);
-    font-size: 22px;
-    color: var(--f1-white);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    flex: 1;
-}
+.admin-section-title { font-family: var(--font-display); font-size: 22px; color: var(--f1-white); letter-spacing: 3px; text-transform: uppercase; flex: 1; }
 .admin-section-arrow { color: rgba(255,255,255,0.4); font-size: 14px; transition: transform 0.3s; }
 .admin-section-header.open .admin-section-arrow { transform: rotate(180deg); }
 .admin-section-body { padding: 30px; display: none; }
 .admin-section-body.open { display: block; }
-
 .form-group { margin-bottom: 22px; }
 .form-label { display: block; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; font-size: 12px; color: #666; letter-spacing: 2px; }
 .form-hint { font-size: 11px; color: #999; font-weight: 400; text-transform: none; letter-spacing: 0; margin-top: 4px; display: block; }
@@ -729,7 +388,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .f1-input:focus { border-color: var(--f1-red); outline: none; box-shadow: 0 0 0 3px rgba(225,6,0,0.1); }
 .f1-textarea { width: 100%; padding: 16px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; font-family: monospace; min-height: 120px; resize: vertical; box-sizing: border-box; transition: border-color 0.2s; }
 .f1-textarea:focus { border-color: var(--f1-red); outline: none; box-shadow: 0 0 0 3px rgba(225,6,0,0.1); }
-
 .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 20px; }
 .btn-action { background: var(--f1-black); color: var(--f1-white); padding: 16px 32px; border: none; font-family: var(--font-display); font-weight: 900; font-size: 15px; cursor: pointer; text-transform: uppercase; transition: background 0.3s, transform 0.2s, box-shadow 0.2s; display: inline-flex; align-items: center; gap: 8px; border-radius: 4px; letter-spacing: 2px; }
 .btn-action:hover { background: var(--f1-red); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(225,6,0,0.3); }
@@ -738,133 +396,87 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .btn-secondary { background: #555; }
 .btn-secondary:hover { background: #777; }
 .btn-sm { padding: 10px 18px; font-size: 13px; }
-
 .check-group { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; font-weight: 700; cursor: pointer; font-size: 15px; }
 .check-group input { width: 20px; height: 20px; cursor: pointer; accent-color: var(--f1-red); }
 .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: #f9f9fb; border: 1px solid #e8e8ee; border-radius: 6px; margin-bottom: 8px; }
 .admin-list-item span { font-family: var(--font-data); font-size: 18px; letter-spacing: 1px; }
-
 .splash-preview { background: #111; color: #fff; padding: 24px; border-radius: 8px; margin-top: 16px; min-height: 80px; font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
 .splash-preview img { max-width: 100%; border-radius: 4px; }
 
-/* ===================== LISTA ZDJĘĆ SPLASH W ADMINIE ===================== */
-#adm-splash-images-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-.splash-img-entry {
-    background: #f4f4f7;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 14px 16px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    /* drag and drop */
-    cursor: grab;
-    transition: box-shadow 0.2s, opacity 0.2s;
-}
+/* ===================== SPLASH IMAGES ADMIN ===================== */
+#adm-splash-images-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.splash-img-entry { background: #f4f4f7; border: 1px solid #ddd; border-radius: 8px; padding: 14px 16px; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; cursor: grab; transition: box-shadow 0.2s, opacity 0.2s; }
 .splash-img-entry.dragging { opacity: 0.4; box-shadow: 0 8px 30px rgba(0,0,0,0.2); cursor: grabbing; }
 .splash-img-entry.drag-over { border: 2px dashed var(--f1-red); background: rgba(225,6,0,0.04); }
-.sie-drag-handle {
-    font-size: 20px;
-    color: #bbb;
-    cursor: grab;
-    padding-bottom: 6px;
-    flex-shrink: 0;
-    user-select: none;
-    align-self: flex-end;
-}
-.sie-num {
-    font-family: var(--font-display);
-    font-size: 26px;
-    font-weight: 900;
-    color: var(--f1-red);
-    min-width: 28px;
-    padding-bottom: 4px;
-    flex-shrink: 0;
-}
+.sie-drag-handle { font-size: 20px; color: #bbb; cursor: grab; padding-bottom: 6px; flex-shrink: 0; user-select: none; align-self: flex-end; }
+.sie-num { font-family: var(--font-display); font-size: 26px; font-weight: 900; color: var(--f1-red); min-width: 28px; padding-bottom: 4px; flex-shrink: 0; }
 .sie-field { flex: 1; min-width: 160px; }
 .sie-field-sm { width: 130px; min-width: 100px; flex: none; }
 .sie-remove { background: #800; color: #fff; border: none; padding: 14px 16px; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background 0.2s; flex-shrink: 0; align-self: flex-end; }
 .sie-remove:hover { background: #c00; }
 .splash-img-preview-thumb { width: 60px; height: 42px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; flex-shrink: 0; align-self: flex-end; background: #eee; }
 .splash-img-entry select.f1-input { padding: 12px 10px; cursor: pointer; }
-
-/* Upload-or-URL toggle */
 .sie-source-toggle { display: flex; gap: 6px; margin-bottom: 6px; }
-.sie-source-btn {
-    padding: 5px 12px; border: 2px solid #ddd; border-radius: 4px; cursor: pointer;
-    font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
-    background: #fff; transition: all 0.2s;
-}
+.sie-source-btn { padding: 5px 12px; border: 2px solid #ddd; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: #fff; transition: all 0.2s; }
 .sie-source-btn.active { border-color: var(--f1-red); color: var(--f1-red); background: rgba(225,6,0,0.05); }
 
-/* ===================== LOGA ZESPOŁÓW — SIATKA W ADMINIE ===================== */
-.adm-logos-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-}
-.adm-logo-item {
-    background: #f9f9fb;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.adm-logo-item .logo-swatch {
-    width: 14px;
-    height: 40px;
-    border-radius: 3px;
-    flex-shrink: 0;
-}
-.adm-logo-item .logo-team-name {
-    font-family: var(--font-display);
-    font-size: 16px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    width: 110px;
-    flex-shrink: 0;
-    color: #333;
-}
+/* Edycja skali splash image */
+.sie-scale-wrap { display: flex; align-items: center; gap: 8px; }
+.sie-scale-wrap input[type=range] { flex: 1; accent-color: var(--f1-red); }
+.sie-scale-val { font-family: var(--font-display); font-size: 18px; font-weight: 900; color: var(--f1-red); min-width: 46px; }
+
+/* ===================== LOGA ZESPOŁÓW ADMIN ===================== */
+.adm-logos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.adm-logo-item { background: #f9f9fb; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.adm-logo-item .logo-swatch { width: 14px; height: 40px; border-radius: 3px; flex-shrink: 0; }
+.adm-logo-item .logo-team-name { font-family: var(--font-display); font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; width: 110px; flex-shrink: 0; color: #333; }
 .adm-logo-item .f1-input { padding: 10px 12px; font-size: 13px; }
 .adm-logo-preview { width: 50px; height: 34px; object-fit: contain; flex-shrink: 0; background: #eee; border-radius: 3px; border: 1px solid #ddd; }
-/* Upload przycisk dla logo */
-.logo-upload-label {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 14px; background: #333; color: #fff;
-    border-radius: 4px; cursor: pointer; font-size: 12px;
-    font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
-    transition: background 0.2s; white-space: nowrap; flex-shrink: 0;
-}
+.logo-upload-label { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; background: #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; white-space: nowrap; flex-shrink: 0; }
 .logo-upload-label:hover { background: var(--f1-red); }
 .logo-upload-input { display: none; }
 
-/* ===================== AUTH MODAL ===================== */
+/* ===================== SOCIAL ICONS ADMIN ===================== */
+.social-icons-admin { display: flex; flex-direction: column; gap: 18px; }
+.social-icon-row {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    background: #f9f9fb; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;
+}
+.social-icon-preview-box {
+    width: 54px; height: 54px; border-radius: 10px;
+    background: rgba(21,21,30,0.08); border: 1.5px solid rgba(21,21,30,0.12);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; flex-shrink: 0;
+}
+.social-icon-preview-box img { width: 30px; height: 30px; object-fit: contain; }
+.social-icon-preview-box svg { width: 30px; height: 30px; }
+.social-platform-label { font-family: var(--font-display); font-size: 20px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #333; width: 90px; flex-shrink: 0; }
+.social-icon-fields { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 200px; }
+.social-icon-upload-label { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; background: #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; white-space: nowrap; }
+.social-icon-upload-label:hover { background: var(--f1-red); }
+
+/* ===================== AUTH ===================== */
 .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
 .auth-card { background: var(--f1-white); width: 600px; padding: 70px; border-top: 25px solid var(--f1-red); box-shadow: 0 50px 100px rgba(0,0,0,0.5); }
 .auth-card h2 { font-family: var(--font-display); font-size: 40px; text-align: center; margin-bottom: 50px; letter-spacing: 4px; }
 .hidden { display: none !important; }
-
 #btn-open-login { font-size: 32px; padding: 20px 30px; background: transparent; border: 3px solid var(--f1-black); color: var(--f1-black); cursor: pointer; transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.2s; letter-spacing: 0; line-height: 1; border-radius: 4px; }
 #btn-open-login:hover { background: var(--f1-black); color: var(--f1-white); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
 
+/* ===================== INLINE EDYCJA KOMÓREK ARCHIWUM ===================== */
+.arc-cell-editable {
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 2px 6px;
+    transition: background 0.2s, color 0.2s;
+    display: inline-block;
+}
+.arc-cell-editable:hover { background: rgba(225,6,0,0.08); color: var(--f1-red); }
+.arc-cell-editable:hover::after { content: ' ✎'; font-size: 0.6em; opacity: 0.5; }
+
 /* ===================== MOBILNE ===================== */
 @media (max-width: 1024px) {
-    :root {
-        --ls-nav: 1px;
-        --ls-data: 0.5px;
-        --ls-label: 2px;
-        --ls-heading: 0px;
-    }
+    :root { --ls-nav: 1px; --ls-data: 0.5px; --ls-label: 2px; --ls-heading: 0px; }
     .f1-header { height: auto; padding: 20px 4%; flex-wrap: wrap; gap: 15px; }
     .f1-logo { width: 120px; height: 90px; }
     .f1-title { font-size: 36px; margin-left: 20px; letter-spacing: 0px; }
@@ -908,6 +520,11 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     .splash-img-entry { flex-direction: column; gap: 8px; }
     .splash-img-entry .sie-field-sm { width: 100%; }
     .admin-toc { padding: 12px 20px; }
+    #splash-social-icons { top: 14px; right: 14px; gap: 10px; }
+    .splash-social-btn { width: 40px; height: 40px; border-radius: 9px; }
+    .splash-social-btn img, .splash-social-btn svg { width: 22px; height: 22px; }
+    .header-social-btn { width: 48px; height: 48px; }
+    .header-social-btn img, .header-social-btn svg { width: 26px; height: 26px; }
 }
 @media (max-width: 480px) {
     .f1-title { font-size: 26px; }
@@ -927,6 +544,9 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 <body>
 
 <!-- ===================== STRONA STARTOWA ===================== -->
+<!-- Social icons - prawy górny róg splasha -->
+<div id="splash-social-icons"></div>
+
 <div id="splash-screen" onclick="hideSplash()">
     <div class="splash-logo-wrap">
         <div class="splash-logo-box">
@@ -960,9 +580,13 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
         <div class="f1-title">Weekendowa<br>Liga F1</div>
     </div>
-    <div class="f1-auth-zone">
-        <button class="btn-action hidden" id="btn-open-login" onclick="ui.toggleAuth(true)" title="Logowanie">🔒</button>
-        <button class="btn-action hidden" id="btn-open-admin" onclick="ui.toggleAdmin(true)">⚙ PANEL ADMINA</button>
+    <div class="header-right">
+        <!-- Social icons obok logo w headerze -->
+        <div class="header-social-icons" id="header-social-icons"></div>
+        <div class="f1-auth-zone" style="display:flex;align-items:center;gap:12px;">
+            <button class="btn-action hidden" id="btn-open-login" onclick="ui.toggleAuth(true)" title="Logowanie">🔒</button>
+            <button class="btn-action hidden" id="btn-open-admin" onclick="ui.toggleAdmin(true)">⚙ PANEL ADMINA</button>
+        </div>
     </div>
 </header>
 
@@ -1047,14 +671,13 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 <!-- ===================== PANEL ADMINA ===================== -->
 <div id="admin-overlay" onclick="ui.toggleAdmin(false)"></div>
 <div id="admin-sidebar">
-
     <div class="admin-header-bar">
         <h2>⚙ CENTRALNY PANEL</h2>
         <button class="btn-action" onclick="ui.toggleAdmin(false)">✕ ZAMKNIJ</button>
     </div>
-
     <div class="admin-toc">
         <a href="#sec-splash" onclick="ui.openAdminSection('sec-splash')">🖼 Splash</a>
+        <a href="#sec-social" onclick="ui.openAdminSection('sec-social')">🔗 Social</a>
         <a href="#sec-news" onclick="ui.openAdminSection('sec-news')">📢 News</a>
         <a href="#sec-countdown" onclick="ui.openAdminSection('sec-countdown')">⏱ Odliczanie</a>
         <a href="#sec-race" onclick="ui.openAdminSection('sec-race')">🏁 Wyścig</a>
@@ -1063,7 +686,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         <a href="#sec-logos" onclick="ui.openAdminSection('sec-logos')">🏎 Loga</a>
         <a href="#sec-gallery" onclick="ui.openAdminSection('sec-gallery')">📷 Galeria</a>
     </div>
-
     <div class="admin-body">
 
     <!-- 1. STRONA STARTOWA -->
@@ -1076,14 +698,14 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         <div class="admin-section-body open">
             <div class="form-group">
                 <label class="form-label">Zdjęcia na splash (do 10)
-                    <span class="form-hint">Przeciągnij wiersze aby zmienić kolejność. Możesz wkleić URL lub przesłać plik.</span>
+                    <span class="form-hint">Przeciągnij wiersze aby zmienić kolejność. Suwak = skala. Możesz wkleić URL lub przesłać plik.</span>
                 </label>
                 <div id="adm-splash-images-list"></div>
                 <button class="btn-action btn-secondary btn-sm" onclick="ui.addSplashImageRow()" id="btn-add-splash-img">＋ DODAJ ZDJĘCIE</button>
             </div>
             <div class="form-group">
                 <label class="form-label">Treść HTML pod zdjęciami (opcjonalna)</label>
-                <textarea id="adm-splash-content" class="f1-textarea" rows="4" placeholder='np. <h2 style="color:#e10600">Sezon 2025 Już Trwa!</h2>'></textarea>
+                <textarea id="adm-splash-content" class="f1-textarea" rows="4" placeholder='np. <h2 style="color:#e10600">Sezon 2026 Już Trwa!</h2>'></textarea>
             </div>
             <div class="btn-row">
                 <button class="btn-action" onclick="dbCore.saveSplashContent()">💾 ZAPISZ SPLASH</button>
@@ -1092,7 +714,62 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 2. BREAKING NEWS -->
+    <!-- 2. SOCIAL ICONS -->
+    <div class="admin-section" id="sec-social">
+        <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
+            <span class="admin-section-icon">🔗</span>
+            <span class="admin-section-title">Ikonki Social (Discord / YouTube)</span>
+            <span class="admin-section-arrow">▼</span>
+        </div>
+        <div class="admin-section-body">
+            <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">
+                Ikony wyświetlają się obok logo w nagłówku strony oraz w prawym górnym rogu strony startowej. Kliknięcie otwiera link w nowej karcie.
+                Wklej URL grafiki lub prześlij plik PNG/SVG.
+            </p>
+            <div class="social-icons-admin" id="adm-social-list">
+                <!-- Discord -->
+                <div class="social-icon-row" id="social-row-discord">
+                    <div class="social-icon-preview-box" id="social-prev-discord">
+                        <!-- default discord SVG -->
+                        <svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028z"/></svg>
+                    </div>
+                    <span class="social-platform-label">Discord</span>
+                    <div class="social-icon-fields">
+                        <input type="text" class="f1-input" id="social-url-discord" placeholder="https://discord.gg/..." style="padding:10px 14px;">
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <input type="text" class="f1-input" id="social-icon-discord" placeholder="URL grafiki ikony (opcjonalne)" style="padding:10px 14px;flex:1;min-width:160px;">
+                            <label class="social-icon-upload-label">
+                                📁 PLIK
+                                <input type="file" accept="image/*" style="display:none" onchange="ui.handleSocialIconUpload('discord', this)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- YouTube -->
+                <div class="social-icon-row" id="social-row-youtube">
+                    <div class="social-icon-preview-box" id="social-prev-youtube">
+                        <svg viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </div>
+                    <span class="social-platform-label">YouTube</span>
+                    <div class="social-icon-fields">
+                        <input type="text" class="f1-input" id="social-url-youtube" placeholder="https://youtube.com/@..." style="padding:10px 14px;">
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <input type="text" class="f1-input" id="social-icon-youtube" placeholder="URL grafiki ikony (opcjonalne)" style="padding:10px 14px;flex:1;min-width:160px;">
+                            <label class="social-icon-upload-label">
+                                📁 PLIK
+                                <input type="file" accept="image/*" style="display:none" onchange="ui.handleSocialIconUpload('youtube', this)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn-action" onclick="dbCore.saveSocialConfig()">💾 ZAPISZ IKONKI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. BREAKING NEWS -->
     <div class="admin-section" id="sec-news">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">📢</span>
@@ -1101,9 +778,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
         <div class="admin-section-body">
             <div class="form-group">
-                <label class="check-group">
-                    <input type="checkbox" id="adm-show-news"> POKAŻ PASEK BREAKING NEWS
-                </label>
+                <label class="check-group"><input type="checkbox" id="adm-show-news"> POKAŻ PASEK BREAKING NEWS</label>
             </div>
             <div class="form-group">
                 <label class="form-label">Treść newsa (HTML):</label>
@@ -1115,7 +790,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 3. ODLICZANIE -->
+    <!-- 4. ODLICZANIE -->
     <div class="admin-section" id="sec-countdown">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">⏱</span>
@@ -1136,7 +811,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
             </div>
             <div id="hero-date-group" class="form-group">
                 <label class="form-label">Data licznika (YYYY-MM-DD HH:MM):</label>
-                <input type="text" id="adm-hero-date" class="f1-input" placeholder="2024-05-24 20:00">
+                <input type="text" id="adm-hero-date" class="f1-input" placeholder="2026-05-24 20:00">
             </div>
             <div class="btn-row">
                 <button class="btn-action" onclick="dbCore.saveCountdownConfig()">💾 ZAPISZ ODLICZANIE</button>
@@ -1144,7 +819,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 4. WYNIKI WYŚCIGU -->
+    <!-- 5. WYNIKI WYŚCIGU -->
     <div class="admin-section" id="sec-race">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">🏁</span>
@@ -1173,7 +848,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 5. ARCHIWUM -->
+    <!-- 6. ARCHIWUM -->
     <div class="admin-section" id="sec-archive">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">📁</span>
@@ -1188,7 +863,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 6. KLASYFIKACJE -->
+    <!-- 7. KLASYFIKACJE -->
     <div class="admin-section" id="sec-standings">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">🏆</span>
@@ -1213,7 +888,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 7. LOGA ZESPOŁÓW -->
+    <!-- 8. LOGA ZESPOŁÓW -->
     <div class="admin-section" id="sec-logos">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">🏎</span>
@@ -1222,7 +897,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
         <div class="admin-section-body">
             <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">
-                Wklej URL <b>lub prześlij plik</b> PNG/SVG dla każdego zespołu. Logo wyświetla się jako duży watermark w tle wiersza tabeli konstruktorów.
+                Wklej URL <b>lub prześlij plik</b> PNG/SVG dla każdego zespołu. Logo wyświetla się w tabeli konstruktorów — jako ikonka przy nazwie zespołu i jako watermark w tle wiersza. W tabeli kierowców wyświetla się małe logo przy nazwie zespołu.
             </p>
             <div class="adm-logos-grid" id="adm-logos-grid"></div>
             <div class="btn-row">
@@ -1231,7 +906,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         </div>
     </div>
 
-    <!-- 8. GALERIA -->
+    <!-- 9. GALERIA -->
     <div class="admin-section" id="sec-gallery">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
             <span class="admin-section-icon">📷</span>
@@ -1243,7 +918,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                 <h4 style="margin:0 0 16px;font-family:var(--font-display);font-size:16px;letter-spacing:2px;color:#333;">1. UTWÓRZ ALBUM</h4>
                 <div class="form-group">
                     <label class="form-label">Nazwa albumu:</label>
-                    <input type="text" id="adm-gal-name" class="f1-input" placeholder="np. GP Monako 2025">
+                    <input type="text" id="adm-gal-name" class="f1-input" placeholder="np. GP Monako 2026">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Link do okładki (URL):</label>
@@ -1290,7 +965,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                 </div>
             </div>
             <div>
-                <h4 style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:12px;">USUŃ ALBUMY:</h4>
+                <h4 style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:12px;">USUŃ / EDYTUJ ALBUMY:</h4>
                 <div id="adm-gallery-manager"></div>
             </div>
         </div>
@@ -1338,6 +1013,10 @@ let isLoggedIn = false;
 let splashTimerInterval = null;
 let cachedHeroConfig = { mode: 'countdown', date: '', title: '' };
 let teamLogos = {};
+// Social icons config: { discord: { url, icon }, youtube: { url, icon } }
+let socialConfig = {};
+// Tymczasowe uploadowane ikony (base64) przed zapisem
+let socialIconUploads = {};
 
 // ===================== DEFINICJE ZESPOŁÓW =====================
 const TEAM_DEFS = [
@@ -1352,6 +1031,43 @@ const TEAM_DEFS = [
     { key: 'haas',     label: 'Haas',           color: '#bdb3b3' },
     { key: 'rb',       label: 'Racing Bulls',   color: '#004cff' },
 ];
+
+// Default SVG icons
+const DEFAULT_DISCORD_SVG = `<svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028z"/></svg>`;
+const DEFAULT_YOUTUBE_SVG = `<svg viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
+
+// ===================== SOCIAL ICONS RENDER =====================
+function renderSocialIcons() {
+    // Splash - prawy górny róg
+    const splashContainer = document.getElementById('splash-social-icons');
+    // Header - obok logo
+    const headerContainer = document.getElementById('header-social-icons');
+
+    if (!splashContainer || !headerContainer) return;
+
+    const platforms = ['discord', 'youtube'];
+    let splashHtml = '';
+    let headerHtml = '';
+
+    platforms.forEach(p => {
+        const cfg = socialConfig[p] || {};
+        const link = cfg.url || '';
+        const iconSrc = cfg.icon || '';
+        const defaultSvg = p === 'discord' ? DEFAULT_DISCORD_SVG : DEFAULT_YOUTUBE_SVG;
+
+        if (!link) return; // nie pokazuj jeśli brak linku
+
+        const innerHtml = iconSrc
+            ? `<img src="${iconSrc}" alt="${p}">`
+            : defaultSvg;
+
+        splashHtml += `<a class="splash-social-btn" href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${p.charAt(0).toUpperCase()+p.slice(1)}">${innerHtml}</a>`;
+        headerHtml += `<a class="header-social-btn" href="${link}" target="_blank" rel="noopener" title="${p.charAt(0).toUpperCase()+p.slice(1)}">${innerHtml}</a>`;
+    });
+
+    splashContainer.innerHTML = splashHtml;
+    headerContainer.innerHTML = headerHtml;
+}
 
 // ===================== LOGA GRID W ADMINIE =====================
 function buildLogosGrid() {
@@ -1410,8 +1126,10 @@ function renderSplashImages(images) {
         const alignMap = { center: 'center', left: 'flex-start', right: 'flex-end' };
         const justify = alignMap[img.align || 'center'] || 'center';
         const width = img.width || '80%';
+        const scale = img.scale !== undefined ? parseFloat(img.scale) : 1;
+        const finalWidth = scale !== 1 ? `calc(${width} * ${scale})` : width;
         return `<div class="splash-img-row" style="justify-content:${justify};">
-            <img src="${img.url}" style="width:${width};" alt="splash image" onclick="event.stopPropagation()">
+            <img src="${img.url}" style="width:${finalWidth};" alt="splash image" onclick="event.stopPropagation()">
         </div>`;
     }).filter(Boolean).join('');
 }
@@ -1450,39 +1168,14 @@ function renderSplashCountdown(config) {
 
 // ===================== DRAG & DROP dla splash images =====================
 let dragSrcEl = null;
-
 function initSplashDragDrop() {
     const list = document.getElementById('adm-splash-images-list');
     list.querySelectorAll('.splash-img-entry').forEach(item => {
         item.draggable = true;
-        item.addEventListener('dragstart', e => {
-            dragSrcEl = item;
-            item.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        item.addEventListener('dragend', () => {
-            item.classList.remove('dragging');
-            list.querySelectorAll('.splash-img-entry').forEach(i => i.classList.remove('drag-over'));
-            ui._renumberSplashRows();
-        });
-        item.addEventListener('dragover', e => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            list.querySelectorAll('.splash-img-entry').forEach(i => i.classList.remove('drag-over'));
-            if (item !== dragSrcEl) item.classList.add('drag-over');
-            return false;
-        });
-        item.addEventListener('drop', e => {
-            e.stopPropagation();
-            if (dragSrcEl !== item) {
-                const allItems = [...list.querySelectorAll('.splash-img-entry')];
-                const srcIdx = allItems.indexOf(dragSrcEl);
-                const dstIdx = allItems.indexOf(item);
-                if (srcIdx < dstIdx) { list.insertBefore(dragSrcEl, item.nextSibling); }
-                else { list.insertBefore(dragSrcEl, item); }
-            }
-            return false;
-        });
+        item.addEventListener('dragstart', e => { dragSrcEl = item; item.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+        item.addEventListener('dragend', () => { item.classList.remove('dragging'); list.querySelectorAll('.splash-img-entry').forEach(i => i.classList.remove('drag-over')); ui._renumberSplashRows(); });
+        item.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; list.querySelectorAll('.splash-img-entry').forEach(i => i.classList.remove('drag-over')); if (item !== dragSrcEl) item.classList.add('drag-over'); return false; });
+        item.addEventListener('drop', e => { e.stopPropagation(); if (dragSrcEl !== item) { const allItems = [...list.querySelectorAll('.splash-img-entry')]; const srcIdx = allItems.indexOf(dragSrcEl); const dstIdx = allItems.indexOf(item); if (srcIdx < dstIdx) { list.insertBefore(dragSrcEl, item.nextSibling); } else { list.insertBefore(dragSrcEl, item); } } return false; });
     });
 }
 
@@ -1514,12 +1207,27 @@ window.ui = {
         if (!section) return;
         const header = section.querySelector('.admin-section-header');
         const body = section.querySelector('.admin-section-body');
-        if (header && body && !body.classList.contains('open')) {
-            body.classList.add('open');
-            header.classList.add('open');
-        }
+        if (header && body && !body.classList.contains('open')) { body.classList.add('open'); header.classList.add('open'); }
         setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
         return false;
+    },
+
+    // ---- SOCIAL ICONS ----
+    handleSocialIconUpload(platform, input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            const dataUrl = e.target.result;
+            socialIconUploads[platform] = dataUrl;
+            // Aktualizuj podgląd w adminie
+            const prev = document.getElementById('social-prev-' + platform);
+            if (prev) prev.innerHTML = `<img src="${dataUrl}" alt="${platform}" style="width:30px;height:30px;object-fit:contain;">`;
+            // Aktualizuj pole URL na "[plik lokalny]"
+            const iconInput = document.getElementById('social-icon-' + platform);
+            if (iconInput) iconInput.value = '[plik lokalny]';
+        };
+        reader.readAsDataURL(file);
     },
 
     // ---- SPLASH IMAGE ROWS ----
@@ -1530,7 +1238,9 @@ window.ui = {
         const url = imgData ? imgData.url : '';
         const width = imgData ? (imgData.width || '80%') : '80%';
         const align = imgData ? (imgData.align || 'center') : 'center';
+        const scale = imgData ? (imgData.scale !== undefined ? parseFloat(imgData.scale) : 1) : 1;
         const isBase64 = url.startsWith('data:');
+        const scalePercent = Math.round(scale * 100);
 
         const entry = document.createElement('div');
         entry.className = 'splash-img-entry';
@@ -1540,10 +1250,8 @@ window.ui = {
             <div class="sie-field">
                 <label class="form-label" style="font-size:10px;margin-bottom:4px;">ŹRÓDŁO</label>
                 <div class="sie-source-toggle">
-                    <button type="button" class="sie-source-btn ${!isBase64 ? 'active' : ''}"
-                        onclick="ui.sieSetMode(this,'url')">URL</button>
-                    <button type="button" class="sie-source-btn ${isBase64 ? 'active' : ''}"
-                        onclick="ui.sieSetMode(this,'file')">PLIK</button>
+                    <button type="button" class="sie-source-btn ${!isBase64 ? 'active' : ''}" onclick="ui.sieSetMode(this,'url')">URL</button>
+                    <button type="button" class="sie-source-btn ${isBase64 ? 'active' : ''}" onclick="ui.sieSetMode(this,'file')">PLIK</button>
                 </div>
                 <div class="sie-url-wrap" style="display:${isBase64 ? 'none' : 'block'}">
                     <input type="text" class="f1-input spl-url" placeholder="https://example.com/foto.jpg"
@@ -1554,8 +1262,7 @@ window.ui = {
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:#333;color:#fff;padding:10px 14px;border-radius:4px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:background 0.2s;"
                         onmouseover="this.style.background='#e10600'" onmouseout="this.style.background='#333'">
                         📁 WYBIERZ PLIK
-                        <input type="file" accept="image/*" style="display:none"
-                            onchange="ui.handleSplashFileUpload(this)">
+                        <input type="file" accept="image/*" style="display:none" onchange="ui.handleSplashFileUpload(this)">
                     </label>
                     <input type="hidden" class="spl-url spl-file-data" value="${isBase64 ? url : ''}">
                     <span class="spl-file-name" style="font-size:11px;color:#888;margin-top:4px;display:block;">
@@ -1575,7 +1282,15 @@ window.ui = {
                 <label class="form-label" style="font-size:10px;margin-bottom:4px;">SZEROKOŚĆ</label>
                 <input type="text" class="f1-input spl-width" placeholder="80% lub 500px" value="${width}">
             </div>
-            <img class="splash-img-preview-thumb" 
+            <div class="sie-field" style="min-width:180px;">
+                <label class="form-label" style="font-size:10px;margin-bottom:4px;">SKALA</label>
+                <div class="sie-scale-wrap">
+                    <input type="range" class="spl-scale" min="10" max="200" value="${scalePercent}"
+                        oninput="this.nextElementSibling.textContent=this.value+'%'">
+                    <span class="sie-scale-val">${scalePercent}%</span>
+                </div>
+            </div>
+            <img class="splash-img-preview-thumb"
                 src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}"
                 style="opacity:${url ? 1 : 0.2}" alt="thumb">
             <button type="button" class="sie-remove" onclick="ui.removeSplashImageRow(this)" title="Usuń">✕</button>`;
@@ -1644,7 +1359,6 @@ window.ui = {
         if (!img) return;
         img.src = url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
         img.style.opacity = url ? 1 : 0.2;
-        // Update local cache for this session
         if (url && !url.startsWith('[')) teamLogos[teamKey] = url;
     },
 
@@ -1654,9 +1368,7 @@ window.ui = {
         const reader = new FileReader();
         reader.onload = e => {
             const dataUrl = e.target.result;
-            // Zachowaj w session cache
             teamLogos[teamKey] = dataUrl;
-            // Aktualizuj podgląd
             const img = document.getElementById('logo-prev-' + teamKey);
             if (img) { img.src = dataUrl; img.style.opacity = 1; }
             const urlInput = document.getElementById('logo-url-' + teamKey);
@@ -1671,12 +1383,78 @@ window.ui = {
         const isOpen = body.classList.toggle('open');
         if (btn) btn.classList.toggle('open', isOpen);
     },
+
+    // ==================== EDYCJA KOMÓREK ARCHIWUM ====================
+    editArcCell(el, raceId, rowIdx, field) {
+        if (!isLoggedIn) return;
+        const current = el.textContent.trim();
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = current;
+        input.style.cssText = 'width:90px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
+        el.replaceWith(input);
+        input.focus(); input.select();
+        const save = async () => {
+            const newVal = input.value.trim();
+            const span = document.createElement('span');
+            span.className = 'arc-cell-editable';
+            span.textContent = newVal;
+            span.onclick = () => ui.editArcCell(span, raceId, rowIdx, field);
+            input.replaceWith(span);
+            // Pobierz aktualne dane i zaktualizuj
+            const s = await new Promise(res => onValue(ref(db, 'archive/' + raceId), res, { onlyOnce: true }));
+            const data = s.val();
+            if (data && data.results && data.results[rowIdx]) {
+                data.results[rowIdx][field] = newVal;
+                await update(ref(db, 'archive/' + raceId), { results: data.results });
+            }
+        };
+        input.addEventListener('blur', save);
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
+    },
+
+    editLastRaceCell(el, rowIdx, field) {
+        if (!isLoggedIn) return;
+        const current = el.textContent.trim();
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = current;
+        input.style.cssText = 'width:90px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
+        el.replaceWith(input);
+        input.focus(); input.select();
+        const save = async () => {
+            const newVal = input.value.trim();
+            const span = document.createElement('span');
+            span.className = 'arc-cell-editable';
+            span.textContent = newVal;
+            span.onclick = () => ui.editLastRaceCell(span, rowIdx, field);
+            input.replaceWith(span);
+            const s = await new Promise(res => onValue(ref(db, 'lastRace'), res, { onlyOnce: true }));
+            const data = s.val();
+            if (data && data.results && data.results[rowIdx]) {
+                data.results[rowIdx][field] = newVal;
+                await update(ref(db, 'lastRace'), { results: data.results });
+            }
+        };
+        input.addEventListener('blur', save);
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
+    },
+
     openAlbum(id) {
         document.getElementById('gallery-albums').classList.add('hidden');
         document.getElementById('gallery-viewer').classList.remove('hidden');
         window._currentAlbumId = id;
         const album = window.galleryData[id];
-        document.getElementById('gallery-viewer-title').textContent = album.name;
+
+        // Tytuł albumu — edytowalny jeśli zalogowany
+        const titleEl = document.getElementById('gallery-viewer-title');
+        if (isLoggedIn) {
+            titleEl.innerHTML = `<span class="album-viewer-title-editable" title="Kliknij aby edytować nazwę">${album.name}</span>`;
+            titleEl.querySelector('span').onclick = () => ui.editAlbumName(id, album.name, titleEl.querySelector('span'));
+        } else {
+            titleEl.textContent = album.name;
+        }
+
         const grid = document.getElementById('album-content-grid');
         const entries = album.entries ? Object.entries(album.entries) : [];
         if (entries.length === 0) {
@@ -1706,13 +1484,57 @@ window.ui = {
             const deleteBtn = isLoggedIn
                 ? `<button class="btn-action btn-danger btn-sm" style="position:absolute;top:10px;right:10px;z-index:10;" onclick="dbCore.deleteNode('gallery/${id}/entries/${entryId}');ui.openAlbum('${id}')">✕</button>`
                 : '';
+            // Edytowalna nazwa wpisu
+            const entryTitleHtml = isLoggedIn
+                ? `<div class="media-entry-title"><span class="arc-cell-editable" onclick="ui.editEntryTitle(this,'${id}','${entryId}')">${entry.title || 'Wpis'}</span></div>`
+                : (entry.title ? `<div class="media-entry-title">${entry.title}</div>` : '');
             return `
                 <div class="media-entry">
-                    ${entry.title ? `<div class="media-entry-title">${entry.title}</div>` : ''}
+                    ${entryTitleHtml}
                     <div class="media-entry-body" style="position:relative;">${mediaHtml}${deleteBtn}</div>
                 </div>`;
         }).join('');
     },
+
+    // Edycja nazwy albumu w widoku galerii
+    editAlbumName(id, currentName, el) {
+        if (!isLoggedIn) return;
+        const input = document.createElement('input');
+        input.type = 'text'; input.value = currentName;
+        input.style.cssText = 'font-family:var(--font-display);font-size:44px;font-weight:900;letter-spacing:2px;color:var(--f1-black);background:transparent;border:none;border-bottom:3px solid var(--f1-red);outline:none;width:100%;text-transform:uppercase;';
+        el.replaceWith(input);
+        input.focus(); input.select();
+        const save = async () => {
+            const nv = input.value.trim() || currentName;
+            await update(ref(db, 'gallery/' + id), { name: nv });
+            if (window.galleryData && window.galleryData[id]) window.galleryData[id].name = nv;
+        };
+        input.addEventListener('blur', save);
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = currentName; input.blur(); } });
+    },
+
+    // Edycja nazwy wpisu w galerii
+    editEntryTitle(el, albumId, entryId) {
+        if (!isLoggedIn) return;
+        const current = el.textContent.trim();
+        const input = document.createElement('input');
+        input.type = 'text'; input.value = current;
+        input.style.cssText = 'font-family:var(--font-data);font-size:30px;font-weight:700;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);outline:none;width:100%;letter-spacing:1px;';
+        el.replaceWith(input);
+        input.focus(); input.select();
+        const save = async () => {
+            const nv = input.value.trim() || current;
+            const span = document.createElement('span');
+            span.className = 'arc-cell-editable';
+            span.textContent = nv;
+            span.onclick = () => ui.editEntryTitle(span, albumId, entryId);
+            input.replaceWith(span);
+            await update(ref(db, `gallery/${albumId}/entries/${entryId}`), { title: nv });
+        };
+        input.addEventListener('blur', save);
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
+    },
+
     closeAlbum() {
         document.getElementById('gallery-albums').classList.remove('hidden');
         document.getElementById('gallery-viewer').classList.add('hidden');
@@ -1746,6 +1568,7 @@ window.ui = {
         input.addEventListener('blur', save);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
     },
+
     async editLastRaceName() {
         if (!isLoggedIn) return;
         const titleEl = document.getElementById('display-last-race-name');
@@ -1760,13 +1583,11 @@ window.ui = {
         if (existingSpan) existingSpan.replaceWith(input);
         else { titleEl.textContent = 'WYNIKI: '; titleEl.appendChild(input); }
         input.focus(); input.select();
-        const save = async () => {
-            const newVal = input.value.trim();
-            await update(ref(db, 'lastRace'), { name: newVal });
-        };
+        const save = async () => { const newVal = input.value.trim(); await update(ref(db, 'lastRace'), { name: newVal }); };
         input.addEventListener('blur', save);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
     },
+
     async editArchiveName(id, currentName) {
         if (!isLoggedIn) return;
         const nameEl = document.getElementById('arc-name-' + id);
@@ -1798,35 +1619,35 @@ onAuthStateChanged(auth, user => {
     isLoggedIn = !!user;
     document.getElementById('btn-open-login').classList.toggle('hidden', !!user);
     document.getElementById('btn-open-admin').classList.toggle('hidden', !user);
+    // Pokaż przyciski edycji albumów gdy zalogowany
+    document.querySelectorAll('.album-edit-btn').forEach(btn => {
+        btn.classList.toggle('visible', !!user);
+    });
 });
 
 // ===================== DATABASE =====================
 window.dbCore = {
+    // ---- SPLASH ----
     async saveSplashContent() {
         const snap = await new Promise(res => onValue(ref(db, 'config'), res, { onlyOnce: true }));
         const current = snap.val() || {};
-
-        // Zbierz zdjęcia z formularza — obsługa URL i base64 z pliku
         const entries = document.querySelectorAll('.splash-img-entry');
         const images = [];
         entries.forEach(entry => {
             const align = entry.querySelector('.spl-align')?.value || 'center';
             const width = entry.querySelector('.spl-width')?.value?.trim() || '80%';
-
-            // Sprawdź czy tryb URL czy plik
+            const scaleInput = entry.querySelector('.spl-scale');
+            const scale = scaleInput ? parseFloat(scaleInput.value) / 100 : 1;
             const fileData = entry.querySelector('.spl-file-data');
             const urlInput = entry.querySelector('.sie-url-wrap .spl-url');
             let url = '';
-
             if (fileData && fileData.value && fileData.value.startsWith('data:')) {
-                url = fileData.value; // base64 z pliku
+                url = fileData.value;
             } else if (urlInput) {
                 url = urlInput.value?.trim() || '';
             }
-
-            if (url) images.push({ url, align, width });
+            if (url) images.push({ url, align, width, scale });
         });
-
         await set(ref(db, 'config'), {
             ...current,
             splashContent: document.getElementById('adm-splash-content').value,
@@ -1836,6 +1657,35 @@ window.dbCore = {
         alert("Strona startowa zapisana!");
         document.getElementById('splash-custom-content').innerHTML = document.getElementById('adm-splash-content').value;
         renderSplashImages(images);
+    },
+
+    // ---- SOCIAL ----
+    async saveSocialConfig() {
+        const snap = await new Promise(res => onValue(ref(db, 'config'), res, { onlyOnce: true }));
+        const current = snap.val() || {};
+
+        const platforms = ['discord', 'youtube'];
+        const social = {};
+
+        platforms.forEach(p => {
+            const url = document.getElementById('social-url-' + p)?.value?.trim() || '';
+            let icon = '';
+            // Jeśli był upload (base64 w pamięci)
+            if (socialIconUploads[p]) {
+                icon = socialIconUploads[p];
+            } else {
+                const iconInput = document.getElementById('social-icon-' + p);
+                if (iconInput && iconInput.value.trim() && !iconInput.value.includes('[')) {
+                    icon = iconInput.value.trim();
+                }
+            }
+            if (url) social[p] = { url, icon };
+        });
+
+        await set(ref(db, 'config'), { ...current, socialIcons: social });
+        socialConfig = social;
+        renderSocialIcons();
+        alert("Ikonki social zapisane!");
     },
 
     async saveNewsConfig() {
@@ -1911,15 +1761,12 @@ window.dbCore = {
         alert("Klasyfikacje zaktualizowane!");
     },
 
-    // Zapisz loga — obsługuje zarówno URL jak i base64 z przesłanych plików
     async saveTeamLogos() {
         const logos = {};
         TEAM_DEFS.forEach(t => {
-            // Jeśli mamy base64 w session cache (z uploadu), użyj tego
             if (teamLogos[t.key] && (teamLogos[t.key].startsWith('data:') || teamLogos[t.key].startsWith('http'))) {
                 logos[t.key] = teamLogos[t.key];
             } else {
-                // Fallback na wartość inputa URL (o ile nie jest placeholder)
                 const input = document.getElementById('logo-url-' + t.key);
                 if (input && input.value.trim() && !input.value.includes('[')) {
                     logos[t.key] = input.value.trim();
@@ -1990,21 +1837,16 @@ window.dbCore = {
 // ===================== HELPERS =====================
 const extractYtId = (url) => {
     if (!url) return '';
-    let m = url.match(/youtu\.be\/([^?&]+)/);
-    if (m) return m[1];
-    m = url.match(/[?&]v=([^?&]+)/);
-    if (m) return m[1];
-    m = url.match(/embed\/([^?&]+)/);
-    if (m) return m[1];
+    let m = url.match(/youtu\.be\/([^?&]+)/); if (m) return m[1];
+    m = url.match(/[?&]v=([^?&]+)/); if (m) return m[1];
+    m = url.match(/embed\/([^?&]+)/); if (m) return m[1];
     return url;
 };
 
 const normalizeTeamName = (name) => {
     if (!name) return name;
     const n = name.toLowerCase().trim();
-    if (n.includes('racing bull') || n.includes('visa cash') || n.includes('vcarb') || n === 'rb' || n.startsWith('rb ') || n.match(/^racing bulls?$/)) {
-        return 'Racing Bulls';
-    }
+    if (n.includes('racing bull') || n.includes('visa cash') || n.includes('vcarb') || n === 'rb' || n.startsWith('rb ') || n.match(/^racing bulls?$/)) return 'Racing Bulls';
     return name;
 };
 
@@ -2043,7 +1885,7 @@ const getTeamKey = (teamName) => {
     return tc ? tc.replace('team-', '') : '';
 };
 
-// Logo tylko dla tabeli kierowców (małe ikonki)
+// Logo małe - tylko tabela kierowców
 const teamLogoHtml = (teamName, className = 'team-logo-img') => {
     const key = getTeamKey(teamName);
     if (key && teamLogos[key]) {
@@ -2066,10 +1908,23 @@ const findFastestLap = (results) => {
     return fastestIdx;
 };
 
-const renderRaceTable = (results) => {
-    const posClass = (i) => i === 0 ? 'pos-gold' : i === 1 ? 'pos-silver' : i === 2 ? 'pos-bronze' : '';
+// ===================== RENDER RACE TABLE =====================
+// Wersja z obsługą edycji każdej komórki
+const renderRaceTable = (results, raceId = null, isLastRace = false) => {
+    const posClass = (i) => i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
     const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
     const fastestIdx = findFastestLap(results);
+
+    const cellHtml = (val, rowIdx, field, extraClass = '') => {
+        if (!isLoggedIn) return `<span class="${extraClass}">${val || '-'}</span>`;
+        if (raceId) {
+            return `<span class="arc-cell-editable ${extraClass}" onclick="ui.editArcCell(this,'${raceId}',${rowIdx},'${field}')">${val || '-'}</span>`;
+        } else if (isLastRace) {
+            return `<span class="arc-cell-editable ${extraClass}" onclick="ui.editLastRaceCell(this,${rowIdx},'${field}')">${val || '-'}</span>`;
+        }
+        return `<span class="${extraClass}">${val || '-'}</span>`;
+    };
+
     return `
         <table class="f1-table">
             <thead><tr>
@@ -2085,66 +1940,52 @@ const renderRaceTable = (results) => {
             <tbody>
                 ${results.map((r, i) => `
                     <tr class="${getTeamClass(r.team)}">
-                        <td class="col-pos ${posClass(i)}">${r.pos}</td>
-                        <td class="col-driver">${r.nick}</td>
+                        <td class="col-pos ${posClass(i)}">${cellHtml(r.pos, i, 'pos')}</td>
+                        <td class="col-driver">${cellHtml(r.nick, i, 'nick')}</td>
                         <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">
                             <div style="display:flex;align-items:center;gap:8px;">
                                 ${teamLogoHtml(r.team)}
-                                ${r.team}
+                                ${cellHtml(r.team, i, 'team')}
                             </div>
                         </td>
-                        <td style="text-align:center;">${clean(r.start)}</td>
-                        <td style="text-align:center;">${clean(r.pit)}</td>
-                        <td class="${i === fastestIdx ? 'fastest-lap' : 'col-best-lap'}">${r.best || '-'}</td>
-                        <td>${r.time || '-'}</td>
-                        <td class="col-pts">${r.pts}</td>
+                        <td style="text-align:center;">${cellHtml(clean(r.start), i, 'start')}</td>
+                        <td style="text-align:center;">${cellHtml(clean(r.pit), i, 'pit')}</td>
+                        <td class="${i === fastestIdx ? 'fastest-lap' : 'col-best-lap'}">${cellHtml(r.best, i, 'best', i === fastestIdx ? 'fastest-lap' : '')}</td>
+                        <td>${cellHtml(r.time, i, 'time')}</td>
+                        <td class="col-pts">${cellHtml(r.pts, i, 'pts')}</td>
                     </tr>
                 `).join('')}
             </tbody>
         </table>`;
 };
 
-// ===================== KONSTRUKTORZY — renderowanie z logo-bg =====================
+// ===================== KONSTRUKTORZY — renderowanie =====================
 function renderConstructorRow(r, i, isLoggedIn) {
     const cClass = getConstructorClass(r.team);
     const posClass = i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
-    const isDark = cClass.includes('mercedes') || cClass.includes('mclaren');
-    const posStyle = isDark ? 'color:#111 !important;' : 'color:#fff !important;';
-    const editable = isLoggedIn;
-
-    // Logo jako pełny background wiersza
     const key = getTeamKey(r.team);
     const logoUrl = key ? (teamLogos[key] || '') : '';
-    const logoBgHtml = logoUrl
-        ? `<td style="position:relative;padding:0;width:0;border:none;">
-               <div class="constructor-logo-bg"
-                   style="background-image:url('${logoUrl}');position:absolute;top:0;left:0;right:-9999px;bottom:0;"></div>
-           </td>`
-        : '';
+    const editable = isLoggedIn;
 
-    // Pionowy pasek gdy brak logo
-    const stripeHtml = `<div style="width:8px;height:44px;background:rgba(255,255,255,0.35);border-radius:2px;flex-shrink:0;"></div>`;
+    // Pasek boczny gdy brak logo
+    const leftDecor = logoUrl
+        ? `<img src="${logoUrl}" class="constructor-logo-inline" alt="${r.team}" onerror="this.style.display='none'">`
+        : `<div style="width:8px;height:44px;background:rgba(255,255,255,0.35);border-radius:2px;flex-shrink:0;"></div>`;
 
     return `
         <tr class="constructor-row ${cClass}" style="position:relative;">
-            ${logoUrl ? `<td colspan="3" style="padding:0;position:relative;height:1px;overflow:visible;border:none;display:none;"></td>` : ''}
-            <td class="col-pos" style="${posStyle} font-weight:900; position:relative; z-index:1;">
-                ${logoUrl ? `<div class="constructor-logo-bg" style="background-image:url('${logoUrl}'); opacity:0.18; position:absolute; inset:0; background-size:contain; background-repeat:no-repeat; background-position:center left 30px; z-index:0; pointer-events:none;"></div>` : ''}
-                <span style="position:relative;z-index:1;">${i+1}</span>
+            <td class="col-pos" style="font-weight:900;position:relative;z-index:1;">
+                ${posClass ? `<span class="${posClass}">${i+1}</span>` : i+1}
             </td>
             <td style="font-weight:700;font-size:38px;letter-spacing:1.5px;position:relative;z-index:1;">
-                ${logoUrl ? `<div class="constructor-logo-bg" style="background-image:url('${logoUrl}'); opacity:0.18; position:absolute; inset:0; background-size:contain; background-repeat:no-repeat; background-position:center left 20px; z-index:0; pointer-events:none;"></div>` : ''}
-                <div style="display:flex;align-items:center;gap:16px;position:relative;z-index:1;">
-                    ${logoUrl
-                        ? `<img src="${logoUrl}" style="height:52px;width:auto;max-width:120px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.9;flex-shrink:0;" alt="${r.team}" onerror="this.style.display='none'">`
-                        : stripeHtml
-                    }
+                ${logoUrl ? `<img src="${logoUrl}" class="constructor-logo-watermark" alt="${r.team}" onerror="this.style.display='none'">` : ''}
+                <div class="constructor-name-cell">
+                    ${leftDecor}
                     ${r.team}
                 </div>
             </td>
             <td class="col-pts" style="padding-right:30px;position:relative;z-index:1;">
-                ${logoUrl ? `<div class="constructor-logo-bg" style="background-image:url('${logoUrl}'); opacity:0.18; position:absolute; inset:0; background-size:contain; background-repeat:no-repeat; background-position:center right 20px; z-index:0; pointer-events:none;"></div>` : ''}
-                <span class="cteam-pts-cell" style="position:relative;z-index:1;">
+                <span class="cteam-pts-cell">
                     ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>` : r.pts}
                 </span>
             </td>
@@ -2158,10 +1999,26 @@ onValue(ref(db, 'config'), snap => {
     const c = snap.val();
     if (!c) return;
 
-    if (c.teamLogos) {
-        teamLogos = c.teamLogos;
-        buildLogosGrid();
+    if (c.teamLogos) { teamLogos = c.teamLogos; buildLogosGrid(); }
+
+    // Social icons
+    if (c.socialIcons) {
+        socialConfig = c.socialIcons;
+        // Załaduj do pól admina
+        ['discord', 'youtube'].forEach(p => {
+            const cfg = c.socialIcons[p] || {};
+            const urlInput = document.getElementById('social-url-' + p);
+            const iconInput = document.getElementById('social-icon-' + p);
+            if (urlInput) urlInput.value = cfg.url || '';
+            if (iconInput && cfg.icon && !cfg.icon.startsWith('data:')) iconInput.value = cfg.icon || '';
+            // Aktualizuj podgląd w adminie
+            if (cfg.icon) {
+                const prev = document.getElementById('social-prev-' + p);
+                if (prev) prev.innerHTML = `<img src="${cfg.icon}" alt="${p}" style="width:30px;height:30px;object-fit:contain;">`;
+            }
+        });
     }
+    renderSocialIcons();
 
     if (c.splashContent) {
         document.getElementById('splash-custom-content').innerHTML = c.splashContent;
@@ -2172,10 +2029,7 @@ onValue(ref(db, 'config'), snap => {
     if (c.splashImages && c.splashImages.length > 0) {
         renderSplashImages(c.splashImages);
         const list = document.getElementById('adm-splash-images-list');
-        if (list) {
-            list.innerHTML = '';
-            c.splashImages.forEach(img => ui.addSplashImageRow(img));
-        }
+        if (list) { list.innerHTML = ''; c.splashImages.forEach(img => ui.addSplashImageRow(img)); }
         document.getElementById('splash-image-area').style.display = 'none';
     } else if (c.splashImage) {
         const imgArea = document.getElementById('splash-image-area');
@@ -2246,7 +2100,6 @@ onValue(ref(db, 'standings'), snap => {
     const allForAdmin = allDrivers.map(d => `${d.isBot ? 'BOT:' : ''}${d.nick} | ${d.team} | ${d.photo || ''} | ${d.wins || 0} | ${d.pts}`).join('\n');
     document.getElementById('adm-drivers-raw').value = allForAdmin;
 
-    // Kierowcy
     const dBody = document.getElementById('api-drivers-list');
     let html = '';
     humanDrivers.forEach((r, i) => {
@@ -2293,14 +2146,13 @@ onValue(ref(db, 'standings'), snap => {
     }
     dBody.innerHTML = html;
 
-    // Konstruktorzy
     const tBody = document.getElementById('api-teams-list');
     const teams = data.teams || [];
     document.getElementById('adm-teams-raw').value = teams.map(t => `${t.team} | ${t.pts}`).join('\n');
     tBody.innerHTML = teams.map((r, i) => renderConstructorRow(r, i, isLoggedIn)).join('');
 });
 
-// 3. Last Race
+// 3. Last Race — z edytowalnymi komórkami
 onValue(ref(db, 'lastRace'), snap => {
     const data = snap.val();
     const container = document.getElementById('api-last-race-results');
@@ -2308,7 +2160,7 @@ onValue(ref(db, 'lastRace'), snap => {
     if (!data) { container.innerHTML = "<p style='padding:40px;'>Brak danych o ostatnim wyścigu.</p>"; titleEl.textContent = 'WYNIKI: OSTATNI WYŚCIG'; return; }
     if (isLoggedIn) { titleEl.innerHTML = `WYNIKI: <span class="editable-title" onclick="ui.editLastRaceName()" title="Kliknij aby edytować">${data.name}</span>`; }
     else { titleEl.textContent = 'WYNIKI: ' + data.name; }
-    container.innerHTML = renderRaceTable(data.results);
+    container.innerHTML = renderRaceTable(data.results, null, true);
 });
 
 onAuthStateChanged(auth, () => {
@@ -2318,10 +2170,13 @@ onAuthStateChanged(auth, () => {
         if (!data || !titleEl) return;
         if (isLoggedIn) { titleEl.innerHTML = `WYNIKI: <span class="editable-title" onclick="ui.editLastRaceName()" title="Kliknij aby edytować">${data.name}</span>`; }
         else { titleEl.textContent = 'WYNIKI: ' + data.name; }
+        // Re-render tabeli z aktualnymi uprawnieniami
+        const container = document.getElementById('api-last-race-results');
+        if (container) container.innerHTML = renderRaceTable(data.results, null, true);
     }, { onlyOnce: true });
 });
 
-// 4. Archive
+// 4. Archive — z edytowalnymi komórkami
 onValue(ref(db, 'archive'), snap => {
     const data = snap.val();
     const arcList = document.getElementById('api-archive-list');
@@ -2339,7 +2194,7 @@ onValue(ref(db, 'archive'), snap => {
                 <span>WYNIKI <span class="arc-arrow">▼</span></span>
             </button>
             <div class="archive-body" id="arc-body-${id}">
-                <div style="padding:20px;border-top:2px solid #eee;overflow-x:auto;">${renderRaceTable(race.results)}</div>
+                <div style="padding:20px;border-top:2px solid #eee;overflow-x:auto;">${renderRaceTable(race.results, id, false)}</div>
             </div>
         </div>`;
     }).join('');
@@ -2363,10 +2218,12 @@ onValue(ref(db, 'gallery'), snap => {
     albumsGrid.innerHTML = entries.map(([id, gal]) => {
         const entryCount = gal.entries ? Object.keys(gal.entries).length : 0;
         return `
-            <div class="album-card" onclick="ui.openAlbum('${id}')">
-                ${gal.cover ? `<img src="${gal.cover}" alt="${gal.name}">` : ''}
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);"></div>
-                <div class="album-info">
+            <div class="album-card">
+                <div class="album-click-zone" onclick="ui.openAlbum('${id}')"></div>
+                ${gal.cover ? `<img class="album-card-img" src="${gal.cover}" alt="${gal.name}">` : ''}
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);pointer-events:none;"></div>
+                <button class="album-edit-btn ${isLoggedIn ? 'visible' : ''}" onclick="event.stopPropagation();ui.editAlbumNameFromGrid('${id}','${gal.name.replace(/'/g,"\\'")}',this)">✎ NAZWA</button>
+                <div class="album-info" style="pointer-events:none;">
                     <div class="album-name">${gal.name}</div>
                     <div style="font-family:var(--font-body);font-size:16px;color:rgba(255,255,255,0.6);margin-top:6px;letter-spacing:1px;">${entryCount} ${entryCount===1?'wpis':'wpisów'}</div>
                 </div>
@@ -2375,12 +2232,33 @@ onValue(ref(db, 'gallery'), snap => {
     manager.innerHTML = entries.map(([id, gal]) => `
         <div class="admin-list-item">
             <span>${gal.name}</span>
-            <button class="btn-action btn-danger btn-sm" onclick="dbCore.deleteNode('gallery/${id}')">🗑 USUŃ</button>
+            <div style="display:flex;gap:8px;">
+                <button class="btn-action btn-secondary btn-sm" onclick="ui.editAlbumCover('${id}','${(gal.cover||'').replace(/'/g,"\\'")}')">🖼 OKŁADKA</button>
+                <button class="btn-action btn-danger btn-sm" onclick="dbCore.deleteNode('gallery/${id}')">🗑 USUŃ</button>
+            </div>
         </div>`).join('');
     if (window._currentAlbumId && data[window._currentAlbumId]) ui.openAlbum(window._currentAlbumId);
 });
 
-// Reakcje na radio-mode w adminie
+// Dodatkowe metody UI dla galerii
+ui.editAlbumNameFromGrid = async function(id, currentName, btn) {
+    if (!isLoggedIn) return;
+    const newName = prompt('Nowa nazwa albumu:', currentName);
+    if (newName && newName.trim() && newName.trim() !== currentName) {
+        await update(ref(db, 'gallery/' + id), { name: newName.trim() });
+        if (window.galleryData && window.galleryData[id]) window.galleryData[id].name = newName.trim();
+    }
+};
+
+ui.editAlbumCover = async function(id, currentCover) {
+    if (!isLoggedIn) return;
+    const newCover = prompt('Nowy URL okładki:', currentCover);
+    if (newCover !== null && newCover.trim() !== currentCover) {
+        await update(ref(db, 'gallery/' + id), { cover: newCover.trim() });
+    }
+};
+
+// Radio-mode
 document.querySelectorAll('input[name="hero-mode"]').forEach(r => {
     r.addEventListener('change', function() {
         document.getElementById('hero-date-group').style.display = this.value === 'soon' ? 'none' : 'block';
@@ -2388,6 +2266,7 @@ document.querySelectorAll('input[name="hero-mode"]').forEach(r => {
 });
 
 buildLogosGrid();
+renderSocialIcons();
 </script>
 </body>
 </html>
