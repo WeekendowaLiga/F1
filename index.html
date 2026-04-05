@@ -203,12 +203,9 @@ body {
 .pos-silver { color: #b0b0b0 !important; font-weight: 900 !important; }
 .pos-bronze { color: #cd7f32 !important; font-weight: 900 !important; }
 
-/* ===================== LOGO ZESPOŁU (kierowcy — małe ikonki) ===================== */
 .team-logo-img { width: 38px; height: 28px; object-fit: contain; vertical-align: middle; margin-right: 10px; flex-shrink: 0; }
 
-/* ===================== KONSTRUKTORZY — NOWY STYL Z LOGO ===================== */
 .constructor-row { position: relative; }
-
 .cteam-ferrari  { background: linear-gradient(90deg, var(--f1-red) 0%, #c00500 100%); }
 .cteam-ferrari td { color: #fff !important; }
 .cteam-mercedes { background: linear-gradient(90deg, #00d2be 0%, #00b5a4 100%); }
@@ -240,26 +237,13 @@ body {
     min-width: 60px;
     text-align: center;
 }
-
 .constructor-logo-main {
-    width: 200px;
-    height: 150px;
-    object-fit: contain;
-    object-position: center center;
-    flex-shrink: 0;
-    display: block;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    width: 200px; height: 150px; object-fit: contain; object-position: center center;
+    flex-shrink: 0; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
 }
+.constructor-name-cell { display: flex; align-items: center; gap: 24px; }
 
-.constructor-name-cell {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-/* ===================== KOLORY BORDER kierowców ===================== */
-.team-ferrari { border-left: 15px solid var(--f1-red); }
-.txt-ferrari  { color: var(--f1-red); }
+.team-ferrari { border-left: 15px solid var(--f1-red); } .txt-ferrari  { color: var(--f1-red); }
 .team-mercedes { border-left: 15px solid #00d2be; } .txt-mercedes { color: #00d2be; }
 .team-redbull  { border-left: 15px solid #131b45; } .txt-redbull  { color: #131b45; }
 .team-mclaren  { border-left: 15px solid #ff8700; } .txt-mclaren  { color: #ff8700; }
@@ -270,18 +254,15 @@ body {
 .team-haas     { border-left: 15px solid #bdb3b3; } .txt-haas     { color: #bdb3b3; }
 .team-rb       { border-left: 15px solid #004cff; } .txt-rb       { color: #004cff; }
 
-/* ===================== DRIVER ===================== */
 .driver-cell { display: flex; align-items: center; gap: 18px; }
 .driver-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(0,0,0,0.12); flex-shrink: 0; background: #eee; }
 .driver-name { font-weight: 700; font-size: 40px; letter-spacing: 1px; }
 
-/* ===================== SEPARATOR BOTY ===================== */
 .separator-row td { background: #fff !important; border-bottom: none !important; padding: 0 !important; }
 .separator-row td > div { height: 4px; background: var(--f1-red); margin: 15px 0; position: relative; }
 .separator-row td > div::after { content: 'AI'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 16px; font-weight: 900; color: var(--f1-red); background: #fff; padding: 0 10px; letter-spacing: 5px; }
 .bot-row td { opacity: 0.55; font-style: italic; }
 
-/* ===================== FASTEST LAP ===================== */
 .fastest-lap { color: #a855f7 !important; font-weight: 900 !important; letter-spacing: 1.5px; }
 td.col-best-lap { color: #222 !important; font-weight: 500; }
 
@@ -289,6 +270,14 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .editable-cell { cursor: pointer; padding: 4px 8px; border-radius: 3px; transition: background 0.2s, color 0.2s; display: inline-block; }
 .editable-cell:hover { background: rgba(225,6,0,0.08); color: var(--f1-red); }
 .editable-cell:hover::after { content: ' ✎'; font-size: 0.65em; opacity: 0.5; }
+
+/* Komórki edytowalne w tabelach wyników (last race + archiwum) */
+.arc-cell-editable {
+    cursor: pointer; border-radius: 3px; padding: 2px 6px;
+    transition: background 0.2s, color 0.2s; display: inline-block;
+}
+.arc-cell-editable:hover { background: rgba(225,6,0,0.08); color: var(--f1-red); }
+.arc-cell-editable:hover::after { content: ' ✎'; font-size: 0.6em; opacity: 0.5; }
 
 /* ===================== ARCHIWUM ===================== */
 .archive-body { display: block !important; max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.6s cubic-bezier(0.19,1,0.22,1), opacity 0.3s ease; }
@@ -311,15 +300,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .album-info { position: absolute; bottom: 40px; left: 40px; right: 40px; z-index: 10; }
 .album-name { font-family: var(--font-data); font-size: 60px; color: var(--f1-white); text-transform: uppercase; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); letter-spacing: 2px; }
 .album-click-zone { position: absolute; inset: 0; cursor: pointer; z-index: 5; }
-.album-edit-btn {
-    position: absolute; top: 16px; right: 16px; z-index: 20;
-    background: rgba(0,0,0,0.6); border: 1.5px solid rgba(255,255,255,0.2);
-    color: #fff; border-radius: 8px; padding: 8px 14px;
-    font-family: var(--font-data); font-size: 18px; font-weight: 700;
-    cursor: pointer; letter-spacing: 1px; text-transform: uppercase;
-    opacity: 0; transition: opacity 0.2s, background 0.2s;
-    display: none;
-}
+.album-edit-btn { position: absolute; top: 16px; right: 16px; z-index: 20; background: rgba(0,0,0,0.6); border: 1.5px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; padding: 8px 14px; font-family: var(--font-data); font-size: 18px; font-weight: 700; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; opacity: 0; transition: opacity 0.2s, background 0.2s; display: none; }
 .album-card:hover .album-edit-btn { opacity: 1; }
 .album-edit-btn.visible { display: block; }
 .album-edit-btn:hover { background: var(--f1-red); }
@@ -380,7 +361,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .splash-preview { background: #111; color: #fff; padding: 24px; border-radius: 8px; margin-top: 16px; min-height: 80px; font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
 .splash-preview img { max-width: 100%; border-radius: 4px; }
 
-/* ===================== SPLASH IMAGES ADMIN ===================== */
 #adm-splash-images-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 .splash-img-entry { background: #f4f4f7; border: 1px solid #ddd; border-radius: 8px; padding: 14px 16px; display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; cursor: grab; transition: box-shadow 0.2s, opacity 0.2s; }
 .splash-img-entry.dragging { opacity: 0.4; box-shadow: 0 8px 30px rgba(0,0,0,0.2); cursor: grabbing; }
@@ -400,7 +380,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .sie-scale-wrap input[type=range] { flex: 1; accent-color: var(--f1-red); }
 .sie-scale-val { font-family: var(--font-display); font-size: 18px; font-weight: 900; color: var(--f1-red); min-width: 46px; }
 
-/* ===================== LOGA ZESPOŁÓW ADMIN ===================== */
 .adm-logos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
 .adm-logo-item { background: #f9f9fb; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .adm-logo-item .logo-swatch { width: 14px; height: 40px; border-radius: 3px; flex-shrink: 0; }
@@ -411,18 +390,9 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .logo-upload-label:hover { background: var(--f1-red); }
 .logo-upload-input { display: none; }
 
-/* ===================== SOCIAL ICONS ADMIN ===================== */
 .social-icons-admin { display: flex; flex-direction: column; gap: 18px; }
-.social-icon-row {
-    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-    background: #f9f9fb; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;
-}
-.social-icon-preview-box {
-    width: 54px; height: 54px; border-radius: 10px;
-    background: rgba(21,21,30,0.08); border: 1.5px solid rgba(21,21,30,0.12);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden; flex-shrink: 0;
-}
+.social-icon-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: #f9f9fb; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; }
+.social-icon-preview-box { width: 54px; height: 54px; border-radius: 10px; background: rgba(21,21,30,0.08); border: 1.5px solid rgba(21,21,30,0.12); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
 .social-icon-preview-box img { width: 30px; height: 30px; object-fit: contain; }
 .social-icon-preview-box svg { width: 30px; height: 30px; }
 .social-platform-label { font-family: var(--font-display); font-size: 20px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #333; width: 90px; flex-shrink: 0; }
@@ -430,7 +400,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .social-icon-upload-label { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; background: #333; color: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; white-space: nowrap; }
 .social-icon-upload-label:hover { background: var(--f1-red); }
 
-/* ===================== AUTH ===================== */
 .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
 .auth-card { background: var(--f1-white); width: 600px; padding: 70px; border-top: 25px solid var(--f1-red); box-shadow: 0 50px 100px rgba(0,0,0,0.5); }
 .auth-card h2 { font-family: var(--font-display); font-size: 40px; text-align: center; margin-bottom: 50px; letter-spacing: 4px; }
@@ -438,171 +407,81 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 #btn-open-login { font-size: 32px; padding: 20px 30px; background: transparent; border: 3px solid var(--f1-black); color: var(--f1-black); cursor: pointer; transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.2s; letter-spacing: 0; line-height: 1; border-radius: 4px; }
 #btn-open-login:hover { background: var(--f1-black); color: var(--f1-white); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
 
-/* ===================== INLINE EDYCJA KOMÓREK ARCHIWUM ===================== */
-.arc-cell-editable {
-    cursor: pointer;
-    border-radius: 3px;
-    padding: 2px 6px;
-    transition: background 0.2s, color 0.2s;
-    display: inline-block;
-}
-.arc-cell-editable:hover { background: rgba(225,6,0,0.08); color: var(--f1-red); }
-.arc-cell-editable:hover::after { content: ' ✎'; font-size: 0.6em; opacity: 0.5; }
-
 /* ===================== MOBILNE ===================== */
 @media (max-width: 1024px) {
     :root { --ls-nav: 1px; --ls-data: 0.5px; --ls-label: 2px; --ls-heading: 0px; }
-
-    /* --- HEADER --- */
     .f1-header { height: auto; padding: 16px 4%; flex-wrap: wrap; gap: 12px; }
     .f1-logo { width: 120px; height: 90px; }
     .f1-title { font-size: 36px; margin-left: 20px; letter-spacing: 0px; }
-
-    /* POPRAWKA: header-right na całą szerokość, elementy od lewej */
-    .header-right {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: nowrap;
-    }
+    .header-right { width: 100%; display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
     .header-social-icons { gap: 10px; flex-shrink: 0; }
     .header-social-btn { width: 48px; height: 48px; }
     .header-social-btn img, .header-social-btn svg { width: 26px; height: 26px; }
-
-    /* POPRAWKA KŁÓDKI: nie rozciągaj na całą szerokość, trzymaj przy social */
-    .f1-auth-zone {
-        width: auto;
-        display: flex;
-        align-items: right;
-        gap: 8px;
-        flex-shrink: 0;
-    }
-    #btn-open-login {
-        font-size: 22px;
-        padding: 10px 14px;
-        border-width: 2px;
-    }
-    #btn-open-admin {
-        font-size: 12px;
-        padding: 10px 14px;
-        letter-spacing: 1px;
-    }
-
-    /* --- NAV --- */
+    .f1-auth-zone { width: auto; display: flex; align-items: right; gap: 8px; flex-shrink: 0; }
+    #btn-open-login { font-size: 22px; padding: 10px 14px; border-width: 2px; }
+    #btn-open-admin { font-size: 12px; padding: 10px 14px; letter-spacing: 1px; }
     .f1-nav { overflow-x: unset; justify-content: stretch; display: grid; grid-template-columns: 1fr 1fr; }
     .nav-item { padding: 18px 10px; font-size: 22px; white-space: nowrap; text-align: center; border-bottom: 4px solid transparent; letter-spacing: 0.5px; }
-
-    /* --- HERO --- */
     .f1-hero { padding: 40px 20px; }
     .f1-hero h1 { font-size: 40px; margin-bottom: 30px; letter-spacing: 1px; }
-    .f1-timer-grid { gap: 8px; flex-wrap: wrap; justify-content: center; }
-    .timer-unit { min-width: 70px; padding: 16px 12px 14px; }
-    .timer-val { font-size: 38px; }
-    .timer-sep { font-size: 32px; padding-bottom: 20px; }
-    .timer-label { font-size: 10px; letter-spacing: 1px; }
-
-    /* --- MAIN CONTENT --- */
+    /* POPRAWKA: zegar mniejszy żeby nie był ucinany na telefonie */
+    .f1-timer-grid { gap: 6px; flex-wrap: wrap; justify-content: center; }
+    .timer-unit { min-width: 56px; padding: 10px 7px 9px; }
+    .timer-val { font-size: 28px; }
+    .timer-sep { font-size: 22px; padding-bottom: 14px; }
+    .timer-label { font-size: 9px; letter-spacing: 0.5px; }
     .main-content { padding: 0 10px 80px; }
     #view-standings > div { grid-template-columns: 1fr !important; }
-
-    /* --- CARD TYTULY --- */
     .f1-card-title { font-size: 20px; padding: 16px 16px; letter-spacing: 0; }
-
-    /* ==========================================
-       POPRAWKA TABEL — POZIOMY SCROLL
-       ========================================== */
-
-    /* Karta staje się scrollowalnym kontenerem */
-    .f1-card {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        /* Zachowujemy border-top ale usuwamy overflow:hidden */
-    }
-
-    /* Tabela kierowców i konstruktorów — minimalna szerokość żeby się nie ucinała */
-    #view-standings .f1-table {
-        min-width: 400px;
-    }
-
-    /* Tabela wyścigu ma 8 kolumn — potrzebuje więcej miejsca */
-    #view-last-race .f1-table,
-    #view-archive .f1-table {
-        min-width: 620px;
-    }
-
-    /* Tabela archiwum — scroll w środku rozwiniętego bloku */
-    .archive-body > div {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Zmniejszone paddingi i fonty w tabelach */
+    .f1-card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    #view-standings .f1-table { min-width: 400px; }
+    #view-last-race .f1-table, #view-archive .f1-table { min-width: 620px; }
+    .archive-body > div { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .f1-table th { padding: 12px 10px; font-size: 11px; letter-spacing: 1px; }
     .f1-table td { padding: 14px 10px; font-size: 19px; letter-spacing: 0.3px; }
     .col-driver { width: auto !important; font-size: 21px !important; }
     .col-pos { font-size: 16px !important; width: 40px; }
     .col-pts { padding-right: 12px !important; font-size: 19px !important; width: 70px; }
-
-    /* Logo konstruktora — zmniejszone na mobile */
-    .constructor-logo-main {
-        width: 70px;
-        height: 52px;
-    }
+    .constructor-logo-main { width: 70px; height: 52px; }
     .constructor-name-cell { gap: 12px; }
-
-    /* Driver avatar */
     .driver-avatar { width: 36px; height: 36px; }
     .driver-name { font-size: 21px; letter-spacing: 0px; }
     .team-logo-img { width: 28px; height: 20px; }
-
-    /* --- GALERIA --- */
     .gallery-grid { grid-template-columns: 1fr; gap: 20px; }
     .album-card { height: 220px; }
     .album-name { font-size: 36px; letter-spacing: 1px; }
     .media-entries-grid { grid-template-columns: 1fr; gap: 20px; }
-
-    /* --- ARCHIWUM --- */
     .archive-header { font-size: 26px; padding: 20px 20px; letter-spacing: 0.5px; }
-
-    /* --- PANEL ADMINA --- */
     #admin-sidebar { width: 100%; }
     .admin-body { padding: 20px; }
-
-    /* --- NEWS --- */
     .news-label { padding: 0 20px; font-size: 13px; }
     .news-track, .news-track-clone { font-size: 22px; letter-spacing: 0.5px; }
-
-    /* --- SPLASH --- */
     .splash-title { font-size: 48px; letter-spacing: 1px; }
     .splash-logo-box { width: 180px; height: 140px; }
     .soon-box { font-size: 70px; }
     .splash-timer-val { font-size: 32px; }
     .splash-timer-unit { min-width: 65px; }
-
-    /* --- ADMIN GRID --- */
     .adm-logos-grid { grid-template-columns: 1fr; }
     .splash-img-entry { flex-direction: column; gap: 8px; }
     .splash-img-entry .sie-field-sm { width: 100%; }
     .admin-toc { padding: 12px 20px; }
-
-    /* --- SPLASH SOCIAL --- */
     #splash-social-icons { top: 14px; right: 14px; gap: 10px; position: absolute; }
     .splash-social-btn { width: 40px; height: 40px; border-radius: 9px; }
     .splash-social-btn img, .splash-social-btn svg { width: 22px; height: 22px; }
 }
-
 @media (max-width: 480px) {
     .f1-title { font-size: 26px; }
     .f1-logo { width: 80px; height: 62px; }
     .f1-hero h1 { font-size: 28px; }
-    .timer-val { font-size: 28px; }
-    .timer-unit { min-width: 52px; padding: 10px 8px; }
+    /* POPRAWKA: zegar jeszcze mniejszy na bardzo małych ekranach */
+    .timer-val { font-size: 20px; }
+    .timer-unit { min-width: 42px; padding: 7px 5px; }
+    .timer-sep { font-size: 16px; padding-bottom: 10px; }
+    .timer-label { font-size: 8px; letter-spacing: 0; margin-top: 4px; }
     .f1-card-title { font-size: 15px; }
     .splash-title { font-size: 34px; }
     .splash-timer-val { font-size: 26px; }
     .splash-timer-unit { min-width: 52px; padding: 12px 10px; }
-    /* Tabele na bardzo małych ekranach */
     .f1-table td { font-size: 15px; padding: 10px 6px; }
     .f1-table th { font-size: 10px; padding: 10px 6px; }
     .driver-name { font-size: 16px; }
@@ -617,13 +496,10 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 </head>
 <body>
 
-<!-- ===================== STRONA STARTOWA ===================== -->
 <div id="splash-screen" onclick="hideSplash()">
     <div id="splash-social-icons"></div>
     <div class="splash-logo-wrap">
-        <div class="splash-logo-box">
-            <img src="Logo.png" alt="Logo">
-        </div>
+        <div class="splash-logo-box"><img src="Logo.png" alt="Logo"></div>
     </div>
     <div class="splash-title">Weekendowa<br>Liga F1</div>
     <div class="splash-subtitle">Sezon 1 - 2026</div>
@@ -635,7 +511,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     <div class="splash-cta">KLIKNIJ ABY WEJŚĆ</div>
 </div>
 
-<!-- ===================== GŁÓWNA STRONA ===================== -->
 <div id="main-app" style="display:none;">
 
 <div id="news-bar-container">
@@ -716,18 +591,15 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
             </div>
         </div>
     </div>
-
     <div id="view-last-race" class="page-view">
         <div class="f1-card">
             <div class="f1-card-title" id="display-last-race-name">WYNIKI: OSTATNI WYŚCIG</div>
             <div style="overflow-x: auto;" id="api-last-race-results"></div>
         </div>
     </div>
-
     <div id="view-archive" class="page-view">
         <div id="api-archive-list"></div>
     </div>
-
     <div id="view-gallery" class="page-view">
         <div id="gallery-albums" class="gallery-grid"></div>
         <div id="gallery-viewer" class="hidden">
@@ -740,7 +612,6 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     </div>
 </main>
 
-<!-- ===================== PANEL ADMINA ===================== -->
 <div id="admin-overlay" onclick="ui.toggleAdmin(false)"></div>
 <div id="admin-sidebar">
     <div class="admin-header-bar">
@@ -762,15 +633,11 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 
     <div class="admin-section" id="sec-splash">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">🖼</span>
-            <span class="admin-section-title">Strona Startowa (Splash)</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">🖼</span><span class="admin-section-title">Strona Startowa (Splash)</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body open">
             <div class="form-group">
-                <label class="form-label">Zdjęcia na splash (do 10)
-                    <span class="form-hint">Przeciągnij wiersze aby zmienić kolejność. Suwak = skala. Możesz wkleić URL lub przesłać plik.</span>
-                </label>
+                <label class="form-label">Zdjęcia na splash (do 10)<span class="form-hint">Przeciągnij wiersze aby zmienić kolejność. Suwak = skala.</span></label>
                 <div id="adm-splash-images-list"></div>
                 <button class="btn-action btn-secondary btn-sm" onclick="ui.addSplashImageRow()" id="btn-add-splash-img">＋ DODAJ ZDJĘCIE</button>
             </div>
@@ -778,24 +645,16 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                 <label class="form-label">Treść HTML pod zdjęciami (opcjonalna)</label>
                 <textarea id="adm-splash-content" class="f1-textarea" rows="4" placeholder='np. <h2 style="color:#e10600">Sezon 2026 Już Trwa!</h2>'></textarea>
             </div>
-            <div class="btn-row">
-                <button class="btn-action" onclick="dbCore.saveSplashContent()">💾 ZAPISZ SPLASH</button>
-            </div>
+            <div class="btn-row"><button class="btn-action" onclick="dbCore.saveSplashContent()">💾 ZAPISZ SPLASH</button></div>
             <div class="splash-preview" id="splash-preview-box"><em style="opacity:0.4;">Podgląd treści HTML pojawi się tutaj...</em></div>
         </div>
     </div>
 
     <div class="admin-section" id="sec-social">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">🔗</span>
-            <span class="admin-section-title">Ikonki Social (Discord / YouTube)</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">🔗</span><span class="admin-section-title">Ikonki Social (Discord / YouTube)</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
-            <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">
-                Ikony wyświetlają się obok logo w nagłówku strony oraz w prawym górnym rogu strony startowej. Kliknięcie otwiera link w nowej karcie.
-                Wklej URL grafiki lub prześlij plik PNG/SVG.
-            </p>
             <div class="social-icons-admin" id="adm-social-list">
                 <div class="social-icon-row" id="social-row-discord">
                     <div class="social-icon-preview-box" id="social-prev-discord">
@@ -806,10 +665,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                         <input type="text" class="f1-input" id="social-url-discord" placeholder="https://discord.gg/..." style="padding:10px 14px;">
                         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                             <input type="text" class="f1-input" id="social-icon-discord" placeholder="URL grafiki ikony (opcjonalne)" style="padding:10px 14px;flex:1;min-width:160px;">
-                            <label class="social-icon-upload-label">
-                                📁 PLIK
-                                <input type="file" accept="image/*" style="display:none" onchange="ui.handleSocialIconUpload('discord', this)">
-                            </label>
+                            <label class="social-icon-upload-label">📁 PLIK<input type="file" accept="image/*" style="display:none" onchange="ui.handleSocialIconUpload('discord', this)"></label>
                         </div>
                     </div>
                 </div>
@@ -822,45 +678,32 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                         <input type="text" class="f1-input" id="social-url-youtube" placeholder="https://youtube.com/@..." style="padding:10px 14px;">
                         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                             <input type="text" class="f1-input" id="social-icon-youtube" placeholder="URL grafiki ikony (opcjonalne)" style="padding:10px 14px;flex:1;min-width:160px;">
-                            <label class="social-icon-upload-label">
-                                📁 PLIK
-                                <input type="file" accept="image/*" style="display:none" onchange="ui.handleSocialIconUpload('youtube', this)">
-                            </label>
+                            <label class="social-icon-upload-label">📁 PLIK<input type="file" accept="image/*" style="display:none" onchange="ui.handleSocialIconUpload('youtube', this)"></label>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="btn-row">
-                <button class="btn-action" onclick="dbCore.saveSocialConfig()">💾 ZAPISZ IKONKI</button>
-            </div>
+            <div class="btn-row"><button class="btn-action" onclick="dbCore.saveSocialConfig()">💾 ZAPISZ IKONKI</button></div>
         </div>
     </div>
 
     <div class="admin-section" id="sec-news">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">📢</span>
-            <span class="admin-section-title">Breaking News</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">📢</span><span class="admin-section-title">Breaking News</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
-            <div class="form-group">
-                <label class="check-group"><input type="checkbox" id="adm-show-news"> POKAŻ PASEK BREAKING NEWS</label>
-            </div>
+            <div class="form-group"><label class="check-group"><input type="checkbox" id="adm-show-news"> POKAŻ PASEK BREAKING NEWS</label></div>
             <div class="form-group">
                 <label class="form-label">Treść newsa (HTML):</label>
                 <textarea id="adm-news-content" class="f1-textarea" placeholder="np. <b>GP Monako</b> już wkrótce!"></textarea>
             </div>
-            <div class="btn-row">
-                <button class="btn-action" onclick="dbCore.saveNewsConfig()">💾 ZAPISZ NEWS</button>
-            </div>
+            <div class="btn-row"><button class="btn-action" onclick="dbCore.saveNewsConfig()">💾 ZAPISZ NEWS</button></div>
         </div>
     </div>
 
     <div class="admin-section" id="sec-countdown">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">⏱</span>
-            <span class="admin-section-title">Odliczanie do GP</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">⏱</span><span class="admin-section-title">Odliczanie do GP</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
             <div class="form-group">
@@ -878,17 +721,13 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                 <label class="form-label">Data licznika (YYYY-MM-DD HH:MM):</label>
                 <input type="text" id="adm-hero-date" class="f1-input" placeholder="2026-05-24 20:00">
             </div>
-            <div class="btn-row">
-                <button class="btn-action" onclick="dbCore.saveCountdownConfig()">💾 ZAPISZ ODLICZANIE</button>
-            </div>
+            <div class="btn-row"><button class="btn-action" onclick="dbCore.saveCountdownConfig()">💾 ZAPISZ ODLICZANIE</button></div>
         </div>
     </div>
 
     <div class="admin-section" id="sec-race">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">🏁</span>
-            <span class="admin-section-title">Dodaj Wyniki Wyścigu</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">🏁</span><span class="admin-section-title">Dodaj Wyniki Wyścigu</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
             <div class="form-group">
@@ -897,7 +736,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
             </div>
             <div class="form-group">
                 <label class="form-label">Dane wyścigu
-                    <span class="form-hint">① Wklej tabelę z gry F1 25 (format z tabulatorami wykrywany auto)<br>② Ręczny: Nick | Zespół | Start | Pit | Najlepsze | Czas | Pkt</span>
+                    <span class="form-hint">① Wklej tabelę z gry F1 25 (format z tabulatorami wykrywany auto)<br>② Ręczny: Nick | Zespół | Start | Pit | Najlepsze | Czas | Pkt<br>⚡ Gracze dostają <b>+3 PKT</b> za dojechanie — chyba że DNF / DSQ / DNS</span>
                 </label>
                 <textarea id="adm-race-raw" class="f1-textarea" rows="10" placeholder="Wklej tutaj..."></textarea>
             </div>
@@ -906,17 +745,13 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                 <label class="check-group"><input type="checkbox" id="pub-last" checked> OSTATNI WYŚCIG</label>
                 <label class="check-group"><input type="checkbox" id="pub-archive" checked> ARCHIWUM WYŚCIGÓW</label>
             </div>
-            <div class="btn-row">
-                <button class="btn-action" onclick="dbCore.publishRace()">📤 PUBLIKUJ WYNIKI</button>
-            </div>
+            <div class="btn-row"><button class="btn-action" onclick="dbCore.publishRace()">📤 PUBLIKUJ WYNIKI</button></div>
         </div>
     </div>
 
     <div class="admin-section" id="sec-archive">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">📁</span>
-            <span class="admin-section-title">Zarządzaj Archiwum</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">📁</span><span class="admin-section-title">Zarządzaj Archiwum</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
             <div id="adm-archive-manager"></div>
@@ -928,76 +763,47 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 
     <div class="admin-section" id="sec-standings">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">🏆</span>
-            <span class="admin-section-title">Klasyfikacje Generalne</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">🏆</span><span class="admin-section-title">Klasyfikacje Generalne</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
-            <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">Boty dodajesz na końcu — zostaną posortowani pod czerwoną linią. Zaznacz "Bot" w polu nick: np. <b>BOT:Max Verstappen</b></p>
+            <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">Boty: np. <b>BOT:Max Verstappen</b></p>
             <div class="form-group">
-                <label class="form-label">Wszyscy kierowcy (Nick | Team | Foto-URL | Wygrane | Pkt)
-                    <span class="form-hint">Jeśli Nick zaczyna się od "BOT:" — trafi pod separator.</span>
-                </label>
+                <label class="form-label">Wszyscy kierowcy (Nick | Team | Foto-URL | Wygrane | Pkt)</label>
                 <textarea id="adm-drivers-raw" class="f1-textarea" rows="12"></textarea>
             </div>
             <div class="form-group">
                 <label class="form-label">Zespoły (Team | Pkt):</label>
                 <textarea id="adm-teams-raw" class="f1-textarea" rows="6"></textarea>
             </div>
-            <div class="btn-row">
-                <button class="btn-action" onclick="dbCore.saveStandings()">💾 ZAPISZ KLASYFIKACJE</button>
-            </div>
+            <div class="btn-row"><button class="btn-action" onclick="dbCore.saveStandings()">💾 ZAPISZ KLASYFIKACJE</button></div>
         </div>
     </div>
 
     <div class="admin-section" id="sec-logos">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">🏎</span>
-            <span class="admin-section-title">Loga Zespołów</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">🏎</span><span class="admin-section-title">Loga Zespołów</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
-            <p style="color:#888;font-size:13px;margin-top:0;line-height:1.6;">
-                Wklej URL <b>lub prześlij plik</b> PNG/SVG dla każdego zespołu. Logo wyświetla się w tabeli konstruktorów — jako ikonka przy nazwie zespołu i jako watermark w tle wiersza. W tabeli kierowców wyświetla się małe logo przy nazwie zespołu.
-            </p>
             <div class="adm-logos-grid" id="adm-logos-grid"></div>
-            <div class="btn-row">
-                <button class="btn-action" onclick="dbCore.saveTeamLogos()">💾 ZAPISZ LOGA</button>
-            </div>
+            <div class="btn-row"><button class="btn-action" onclick="dbCore.saveTeamLogos()">💾 ZAPISZ LOGA</button></div>
         </div>
     </div>
 
     <div class="admin-section" id="sec-gallery">
         <div class="admin-section-header" onclick="ui.toggleAdminSection(this)">
-            <span class="admin-section-icon">📷</span>
-            <span class="admin-section-title">Zarządzanie Galerią</span>
-            <span class="admin-section-arrow">▼</span>
+            <span class="admin-section-icon">📷</span><span class="admin-section-title">Zarządzanie Galerią</span><span class="admin-section-arrow">▼</span>
         </div>
         <div class="admin-section-body">
             <div style="background:#f4f4f7;border:1px solid #ddd;border-radius:8px;padding:22px;margin-bottom:22px;">
                 <h4 style="margin:0 0 16px;font-family:var(--font-display);font-size:16px;letter-spacing:2px;color:#333;">1. UTWÓRZ ALBUM</h4>
-                <div class="form-group">
-                    <label class="form-label">Nazwa albumu:</label>
-                    <input type="text" id="adm-gal-name" class="f1-input" placeholder="np. GP Monako 2026">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Link do okładki (URL):</label>
-                    <input type="text" id="adm-gal-cover" class="f1-input" placeholder="https://...">
-                </div>
-                <div class="btn-row">
-                    <button class="btn-action" onclick="dbCore.createAlbum()">＋ UTWÓRZ ALBUM</button>
-                </div>
+                <div class="form-group"><label class="form-label">Nazwa albumu:</label><input type="text" id="adm-gal-name" class="f1-input" placeholder="np. GP Monako 2026"></div>
+                <div class="form-group"><label class="form-label">Link do okładki (URL):</label><input type="text" id="adm-gal-cover" class="f1-input" placeholder="https://..."></div>
+                <div class="btn-row"><button class="btn-action" onclick="dbCore.createAlbum()">＋ UTWÓRZ ALBUM</button></div>
             </div>
             <div style="background:#f4f4f7;border:1px solid #ddd;border-radius:8px;padding:22px;margin-bottom:22px;">
                 <h4 style="margin:0 0 16px;font-family:var(--font-display);font-size:16px;letter-spacing:2px;color:#333;">2. DODAJ WPIS DO ALBUMU</h4>
-                <div class="form-group">
-                    <label class="form-label">Wybierz album:</label>
-                    <select id="adm-entry-album" class="f1-input" style="cursor:pointer;"><option value="">— Wybierz album —</option></select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tytuł wpisu:</label>
-                    <input type="text" id="adm-entry-title" class="f1-input" placeholder="np. Kwalifikacje — highlight">
-                </div>
+                <div class="form-group"><label class="form-label">Wybierz album:</label><select id="adm-entry-album" class="f1-input" style="cursor:pointer;"><option value="">— Wybierz album —</option></select></div>
+                <div class="form-group"><label class="form-label">Tytuł wpisu:</label><input type="text" id="adm-entry-title" class="f1-input" placeholder="np. Kwalifikacje — highlight"></div>
                 <div class="form-group">
                     <label class="form-label">Typ mediów:</label>
                     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;">
@@ -1006,53 +812,32 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                         <label class="check-group"><input type="radio" name="media-type" value="upload" onchange="ui.switchMediaType(this.value)"> Prześlij plik</label>
                     </div>
                 </div>
-                <div id="media-input-youtube" class="form-group">
-                    <label class="form-label">Link YouTube:</label>
-                    <input type="text" id="adm-entry-youtube" class="f1-input" placeholder="https://youtu.be/...">
-                </div>
-                <div id="media-input-url" class="form-group hidden">
-                    <label class="form-label">Bezpośredni URL (wideo lub obraz):</label>
-                    <input type="text" id="adm-entry-url" class="f1-input" placeholder="https://...mp4 lub ...jpg">
-                </div>
-                <div id="media-input-upload" class="form-group hidden">
-                    <label class="form-label">Prześlij plik:</label>
-                    <input type="file" id="adm-entry-file" class="f1-input" accept="video/*,image/*" style="padding:10px;">
-                    <span class="form-hint" style="color:#e10600;">⚠ Zalecane do ~50MB. Dłuższe klipy — użyj YouTube.</span>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-action" onclick="dbCore.addEntry()">＋ DODAJ WPIS</button>
-                    <span id="adm-entry-status" style="font-size:14px;color:#666;"></span>
-                </div>
+                <div id="media-input-youtube" class="form-group"><label class="form-label">Link YouTube:</label><input type="text" id="adm-entry-youtube" class="f1-input" placeholder="https://youtu.be/..."></div>
+                <div id="media-input-url" class="form-group hidden"><label class="form-label">Bezpośredni URL:</label><input type="text" id="adm-entry-url" class="f1-input" placeholder="https://...mp4 lub ...jpg"></div>
+                <div id="media-input-upload" class="form-group hidden"><label class="form-label">Prześlij plik:</label><input type="file" id="adm-entry-file" class="f1-input" accept="video/*,image/*" style="padding:10px;"><span class="form-hint" style="color:#e10600;">⚠ Zalecane do ~50MB.</span></div>
+                <div class="btn-row"><button class="btn-action" onclick="dbCore.addEntry()">＋ DODAJ WPIS</button><span id="adm-entry-status" style="font-size:14px;color:#666;"></span></div>
             </div>
-            <div>
-                <h4 style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:12px;">USUŃ / EDYTUJ ALBUMY:</h4>
-                <div id="adm-gallery-manager"></div>
-            </div>
+            <div><h4 style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:12px;">USUŃ / EDYTUJ ALBUMY:</h4><div id="adm-gallery-manager"></div></div>
         </div>
     </div>
 
     <div style="padding:20px 0 40px;">
         <button class="btn-action btn-danger" onclick="authCore.logout()" style="width:100%;justify-content:center;font-size:16px;">🚪 WYLOGUJ Z SYSTEMU</button>
     </div>
-
     </div>
 </div>
 
 <div id="auth-modal" class="auth-overlay">
     <div class="auth-card">
         <h2>AUTORYZACJA</h2>
-        <div class="form-group">
-            <input type="email" id="field-email" class="f1-input" placeholder="Adres E-mail">
-        </div>
-        <div class="form-group">
-            <input type="password" id="field-pass" class="f1-input" placeholder="Hasło">
-        </div>
+        <div class="form-group"><input type="email" id="field-email" class="f1-input" placeholder="Adres E-mail"></div>
+        <div class="form-group"><input type="password" id="field-pass" class="f1-input" placeholder="Hasło"></div>
         <button class="btn-action" style="width:100%;justify-content:center;" onclick="authCore.login()">ZALOGUJ SIĘ</button>
         <button class="btn-action btn-danger" style="width:100%;margin:16px 0 0 0;justify-content:center;" onclick="ui.toggleAuth(false)">ANULUJ</button>
     </div>
 </div>
 
-</div><!-- /main-app -->
+</div>
 
 <script>
 function hideSplash() {
@@ -1129,24 +914,17 @@ function renderSocialIcons() {
     const splashContainer = document.getElementById('splash-social-icons');
     const headerContainer = document.getElementById('header-social-icons');
     if (!splashContainer || !headerContainer) return;
-
     const platforms = [
         { key: 'discord', defaultSvg: DEFAULT_DISCORD_SVG },
         { key: 'youtube', defaultSvg: DEFAULT_YOUTUBE_SVG },
     ];
-    let splashHtml = '';
-    let headerHtml = '';
-
+    let splashHtml = '', headerHtml = '';
     platforms.forEach(({ key, defaultSvg }) => {
         const cfg = socialConfig[key] || {};
         const link = cfg.url || '';
         const iconSrc = cfg.icon || '';
         const label = key.charAt(0).toUpperCase() + key.slice(1);
-
-        const innerHtml = iconSrc
-            ? `<img src="${iconSrc}" alt="${key}" style="width:28px;height:28px;object-fit:contain;">`
-            : defaultSvg;
-
+        const innerHtml = iconSrc ? `<img src="${iconSrc}" alt="${key}" style="width:28px;height:28px;object-fit:contain;">` : defaultSvg;
         if (link) {
             splashHtml += `<a class="splash-social-btn" href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${label}">${innerHtml}</a>`;
             headerHtml += `<a class="header-social-btn" href="${link}" target="_blank" rel="noopener" title="${label}">${innerHtml}</a>`;
@@ -1155,7 +933,6 @@ function renderSocialIcons() {
             headerHtml += `<span class="header-social-btn" style="opacity:0.35;cursor:default;" title="${label} (brak linku)">${innerHtml}</span>`;
         }
     });
-
     splashContainer.innerHTML = splashHtml;
     headerContainer.innerHTML = headerHtml;
 }
@@ -1166,27 +943,14 @@ function buildLogosGrid() {
     grid.innerHTML = TEAM_DEFS.map(t => {
         const url = teamLogos[t.key] || '';
         const isBase64 = url.startsWith('data:');
-        return `
-        <div class="adm-logo-item">
+        return `<div class="adm-logo-item">
             <div class="logo-swatch" style="background:${t.color};"></div>
             <span class="logo-team-name">${t.label}</span>
             <div style="flex:1;min-width:0;">
-                <input type="text" class="f1-input" id="logo-url-${t.key}"
-                    placeholder="URL logo lub prześlij plik →"
-                    value="${isBase64 ? '[plik lokalny]' : url}"
-                    oninput="ui.previewTeamLogo('${t.key}', this.value)"
-                    style="margin-bottom:6px;">
-                <label class="logo-upload-label">
-                    📁 PRZEŚLIJ PLIK
-                    <input type="file" class="logo-upload-input" accept="image/*"
-                        onchange="ui.handleLogoUpload('${t.key}', this)">
-                </label>
+                <input type="text" class="f1-input" id="logo-url-${t.key}" placeholder="URL logo lub prześlij plik →" value="${isBase64 ? '[plik lokalny]' : url}" oninput="ui.previewTeamLogo('${t.key}', this.value)" style="margin-bottom:6px;">
+                <label class="logo-upload-label">📁 PRZEŚLIJ PLIK<input type="file" class="logo-upload-input" accept="image/*" onchange="ui.handleLogoUpload('${t.key}', this)"></label>
             </div>
-            <img class="adm-logo-preview" id="logo-prev-${t.key}"
-                src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}"
-                alt="${t.label}"
-                onerror="this.style.opacity=0.2"
-                style="opacity:${url ? 1 : 0.2}">
+            <img class="adm-logo-preview" id="logo-prev-${t.key}" src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}" alt="${t.label}" onerror="this.style.opacity=0.2" style="opacity:${url ? 1 : 0.2}">
         </div>`;
     }).join('');
 }
@@ -1202,9 +966,7 @@ function renderSplashImages(images) {
         const width = img.width || '80%';
         const scale = img.scale !== undefined ? parseFloat(img.scale) : 1;
         const finalWidth = scale !== 1 ? `calc(${width} * ${scale})` : width;
-        return `<div class="splash-img-row" style="justify-content:${justify};">
-            <img src="${img.url}" style="width:${finalWidth};" alt="splash image" onclick="event.stopPropagation()">
-        </div>`;
+        return `<div class="splash-img-row" style="justify-content:${justify};"><img src="${img.url}" style="width:${finalWidth};" alt="splash image" onclick="event.stopPropagation()"></div>`;
     }).filter(Boolean).join('');
 }
 
@@ -1217,16 +979,15 @@ function renderSplashCountdown(config) {
         return;
     }
     if (!config.date) { section.innerHTML = ''; return; }
-    section.innerHTML = `
-        <div class="splash-countdown">
-            <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-d">00</span><span class="splash-timer-label">DNI</span></div>
-            <div class="splash-timer-sep">:</div>
-            <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-h">00</span><span class="splash-timer-label">GODZIN</span></div>
-            <div class="splash-timer-sep">:</div>
-            <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-m">00</span><span class="splash-timer-label">MINUT</span></div>
-            <div class="splash-timer-sep">:</div>
-            <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-s">00</span><span class="splash-timer-label">SEKUND</span></div>
-        </div>`;
+    section.innerHTML = `<div class="splash-countdown">
+        <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-d">00</span><span class="splash-timer-label">DNI</span></div>
+        <div class="splash-timer-sep">:</div>
+        <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-h">00</span><span class="splash-timer-label">GODZIN</span></div>
+        <div class="splash-timer-sep">:</div>
+        <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-m">00</span><span class="splash-timer-label">MINUT</span></div>
+        <div class="splash-timer-sep">:</div>
+        <div class="splash-timer-unit"><span class="splash-timer-val" id="sp-s">00</span><span class="splash-timer-label">SEKUND</span></div>
+    </div>`;
     if (splashTimerInterval) clearInterval(splashTimerInterval);
     const target = new Date(config.date.replace(' ', 'T')).getTime();
     function tickSplash() {
@@ -1266,9 +1027,7 @@ window.ui = {
         document.getElementById('admin-overlay').classList.toggle('open', show);
         if (show) buildLogosGrid();
     },
-    toggleAuth(show) {
-        document.getElementById('auth-modal').style.display = show ? 'flex' : 'none';
-    },
+    toggleAuth(show) { document.getElementById('auth-modal').style.display = show ? 'flex' : 'none'; },
     toggleAdminSection(header) {
         const body = header.nextElementSibling;
         const isOpen = body.classList.toggle('open');
@@ -1307,7 +1066,6 @@ window.ui = {
         const scale = imgData ? (imgData.scale !== undefined ? parseFloat(imgData.scale) : 1) : 1;
         const isBase64 = url.startsWith('data:');
         const scalePercent = Math.round(scale * 100);
-
         const entry = document.createElement('div');
         entry.className = 'splash-img-entry';
         entry.innerHTML = `
@@ -1320,20 +1078,14 @@ window.ui = {
                     <button type="button" class="sie-source-btn ${isBase64 ? 'active' : ''}" onclick="ui.sieSetMode(this,'file')">PLIK</button>
                 </div>
                 <div class="sie-url-wrap" style="display:${isBase64 ? 'none' : 'block'}">
-                    <input type="text" class="f1-input spl-url" placeholder="https://example.com/foto.jpg"
-                        value="${isBase64 ? '' : url}"
-                        oninput="ui.updateSplashThumb(this)">
+                    <input type="text" class="f1-input spl-url" placeholder="https://example.com/foto.jpg" value="${isBase64 ? '' : url}" oninput="ui.updateSplashThumb(this)">
                 </div>
                 <div class="sie-file-wrap" style="display:${isBase64 ? 'block' : 'none'}">
-                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:#333;color:#fff;padding:10px 14px;border-radius:4px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:background 0.2s;"
-                        onmouseover="this.style.background='#e10600'" onmouseout="this.style.background='#333'">
-                        📁 WYBIERZ PLIK
-                        <input type="file" accept="image/*" style="display:none" onchange="ui.handleSplashFileUpload(this)">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;background:#333;color:#fff;padding:10px 14px;border-radius:4px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;transition:background 0.2s;" onmouseover="this.style.background='#e10600'" onmouseout="this.style.background='#333'">
+                        📁 WYBIERZ PLIK<input type="file" accept="image/*" style="display:none" onchange="ui.handleSplashFileUpload(this)">
                     </label>
                     <input type="hidden" class="spl-url spl-file-data" value="${isBase64 ? url : ''}">
-                    <span class="spl-file-name" style="font-size:11px;color:#888;margin-top:4px;display:block;">
-                        ${isBase64 ? 'Plik lokalny załadowany' : 'Brak pliku'}
-                    </span>
+                    <span class="spl-file-name" style="font-size:11px;color:#888;margin-top:4px;display:block;">${isBase64 ? 'Plik lokalny załadowany' : 'Brak pliku'}</span>
                 </div>
             </div>
             <div class="sie-field-sm">
@@ -1351,14 +1103,11 @@ window.ui = {
             <div class="sie-field" style="min-width:180px;">
                 <label class="form-label" style="font-size:10px;margin-bottom:4px;">SKALA</label>
                 <div class="sie-scale-wrap">
-                    <input type="range" class="spl-scale" min="10" max="200" value="${scalePercent}"
-                        oninput="this.nextElementSibling.textContent=this.value+'%'">
+                    <input type="range" class="spl-scale" min="10" max="200" value="${scalePercent}" oninput="this.nextElementSibling.textContent=this.value+'%'">
                     <span class="sie-scale-val">${scalePercent}%</span>
                 </div>
             </div>
-            <img class="splash-img-preview-thumb"
-                src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}"
-                style="opacity:${url ? 1 : 0.2}" alt="thumb">
+            <img class="splash-img-preview-thumb" src="${url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}" style="opacity:${url ? 1 : 0.2}" alt="thumb">
             <button type="button" class="sie-remove" onclick="ui.removeSplashImageRow(this)" title="Usuń">✕</button>`;
         list.appendChild(entry);
         this._renumberSplashRows();
@@ -1382,22 +1131,15 @@ window.ui = {
             const hidden = entry.querySelector('.spl-file-data');
             const thumb = entry.querySelector('.splash-img-preview-thumb');
             const nameSpan = entry.querySelector('.spl-file-name');
-            if (hidden) { hidden.value = dataUrl; }
+            if (hidden) hidden.value = dataUrl;
             if (thumb) { thumb.src = dataUrl; thumb.style.opacity = 1; }
             if (nameSpan) nameSpan.textContent = file.name;
         };
         reader.readAsDataURL(file);
     },
-    removeSplashImageRow(btn) {
-        btn.closest('.splash-img-entry').remove();
-        this._renumberSplashRows();
-        this._updateAddBtn();
-    },
+    removeSplashImageRow(btn) { btn.closest('.splash-img-entry').remove(); this._renumberSplashRows(); this._updateAddBtn(); },
     _renumberSplashRows() {
-        document.querySelectorAll('.splash-img-entry').forEach((row, i) => {
-            const num = row.querySelector('.sie-num');
-            if (num) num.textContent = i + 1;
-        });
+        document.querySelectorAll('.splash-img-entry').forEach((row, i) => { const num = row.querySelector('.sie-num'); if (num) num.textContent = i + 1; });
     },
     _updateAddBtn() {
         const list = document.getElementById('adm-splash-images-list');
@@ -1407,10 +1149,7 @@ window.ui = {
     },
     updateSplashThumb(input) {
         const thumb = input.closest('.splash-img-entry').querySelector('.splash-img-preview-thumb');
-        if (thumb) {
-            thumb.src = input.value || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-            thumb.style.opacity = input.value ? 1 : 0.2;
-        }
+        if (thumb) { thumb.src = input.value || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; thumb.style.opacity = input.value ? 1 : 0.2; }
     },
     previewTeamLogo(teamKey, url) {
         const img = document.getElementById('logo-prev-' + teamKey);
@@ -1439,13 +1178,17 @@ window.ui = {
         const isOpen = body.classList.toggle('open');
         if (btn) btn.classList.toggle('open', isOpen);
     },
+
+    // ============================================================
+    // EDYCJA KOMÓREK W ARCHIWUM — wszystkie pola
+    // ============================================================
     editArcCell(el, raceId, rowIdx, field) {
         if (!isLoggedIn) return;
         const current = el.textContent.trim();
         const input = document.createElement('input');
         input.type = 'text';
         input.value = current;
-        input.style.cssText = 'width:90px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
+        input.style.cssText = 'width:110px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
         el.replaceWith(input);
         input.focus(); input.select();
         const save = async () => {
@@ -1457,7 +1200,7 @@ window.ui = {
             input.replaceWith(span);
             const s = await new Promise(res => onValue(ref(db, 'archive/' + raceId), res, { onlyOnce: true }));
             const data = s.val();
-            if (data && data.results && data.results[rowIdx]) {
+            if (data && data.results && data.results[rowIdx] !== undefined) {
                 data.results[rowIdx][field] = newVal;
                 await update(ref(db, 'archive/' + raceId), { results: data.results });
             }
@@ -1465,13 +1208,17 @@ window.ui = {
         input.addEventListener('blur', save);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
     },
+
+    // ============================================================
+    // EDYCJA KOMÓREK W OSTATNIM WYŚCIGU — wszystkie pola
+    // ============================================================
     editLastRaceCell(el, rowIdx, field) {
         if (!isLoggedIn) return;
         const current = el.textContent.trim();
         const input = document.createElement('input');
         input.type = 'text';
         input.value = current;
-        input.style.cssText = 'width:90px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
+        input.style.cssText = 'width:110px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
         el.replaceWith(input);
         input.focus(); input.select();
         const save = async () => {
@@ -1483,7 +1230,7 @@ window.ui = {
             input.replaceWith(span);
             const s = await new Promise(res => onValue(ref(db, 'lastRace'), res, { onlyOnce: true }));
             const data = s.val();
-            if (data && data.results && data.results[rowIdx]) {
+            if (data && data.results && data.results[rowIdx] !== undefined) {
                 data.results[rowIdx][field] = newVal;
                 await update(ref(db, 'lastRace'), { results: data.results });
             }
@@ -1491,6 +1238,7 @@ window.ui = {
         input.addEventListener('blur', save);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
     },
+
     openAlbum(id) {
         document.getElementById('gallery-albums').classList.add('hidden');
         document.getElementById('gallery-viewer').classList.remove('hidden');
@@ -1505,10 +1253,7 @@ window.ui = {
         }
         const grid = document.getElementById('album-content-grid');
         const entries = album.entries ? Object.entries(album.entries) : [];
-        if (entries.length === 0) {
-            grid.innerHTML = '<p style="font-family:var(--font-data);font-size:30px;color:#999;letter-spacing:1px;">Brak wpisów w tym albumie.</p>';
-            return;
-        }
+        if (entries.length === 0) { grid.innerHTML = '<p style="font-family:var(--font-data);font-size:30px;color:#999;letter-spacing:1px;">Brak wpisów w tym albumie.</p>'; return; }
         grid.innerHTML = entries.map(([entryId, entry]) => {
             let mediaHtml = '';
             const src = entry.src || '';
@@ -1526,33 +1271,22 @@ window.ui = {
                     const streamId = src.replace(/.*streamable\.com\/(e\/)?/, '').split('?')[0];
                     mediaHtml = `<iframe src="https://streamable.com/e/${streamId}" frameborder="0" allowfullscreen></iframe>`;
                 } else if (src.includes('drive.google.com')) {
-                    let fileId = '';
-                    const m1 = src.match(/\/d\/([^/\?&]+)/);
-                    const m2 = src.match(/[?&]id=([^&]+)/);
-                    if (m1) fileId = m1[1];
-                    else if (m2) fileId = m2[1];
-                    mediaHtml = fileId
-                        ? `<iframe src="https://drive.google.com/file/d/${fileId}/preview" allowfullscreen></iframe>`
-                        : `<video controls preload="metadata" style="width:100%;height:100%;object-fit:contain;"><source src="${src}"><p style="color:#fff;padding:20px;">Nie można załadować.</p></video>`;
+                    let fileId = ''; const m1 = src.match(/\/d\/([^/\?&]+)/); const m2 = src.match(/[?&]id=([^&]+)/);
+                    if (m1) fileId = m1[1]; else if (m2) fileId = m2[1];
+                    mediaHtml = fileId ? `<iframe src="https://drive.google.com/file/d/${fileId}/preview" allowfullscreen></iframe>` : `<video controls preload="metadata" style="width:100%;height:100%;object-fit:contain;"><source src="${src}"><p style="color:#fff;padding:20px;">Nie można załadować.</p></video>`;
                 } else if (/\.(jpg|jpeg|png|gif|webp|svg|bmp)(\?.*)?$/.test(cleanSrc)) {
                     mediaHtml = `<img src="${src}" alt="${entry.title || ''}" style="width:100%;height:100%;object-fit:cover;">`;
                 } else {
-                    mediaHtml = `<video controls preload="metadata" style="width:100%;height:100%;object-fit:contain;" onerror="this.outerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#111;flex-direction:column;gap:12px;\'><p style=\'color:#aaa;font-family:var(--font-data);font-size:20px;\'>Nie można odtworzyć</p><a href=\'${src}\' target=\'_blank\' style=\'color:#e10600;font-family:var(--font-data);font-size:24px;\'>OTWÓRZ LINK →</a></div>'"><source src="${src}"><source src="${src}" type="video/mp4"><source src="${src}" type="video/webm"></video>`;
+                    mediaHtml = `<video controls preload="metadata" style="width:100%;height:100%;object-fit:contain;"><source src="${src}"><source src="${src}" type="video/mp4"><source src="${src}" type="video/webm"></video>`;
                 }
             } else {
-                mediaHtml = `<img src="${src}" alt="${entry.title || ''}" style="width:100%;height:100%;object-fit:cover;" onerror="this.outerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;background:#222;color:#fff;font-family:var(--font-data);font-size:24px;\'>Błąd ładowania</div>'">`;
+                mediaHtml = `<img src="${src}" alt="${entry.title || ''}" style="width:100%;height:100%;object-fit:cover;">`;
             }
-            const deleteBtn = isLoggedIn
-                ? `<button class="btn-action btn-danger btn-sm" style="position:absolute;top:10px;right:10px;z-index:10;" onclick="dbCore.deleteNode('gallery/${id}/entries/${entryId}');ui.openAlbum('${id}')">✕</button>`
-                : '';
+            const deleteBtn = isLoggedIn ? `<button class="btn-action btn-danger btn-sm" style="position:absolute;top:10px;right:10px;z-index:10;" onclick="dbCore.deleteNode('gallery/${id}/entries/${entryId}');ui.openAlbum('${id}')">✕</button>` : '';
             const entryTitleHtml = isLoggedIn
                 ? `<div class="media-entry-title"><span class="arc-cell-editable" onclick="ui.editEntryTitle(this,'${id}','${entryId}')">${entry.title || 'Wpis'}</span></div>`
                 : (entry.title ? `<div class="media-entry-title">${entry.title}</div>` : '');
-            return `
-                <div class="media-entry">
-                    ${entryTitleHtml}
-                    <div class="media-entry-body" style="position:relative;">${mediaHtml}${deleteBtn}</div>
-                </div>`;
+            return `<div class="media-entry">${entryTitleHtml}<div class="media-entry-body" style="position:relative;">${mediaHtml}${deleteBtn}</div></div>`;
         }).join('');
     },
     editAlbumName(id, currentName, el) {
@@ -1560,13 +1294,8 @@ window.ui = {
         const input = document.createElement('input');
         input.type = 'text'; input.value = currentName;
         input.style.cssText = 'font-family:var(--font-display);font-size:44px;font-weight:900;letter-spacing:2px;color:var(--f1-black);background:transparent;border:none;border-bottom:3px solid var(--f1-red);outline:none;width:100%;text-transform:uppercase;';
-        el.replaceWith(input);
-        input.focus(); input.select();
-        const save = async () => {
-            const nv = input.value.trim() || currentName;
-            await update(ref(db, 'gallery/' + id), { name: nv });
-            if (window.galleryData && window.galleryData[id]) window.galleryData[id].name = nv;
-        };
+        el.replaceWith(input); input.focus(); input.select();
+        const save = async () => { const nv = input.value.trim() || currentName; await update(ref(db, 'gallery/' + id), { name: nv }); if (window.galleryData && window.galleryData[id]) window.galleryData[id].name = nv; };
         input.addEventListener('blur', save);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = currentName; input.blur(); } });
     },
@@ -1576,13 +1305,11 @@ window.ui = {
         const input = document.createElement('input');
         input.type = 'text'; input.value = current;
         input.style.cssText = 'font-family:var(--font-data);font-size:30px;font-weight:700;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);outline:none;width:100%;letter-spacing:1px;';
-        el.replaceWith(input);
-        input.focus(); input.select();
+        el.replaceWith(input); input.focus(); input.select();
         const save = async () => {
             const nv = input.value.trim() || current;
             const span = document.createElement('span');
-            span.className = 'arc-cell-editable';
-            span.textContent = nv;
+            span.className = 'arc-cell-editable'; span.textContent = nv;
             span.onclick = () => ui.editEntryTitle(span, albumId, entryId);
             input.replaceWith(span);
             await update(ref(db, `gallery/${albumId}/entries/${entryId}`), { title: nv });
@@ -1590,10 +1317,7 @@ window.ui = {
         input.addEventListener('blur', save);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = current; input.blur(); } });
     },
-    closeAlbum() {
-        document.getElementById('gallery-albums').classList.remove('hidden');
-        document.getElementById('gallery-viewer').classList.add('hidden');
-    },
+    closeAlbum() { document.getElementById('gallery-albums').classList.remove('hidden'); document.getElementById('gallery-viewer').classList.add('hidden'); },
     switchMediaType(type) {
         document.getElementById('media-input-youtube').classList.toggle('hidden', type !== 'youtube');
         document.getElementById('media-input-url').classList.toggle('hidden', type !== 'url');
@@ -1605,18 +1329,15 @@ window.ui = {
         const input = document.createElement('input');
         input.type = 'text'; input.value = current;
         input.style.cssText = 'width:80px;font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--f1-red);background:transparent;border:none;border-bottom:2px solid var(--f1-red);text-align:center;outline:none;';
-        el.replaceWith(input);
-        input.focus(); input.select();
+        el.replaceWith(input); input.focus(); input.select();
         const save = async () => {
             const newVal = input.value.trim();
             const span = document.createElement('span');
-            span.className = 'editable-cell';
-            span.textContent = newVal;
+            span.className = 'editable-cell'; span.textContent = newVal;
             span.onclick = () => ui.editCell(span, dbPath, type, idx, field);
             input.replaceWith(span);
             const s = await new Promise(res => onValue(ref(db, dbPath), res, { onlyOnce: true }));
-            const cur = s.val();
-            cur[type][idx][field] = newVal;
+            const cur = s.val(); cur[type][idx][field] = newVal;
             await set(ref(db, dbPath), cur);
         };
         input.addEventListener('blur', save);
@@ -1647,8 +1368,7 @@ window.ui = {
         const input = document.createElement('input');
         input.type = 'text'; input.value = currentName;
         input.style.cssText = 'font-family:var(--font-data);font-size:46px;font-weight:700;letter-spacing:1px;color:var(--f1-black);background:transparent;border:none;border-bottom:3px solid var(--f1-red);outline:none;flex:1;text-transform:uppercase;';
-        nameEl.replaceWith(input);
-        input.focus(); input.select();
+        nameEl.replaceWith(input); input.focus(); input.select();
         const save = async () => { const nv=input.value.trim(); await update(ref(db,'archive/'+id),{name:nv}); };
         input.addEventListener('blur', save);
         input.addEventListener('keydown', e => { if (e.key==='Enter') input.blur(); if (e.key==='Escape'){input.value=currentName;input.blur();} });
@@ -1670,9 +1390,7 @@ onAuthStateChanged(auth, user => {
     isLoggedIn = !!user;
     document.getElementById('btn-open-login').classList.toggle('hidden', !!user);
     document.getElementById('btn-open-admin').classList.toggle('hidden', !user);
-    document.querySelectorAll('.album-edit-btn').forEach(btn => {
-        btn.classList.toggle('visible', !!user);
-    });
+    document.querySelectorAll('.album-edit-btn').forEach(btn => btn.classList.toggle('visible', !!user));
 });
 
 window.dbCore = {
@@ -1689,19 +1407,11 @@ window.dbCore = {
             const fileData = entry.querySelector('.spl-file-data');
             const urlInput = entry.querySelector('.sie-url-wrap .spl-url');
             let url = '';
-            if (fileData && fileData.value && fileData.value.startsWith('data:')) {
-                url = fileData.value;
-            } else if (urlInput) {
-                url = urlInput.value?.trim() || '';
-            }
+            if (fileData && fileData.value && fileData.value.startsWith('data:')) { url = fileData.value; }
+            else if (urlInput) { url = urlInput.value?.trim() || ''; }
             if (url) images.push({ url, align, width, scale });
         });
-        await set(ref(db, 'config'), {
-            ...current,
-            splashContent: document.getElementById('adm-splash-content').value,
-            splashImages: images,
-            splashImage: images.length === 1 ? images[0].url : (current.splashImage || '')
-        });
+        await set(ref(db, 'config'), { ...current, splashContent: document.getElementById('adm-splash-content').value, splashImages: images, splashImage: images.length === 1 ? images[0].url : (current.splashImage || '') });
         alert("Strona startowa zapisana!");
         document.getElementById('splash-custom-content').innerHTML = document.getElementById('adm-splash-content').value;
         renderSplashImages(images);
@@ -1714,14 +1424,8 @@ window.dbCore = {
         platforms.forEach(p => {
             const url = document.getElementById('social-url-' + p)?.value?.trim() || '';
             let icon = '';
-            if (socialIconUploads[p]) {
-                icon = socialIconUploads[p];
-            } else {
-                const iconInput = document.getElementById('social-icon-' + p);
-                if (iconInput && iconInput.value.trim() && !iconInput.value.includes('[')) {
-                    icon = iconInput.value.trim();
-                }
-            }
+            if (socialIconUploads[p]) { icon = socialIconUploads[p]; }
+            else { const iconInput = document.getElementById('social-icon-' + p); if (iconInput && iconInput.value.trim() && !iconInput.value.includes('[')) { icon = iconInput.value.trim(); } }
             if (url) social[p] = { url, icon };
         });
         await set(ref(db, 'config'), { ...current, socialIcons: social });
@@ -1770,8 +1474,19 @@ window.dbCore = {
         const driverMap = {}; const teamMap = {};
         (currentStandings.drivers || []).forEach(d => { driverMap[d.nick.toLowerCase()] = { ...d }; });
         (currentStandings.teams || []).forEach(t => { teamMap[t.team.toLowerCase()] = { ...t }; });
+
+        // ===== +3 PKT za dojechanie: gracze (nie boty F1, nie DNF/DSQ/DNS) =====
         results.forEach(r => {
-            const pts = parseInt(r.pts) || 0;
+            const basePts = parseInt(r.pts) || 0;
+            const isBot = isRealF1Driver(r.nick);
+            // Sprawdź czy kierowca nie dojechał (DNF/DSQ/DNS/RET/NC)
+            const dnfTags = ['DNF', 'DSQ', 'DNS', 'RET', 'NC'];
+            const isDnfDsq = dnfTags.some(s =>
+                (r.time || '').toString().toUpperCase().includes(s) ||
+                (r.pos  || '').toString().toUpperCase().includes(s)
+            );
+            const bonusPts = (isBot || isDnfDsq) ? 0 : 3;
+            const pts = basePts + bonusPts;
             const nickKey = (r.nick || '').toLowerCase();
             const teamKey = (r.team || '').toLowerCase();
             const isWin = parseInt(r.pos) === 1;
@@ -1779,10 +1494,12 @@ window.dbCore = {
             else { driverMap[nickKey] = { nick: r.nick, team: r.team, pts, wins: isWin ? 1 : 0 }; }
             if (teamKey) { if (teamMap[teamKey]) { teamMap[teamKey].pts = (parseInt(teamMap[teamKey].pts) || 0) + pts; } else { teamMap[teamKey] = { team: r.team, pts }; } }
         });
+        // =====================================================================
+
         const drivers = Object.values(driverMap).sort((a, b) => (parseInt(b.pts) || 0) - (parseInt(a.pts) || 0));
         const teams = Object.values(teamMap).sort((a, b) => (parseInt(b.pts) || 0) - (parseInt(a.pts) || 0));
         await set(ref(db, 'standings'), { drivers, teams });
-        alert("Wyniki opublikowane i klasyfikacje zaktualizowane!");
+        alert("Wyniki opublikowane!\n(Gracze: +3 PKT za dojechanie, 0 pkt za DNF/DSQ/DNS)");
     },
     async saveStandings() {
         const dRaw = document.getElementById('adm-drivers-raw').value.split('\n').filter(l => l.trim());
@@ -1801,14 +1518,8 @@ window.dbCore = {
     async saveTeamLogos() {
         const logos = {};
         TEAM_DEFS.forEach(t => {
-            if (teamLogos[t.key] && (teamLogos[t.key].startsWith('data:') || teamLogos[t.key].startsWith('http'))) {
-                logos[t.key] = teamLogos[t.key];
-            } else {
-                const input = document.getElementById('logo-url-' + t.key);
-                if (input && input.value.trim() && !input.value.includes('[')) {
-                    logos[t.key] = input.value.trim();
-                }
-            }
+            if (teamLogos[t.key] && (teamLogos[t.key].startsWith('data:') || teamLogos[t.key].startsWith('http'))) { logos[t.key] = teamLogos[t.key]; }
+            else { const input = document.getElementById('logo-url-' + t.key); if (input && input.value.trim() && !input.value.includes('[')) { logos[t.key] = input.value.trim(); } }
         });
         const snap = await new Promise(res => onValue(ref(db, 'config'), res, { onlyOnce: true }));
         const current = snap.val() || {};
@@ -1832,24 +1543,13 @@ window.dbCore = {
         const status = document.getElementById('adm-entry-status');
         if (!albumId) { alert("Wybierz album."); return; }
         let entry = { title, type: mediaType };
-        if (mediaType === 'youtube') {
-            const url = document.getElementById('adm-entry-youtube').value.trim();
-            if (!url) { alert("Podaj link YouTube."); return; }
-            entry.src = url;
-        } else if (mediaType === 'url') {
-            const url = document.getElementById('adm-entry-url').value.trim();
-            if (!url) { alert("Podaj URL."); return; }
-            entry.src = url;
-        } else if (mediaType === 'upload') {
+        if (mediaType === 'youtube') { const url = document.getElementById('adm-entry-youtube').value.trim(); if (!url) { alert("Podaj link YouTube."); return; } entry.src = url; }
+        else if (mediaType === 'url') { const url = document.getElementById('adm-entry-url').value.trim(); if (!url) { alert("Podaj URL."); return; } entry.src = url; }
+        else if (mediaType === 'upload') {
             const file = document.getElementById('adm-entry-file').files[0];
             if (!file) { alert("Wybierz plik."); return; }
             status.textContent = "Kodowanie pliku...";
-            entry.src = await new Promise((res, rej) => {
-                const r = new FileReader();
-                r.onload = e => res(e.target.result);
-                r.onerror = () => rej(new Error("Błąd odczytu"));
-                r.readAsDataURL(file);
-            });
+            entry.src = await new Promise((res, rej) => { const r = new FileReader(); r.onload = e => res(e.target.result); r.onerror = () => rej(new Error("Błąd odczytu")); r.readAsDataURL(file); });
             status.textContent = "Zapisywanie...";
         }
         await push(ref(db, `gallery/${albumId}/entries`), entry);
@@ -1861,10 +1561,7 @@ window.dbCore = {
         setTimeout(() => status.textContent = '', 3000);
     },
     async deleteNode(path) {
-        if (confirm("Czy na pewno chcesz to usunąć?")) {
-            await remove(ref(db, path));
-            alert("Usunięto pomyślnie.");
-        }
+        if (confirm("Czy na pewno chcesz to usunąć?")) { await remove(ref(db, path)); alert("Usunięto pomyślnie."); }
     }
 };
 
@@ -1897,7 +1594,6 @@ const getTeamClass = (teamName) => {
     if (name.includes("racing bull") || name.includes("visa cash") || name.includes("vcarb") || name === "rb" || name.startsWith("rb ") || name.endsWith(" rb")) return "team-rb";
     return "";
 };
-
 const getConstructorClass = (teamName) => {
     const name = (teamName || "").toLowerCase().trim();
     if (name.includes("ferrari")) return "cteam-ferrari";
@@ -1912,18 +1608,7 @@ const getConstructorClass = (teamName) => {
     if (name.includes("racing bull") || name.includes("visa cash") || name.includes("vcarb") || name === "rb" || name.startsWith("rb ") || name.endsWith(" rb")) return "cteam-rb";
     return "";
 };
-const getTeamKey = (teamName) => {
-    const tc = getTeamClass(teamName);
-    return tc ? tc.replace('team-', '') : '';
-};
-
-const teamLogoHtml = (teamName, className = 'team-logo-img') => {
-    const key = getTeamKey(teamName);
-    if (key && teamLogos[key]) {
-        return `<img src="${teamLogos[key]}" class="${className}" alt="${teamName}" onerror="this.style.display='none'">`;
-    }
-    return '';
-};
+const getTeamKey = (teamName) => { const tc = getTeamClass(teamName); return tc ? tc.replace('team-', '') : ''; };
 
 const findFastestLap = (results) => {
     const toSeconds = (t) => {
@@ -1939,19 +1624,21 @@ const findFastestLap = (results) => {
     return fastestIdx;
 };
 
+// Wszystkie komórki klikalne — edycja inline po zalogowaniu
 const renderRaceTable = (results, raceId = null, isLastRace = false) => {
     const posClass = (i) => i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
     const clean = (val) => (val || '').toString().replace(/^(Start:|Pit:)\s*/i, '').trim();
     const fastestIdx = findFastestLap(results);
 
     const cellHtml = (val, rowIdx, field, extraClass = '') => {
-        if (!isLoggedIn) return `<span class="${extraClass}">${val || '-'}</span>`;
+        const display = val || '-';
+        if (!isLoggedIn) return `<span class="${extraClass}">${display}</span>`;
         if (raceId) {
-            return `<span class="arc-cell-editable ${extraClass}" onclick="ui.editArcCell(this,'${raceId}',${rowIdx},'${field}')">${val || '-'}</span>`;
+            return `<span class="arc-cell-editable ${extraClass}" onclick="ui.editArcCell(this,'${raceId}',${rowIdx},'${field}')">${display}</span>`;
         } else if (isLastRace) {
-            return `<span class="arc-cell-editable ${extraClass}" onclick="ui.editLastRaceCell(this,${rowIdx},'${field}')">${val || '-'}</span>`;
+            return `<span class="arc-cell-editable ${extraClass}" onclick="ui.editLastRaceCell(this,${rowIdx},'${field}')">${display}</span>`;
         }
-        return `<span class="${extraClass}">${val || '-'}</span>`;
+        return `<span class="${extraClass}">${display}</span>`;
     };
 
     return `
@@ -1971,9 +1658,7 @@ const renderRaceTable = (results, raceId = null, isLastRace = false) => {
                     <tr class="${getTeamClass(r.team)}">
                         <td class="col-pos ${posClass(i)}">${cellHtml(r.pos, i, 'pos')}</td>
                         <td class="col-driver">${cellHtml(r.nick, i, 'nick')}</td>
-                        <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">
-                            ${cellHtml(r.team, i, 'team')}
-                        </td>
+                        <td class="${getTeamClass(r.team).replace('team-', 'txt-')}">${cellHtml(r.team, i, 'team')}</td>
                         <td style="text-align:center;">${cellHtml(clean(r.start), i, 'start')}</td>
                         <td style="text-align:center;">${cellHtml(clean(r.pit), i, 'pit')}</td>
                         <td class="${i === fastestIdx ? 'fastest-lap' : 'col-best-lap'}">${cellHtml(r.best, i, 'best', i === fastestIdx ? 'fastest-lap' : '')}</td>
@@ -1990,29 +1675,18 @@ function renderConstructorRow(r, i, isLoggedIn) {
     const posClass = i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
     const key = getTeamKey(r.team);
     const logoUrl = key ? (teamLogos[key] || '') : '';
-    const editable = isLoggedIn;
-
     const leftDecor = logoUrl
         ? `<img src="${logoUrl}" class="constructor-logo-main" alt="${r.team}" onerror="this.style.display='none'">`
         : `<div style="width:6px;height:50px;background:rgba(255,255,255,0.4);border-radius:3px;flex-shrink:0;"></div>`;
-
-    return `
-        <tr class="constructor-row ${cClass}">
-            <td class="col-pos" style="font-weight:900;">
-                <span class="${posClass}">${i+1}</span>
-            </td>
-            <td style="font-weight:700;font-size:38px;letter-spacing:1.5px;">
-                <div class="constructor-name-cell">
-                    ${leftDecor}
-                    <span class="${getTeamClass(r.team).replace('team-', 'txt-')}" style="filter:brightness(0) invert(1);">${r.team}</span>
-                </div>
-            </td>
-            <td class="col-pts" style="padding-right:30px;">
-                <span class="cteam-pts-cell">
-                    ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>` : r.pts}
-                </span>
-            </td>
-        </tr>`;
+    return `<tr class="constructor-row ${cClass}">
+        <td class="col-pos" style="font-weight:900;"><span class="${posClass}">${i+1}</span></td>
+        <td style="font-weight:700;font-size:38px;letter-spacing:1.5px;">
+            <div class="constructor-name-cell">${leftDecor}<span class="${getTeamClass(r.team).replace('team-', 'txt-')}" style="filter:brightness(0) invert(1);">${r.team}</span></div>
+        </td>
+        <td class="col-pts" style="padding-right:30px;">
+            <span class="cteam-pts-cell">${isLoggedIn ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','teams',${i},'pts')">${r.pts}</span>` : r.pts}</span>
+        </td>
+    </tr>`;
 }
 
 const REAL_F1_DRIVERS = new Set([
@@ -2045,9 +1719,7 @@ const isRealF1Driver = (name) => {
 onValue(ref(db, 'config'), snap => {
     const c = snap.val();
     if (!c) return;
-
     if (c.teamLogos) { teamLogos = c.teamLogos; buildLogosGrid(); }
-
     if (c.socialIcons) {
         socialConfig = c.socialIcons;
         ['discord', 'youtube'].forEach(p => {
@@ -2056,20 +1728,15 @@ onValue(ref(db, 'config'), snap => {
             const iconInput = document.getElementById('social-icon-' + p);
             if (urlInput) urlInput.value = cfg.url || '';
             if (iconInput && cfg.icon && !cfg.icon.startsWith('data:')) iconInput.value = cfg.icon || '';
-            if (cfg.icon) {
-                const prev = document.getElementById('social-prev-' + p);
-                if (prev) prev.innerHTML = `<img src="${cfg.icon}" alt="${p}" style="width:30px;height:30px;object-fit:contain;">`;
-            }
+            if (cfg.icon) { const prev = document.getElementById('social-prev-' + p); if (prev) prev.innerHTML = `<img src="${cfg.icon}" alt="${p}" style="width:30px;height:30px;object-fit:contain;">`; }
         });
     }
     renderSocialIcons();
-
     if (c.splashContent) {
         document.getElementById('splash-custom-content').innerHTML = c.splashContent;
         document.getElementById('adm-splash-content').value = c.splashContent;
         document.getElementById('splash-preview-box').innerHTML = c.splashContent;
     }
-
     if (c.splashImages && c.splashImages.length > 0) {
         renderSplashImages(c.splashImages);
         const list = document.getElementById('adm-splash-images-list');
@@ -2080,11 +1747,9 @@ onValue(ref(db, 'config'), snap => {
         imgArea.style.display = 'block';
         imgArea.innerHTML = `<img src="${c.splashImage}" alt="Splash">`;
     }
-
     document.getElementById('adm-splash-content').addEventListener('input', function() {
         document.getElementById('splash-preview-box').innerHTML = this.value || '<em style="opacity:0.4;">Podgląd...</em>';
     });
-
     const newsBar = document.getElementById('news-bar-container');
     newsBar.style.display = c.showNews ? 'flex' : 'none';
     const rawNews = c.newsContent || "";
@@ -2098,28 +1763,19 @@ onValue(ref(db, 'config'), snap => {
     track.style.animation = 'f1-marquee 40s linear infinite';
     clone.style.animation = 'f1-marquee 40s linear infinite';
     clone.style.animationDelay = '-20s';
-
     document.getElementById('display-hero-title').innerText = c.heroTitle || "NEXT GP EVENT";
-
     const splashGpName = document.getElementById('splash-gp-name');
-    if (splashGpName && c.heroTitle) {
-        splashGpName.textContent = c.heroTitle;
-        splashGpName.style.display = '';
-    } else if (splashGpName) {
-        splashGpName.style.display = 'none';
-    }
-
+    if (splashGpName && c.heroTitle) { splashGpName.textContent = c.heroTitle; splashGpName.style.display = ''; }
+    else if (splashGpName) { splashGpName.style.display = 'none'; }
     const mode = c.heroMode || 'countdown';
     const timerSection = document.getElementById('hero-timer-section');
     const soonSection = document.getElementById('hero-soon-section');
     cachedHeroConfig = { mode, date: c.heroDate || '', title: c.heroTitle || '' };
     if (mode === 'soon') {
-        timerSection.style.display = 'none';
-        soonSection.style.display = 'block';
+        timerSection.style.display = 'none'; soonSection.style.display = 'block';
         if (window.f1Timer) clearInterval(window.f1Timer);
     } else {
-        timerSection.style.display = 'block';
-        soonSection.style.display = 'none';
+        timerSection.style.display = 'block'; soonSection.style.display = 'none';
         if (window.f1Timer) clearInterval(window.f1Timer);
         const targetDate = new Date((c.heroDate || '').replace(' ', 'T')).getTime();
         window.f1Timer = setInterval(() => {
@@ -2133,7 +1789,6 @@ onValue(ref(db, 'config'), snap => {
         }, 1000);
     }
     renderSplashCountdown(cachedHeroConfig);
-
     if (c.heroTitle) document.getElementById('adm-hero-title').value = c.heroTitle;
     if (c.heroDate)  document.getElementById('adm-hero-date').value = c.heroDate;
     if (c.heroMode === 'soon') { document.getElementById('hero-mode-soon').checked = true; document.getElementById('hero-date-group').style.display = 'none'; }
@@ -2145,57 +1800,42 @@ onValue(ref(db, 'standings'), snap => {
     const data = snap.val();
     if (!data) return;
     const allDrivers = data.drivers || [];
-
     const humanDrivers = allDrivers.filter(d => !d.isBot && !isRealF1Driver(d.nick));
     const botDrivers   = allDrivers.filter(d =>  d.isBot ||  isRealF1Driver(d.nick));
-
     const allForAdmin = allDrivers.map(d => {
         const autoBot = !d.isBot && isRealF1Driver(d.nick);
         return `${(d.isBot || autoBot) ? 'BOT:' : ''}${d.nick} | ${d.team} | ${d.photo || ''} | ${d.wins || 0} | ${d.pts}`;
     }).join('\n');
     document.getElementById('adm-drivers-raw').value = allForAdmin;
-
     const dBody = document.getElementById('api-drivers-list');
     let html = '';
     humanDrivers.forEach((r, i) => {
         const editable = isLoggedIn;
         const posClass = i===0?'pos-gold':i===1?'pos-silver':i===2?'pos-bronze':'';
         const avatarHtml = r.photo ? `<img class="driver-avatar" src="${r.photo}" alt="${r.nick}" onerror="this.style.display='none'">` : '';
-        html += `
-            <tr class="${getTeamClass(r.team)}">
-                <td class="col-pos ${posClass}">${i+1}</td>
-                <td class="col-driver">
-                    <div class="driver-cell">${avatarHtml}<span class="driver-name">${r.nick}</span></div>
-                </td>
-                <td class="${getTeamClass(r.team).replace('team-','txt-')}">
-                    ${r.team}
-                </td>
-                <td style="text-align:center">
-                    ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'wins')">${r.wins||0}</span>` : `${r.wins||0}`}
-                </td>
-                <td class="col-pts">
-                    ${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'pts')">${r.pts}</span>` : `${r.pts}`}
-                </td>
-            </tr>`;
+        html += `<tr class="${getTeamClass(r.team)}">
+            <td class="col-pos ${posClass}">${i+1}</td>
+            <td class="col-driver"><div class="driver-cell">${avatarHtml}<span class="driver-name">${r.nick}</span></div></td>
+            <td class="${getTeamClass(r.team).replace('team-','txt-')}">${r.team}</td>
+            <td style="text-align:center">${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'wins')">${r.wins||0}</span>` : `${r.wins||0}`}</td>
+            <td class="col-pts">${editable ? `<span class="editable-cell" onclick="ui.editCell(this,'standings','drivers',${i},'pts')">${r.pts}</span>` : `${r.pts}`}</td>
+        </tr>`;
     });
-
     if (botDrivers.length > 0) {
         html += `<tr class="separator-row"><td colspan="5"><div></div></td></tr>`;
         botDrivers.forEach((r, i) => {
             const totalIdx = humanDrivers.length + i;
             const avatarHtml = r.photo ? `<img class="driver-avatar" src="${r.photo}" alt="${r.nick}" onerror="this.style.display='none'">` : '';
-            html += `
-                <tr class="${getTeamClass(r.team)} bot-row">
-                    <td class="col-pos">${totalIdx+1}</td>
-                    <td class="col-driver"><div class="driver-cell">${avatarHtml}<span class="driver-name">${r.nick}</span></div></td>
-                    <td class="${getTeamClass(r.team).replace('team-','txt-')}">${r.team}</td>
-                    <td style="text-align:center">${r.wins||0}</td>
-                    <td class="col-pts">${r.pts}</td>
-                </tr>`;
+            html += `<tr class="${getTeamClass(r.team)} bot-row">
+                <td class="col-pos">${totalIdx+1}</td>
+                <td class="col-driver"><div class="driver-cell">${avatarHtml}<span class="driver-name">${r.nick}</span></div></td>
+                <td class="${getTeamClass(r.team).replace('team-','txt-')}">${r.team}</td>
+                <td style="text-align:center">${r.wins||0}</td>
+                <td class="col-pts">${r.pts}</td>
+            </tr>`;
         });
     }
     dBody.innerHTML = html;
-
     const tBody = document.getElementById('api-teams-list');
     const teams = data.teams || [];
     document.getElementById('adm-teams-raw').value = teams.map(t => `${t.team} | ${t.pts}`).join('\n');
@@ -2234,8 +1874,7 @@ onValue(ref(db, 'archive'), snap => {
         const editPart = isLoggedIn
             ? `id="arc-name-${id}" class="arc-edit-name editable-mode" onclick="ui.editArchiveName('${id}', '${(race.name||'').replace(/'/g,"\\'")}')"`
             : `id="arc-name-${id}" class="arc-edit-name"`;
-        return `
-        <div class="archive-item">
+        return `<div class="archive-item">
             <button class="archive-header" id="arc-btn-${id}" onclick="ui.toggleArc('${id}')">
                 <span ${editPart}>${race.name}</span>
                 <span>WYNIKI <span class="arc-arrow">▼</span></span>
@@ -2263,17 +1902,16 @@ onValue(ref(db, 'gallery'), snap => {
     albumSelect.innerHTML = '<option value="">— Wybierz album —</option>' + entries.map(([id, gal]) => `<option value="${id}">${gal.name}</option>`).join('');
     albumsGrid.innerHTML = entries.map(([id, gal]) => {
         const entryCount = gal.entries ? Object.keys(gal.entries).length : 0;
-        return `
-            <div class="album-card">
-                <div class="album-click-zone" onclick="ui.openAlbum('${id}')"></div>
-                ${gal.cover ? `<img class="album-card-img" src="${gal.cover}" alt="${gal.name}">` : ''}
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);pointer-events:none;"></div>
-                <button class="album-edit-btn ${isLoggedIn ? 'visible' : ''}" onclick="event.stopPropagation();ui.editAlbumNameFromGrid('${id}','${gal.name.replace(/'/g,"\\'")}',this)">✎ NAZWA</button>
-                <div class="album-info" style="pointer-events:none;">
-                    <div class="album-name">${gal.name}</div>
-                    <div style="font-family:var(--font-body);font-size:16px;color:rgba(255,255,255,0.6);margin-top:6px;letter-spacing:1px;">${entryCount} ${entryCount===1?'wpis':'wpisów'}</div>
-                </div>
-            </div>`;
+        return `<div class="album-card">
+            <div class="album-click-zone" onclick="ui.openAlbum('${id}')"></div>
+            ${gal.cover ? `<img class="album-card-img" src="${gal.cover}" alt="${gal.name}">` : ''}
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 60%);pointer-events:none;"></div>
+            <button class="album-edit-btn ${isLoggedIn ? 'visible' : ''}" onclick="event.stopPropagation();ui.editAlbumNameFromGrid('${id}','${gal.name.replace(/'/g,"\\'")}',this)">✎ NAZWA</button>
+            <div class="album-info" style="pointer-events:none;">
+                <div class="album-name">${gal.name}</div>
+                <div style="font-family:var(--font-body);font-size:16px;color:rgba(255,255,255,0.6);margin-top:6px;letter-spacing:1px;">${entryCount} ${entryCount===1?'wpis':'wpisów'}</div>
+            </div>
+        </div>`;
     }).join('');
     manager.innerHTML = entries.map(([id, gal]) => `
         <div class="admin-list-item">
@@ -2294,7 +1932,6 @@ ui.editAlbumNameFromGrid = async function(id, currentName, btn) {
         if (window.galleryData && window.galleryData[id]) window.galleryData[id].name = newName.trim();
     }
 };
-
 ui.editAlbumCover = async function(id, currentCover) {
     if (!isLoggedIn) return;
     const newCover = prompt('Nowy URL okładki:', currentCover);
