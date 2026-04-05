@@ -67,8 +67,8 @@ body {
     align-items: center;
 }
 .splash-social-btn {
-    width: 52px; height: 52px;
-    border-radius: 12px;
+    width: 72px; height: 72px;
+    border-radius: 16px;
     background: rgba(255,255,255,0.08);
     border: 1.5px solid rgba(255,255,255,0.14);
     display: flex; align-items: center; justify-content: center;
@@ -78,8 +78,8 @@ body {
     overflow: hidden;
 }
 .splash-social-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.35); transform: translateY(-2px); }
-.splash-social-btn img { width: 28px; height: 28px; object-fit: contain; }
-.splash-social-btn svg { width: 28px; height: 28px; }
+.splash-social-btn img { width: 44px; height: 44px; object-fit: contain; }
+.splash-social-btn svg { width: 44px; height: 44px; }
 
 .splash-logo-wrap { position: relative; margin-bottom: 40px; animation: splashLogoIn 1s cubic-bezier(0.19,1,0.22,1) forwards; }
 @keyframes splashLogoIn { from { opacity: 0; transform: scale(0.7) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -132,7 +132,7 @@ body {
 .header-right { display: flex; align-items: center; gap: 20px; }
 .header-social-icons { display: flex; gap: 12px; align-items: center; }
 .header-social-btn {
-    width: 62px; height: 62px; border-radius: 12px;
+    width: 84px; height: 84px; border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
     text-decoration: none; cursor: pointer;
     border: 2px solid rgba(21,21,30,0.15);
@@ -142,8 +142,8 @@ body {
     flex-shrink: 0;
 }
 .header-social-btn:hover { background: rgba(21,21,30,0.10); border-color: var(--f1-red); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(225,6,0,0.18); }
-.header-social-btn img { width: 34px; height: 34px; object-fit: contain; }
-.header-social-btn svg { width: 34px; height: 34px; }
+.header-social-btn img { width: 52px; height: 52px; object-fit: contain; }
+.header-social-btn svg { width: 52px; height: 52px; }
 
 /* ===================== NAV ===================== */
 .f1-nav { background: var(--f1-black); position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; box-shadow: 0 15px 30px rgba(0,0,0,0.2); background-image: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px), linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%); }
@@ -361,6 +361,17 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
 .splash-preview { background: #111; color: #fff; padding: 24px; border-radius: 8px; margin-top: 16px; min-height: 80px; font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
 .splash-preview img { max-width: 100%; border-radius: 4px; }
 
+/* ===================== DRAG-REORDER LISTY W ADMINIE ===================== */
+.reorder-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.reorder-item { display: flex; align-items: center; gap: 12px; background: #f9f9fb; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px 16px; cursor: grab; transition: box-shadow 0.2s, opacity 0.2s; user-select: none; }
+.reorder-item:active { cursor: grabbing; }
+.reorder-item.dragging { opacity: 0.35; box-shadow: 0 8px 30px rgba(0,0,0,0.18); }
+.reorder-item.drag-over { border: 2px dashed var(--f1-red); background: rgba(225,6,0,0.03); }
+.reorder-handle { font-size: 22px; color: #bbb; flex-shrink: 0; line-height: 1; }
+.reorder-label { font-family: var(--font-data); font-size: 18px; letter-spacing: 1px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reorder-actions { display: flex; gap: 8px; flex-shrink: 0; }
+/* ======================================================================= */
+
 /* bonus info box */
 .bonus-info-box { background: #f0f9f0; border: 1.5px solid #4caf50; border-radius: 8px; padding: 14px 18px; margin-bottom: 14px; font-size: 13px; color: #2a6e2a; line-height: 1.7; }
 .bonus-info-box b { font-weight: 900; }
@@ -475,8 +486,10 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
     .splash-img-entry .sie-field-sm { width: 100%; }
     .admin-toc { padding: 12px 20px; }
     #splash-social-icons { top: 14px; right: 14px; gap: 10px; position: absolute; }
-    .splash-social-btn { width: 40px; height: 40px; border-radius: 9px; }
-    .splash-social-btn img, .splash-social-btn svg { width: 22px; height: 22px; }
+    .splash-social-btn { width: 56px; height: 56px; border-radius: 12px; }
+    .splash-social-btn img, .splash-social-btn svg { width: 34px; height: 34px; }
+    .header-social-btn { width: 54px; height: 54px; }
+    .header-social-btn img, .header-social-btn svg { width: 32px; height: 32px; }
 }
 @media (max-width: 480px) {
     .f1-title { font-size: 26px; }
@@ -786,6 +799,7 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
         <div class="admin-section-body">
             <div id="adm-archive-manager"></div>
             <div class="btn-row" style="margin-top:20px;">
+                <button class="btn-action" id="btn-save-archive-order" onclick="dbCore.saveArchiveOrder()" style="display:none;">💾 ZAPISZ KOLEJNOŚĆ</button>
                 <button class="btn-action btn-danger" onclick="dbCore.deleteNode('lastRace')">🗑 WYCZYŚĆ OSTATNI WYŚCIG</button>
             </div>
         </div>
@@ -847,7 +861,8 @@ td.col-best-lap { color: #222 !important; font-weight: 500; }
                 <div id="media-input-upload" class="form-group hidden"><label class="form-label">Prześlij plik:</label><input type="file" id="adm-entry-file" class="f1-input" accept="video/*,image/*" style="padding:10px;"><span class="form-hint" style="color:#e10600;">⚠ Zalecane do ~50MB.</span></div>
                 <div class="btn-row"><button class="btn-action" onclick="dbCore.addEntry()">＋ DODAJ WPIS</button><span id="adm-entry-status" style="font-size:14px;color:#666;"></span></div>
             </div>
-            <div><h4 style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:12px;">USUŃ / EDYTUJ ALBUMY:</h4><div id="adm-gallery-manager"></div></div>
+            <div><h4 style="font-family:var(--font-display);font-size:16px;letter-spacing:2px;margin-bottom:12px;">KOLEJNOŚĆ / USUŃ / EDYTUJ ALBUMY:</h4><div id="adm-gallery-manager"></div>
+            <div class="btn-row" style="margin-top:12px;"><button class="btn-action" id="btn-save-gallery-order" onclick="dbCore.saveGalleryOrder()" style="display:none;">💾 ZAPISZ KOLEJNOŚĆ ALBUMÓW</button></div></div>
         </div>
     </div>
 
@@ -1042,6 +1057,42 @@ function initSplashDragDrop() {
         item.addEventListener('drop', e => { e.stopPropagation(); if (dragSrcEl !== item) { const allItems = [...list.querySelectorAll('.splash-img-entry')]; const srcIdx = allItems.indexOf(dragSrcEl); const dstIdx = allItems.indexOf(item); if (srcIdx < dstIdx) { list.insertBefore(dragSrcEl, item.nextSibling); } else { list.insertBefore(dragSrcEl, item); } } return false; });
     });
 }
+
+// ===== DRAG-REORDER dla list w adminie (archiwum / galeria) =====
+let reorderDragSrc = null;
+function initReorderList(listEl, onDrop) {
+    listEl.querySelectorAll('.reorder-item').forEach(item => {
+        item.draggable = true;
+        item.addEventListener('dragstart', e => {
+            reorderDragSrc = item;
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+            listEl.querySelectorAll('.reorder-item').forEach(i => i.classList.remove('drag-over'));
+            if (onDrop) onDrop();
+        });
+        item.addEventListener('dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            listEl.querySelectorAll('.reorder-item').forEach(i => i.classList.remove('drag-over'));
+            if (item !== reorderDragSrc) item.classList.add('drag-over');
+            return false;
+        });
+        item.addEventListener('drop', e => {
+            e.stopPropagation();
+            if (reorderDragSrc && reorderDragSrc !== item) {
+                const all = [...listEl.querySelectorAll('.reorder-item')];
+                const si = all.indexOf(reorderDragSrc), di = all.indexOf(item);
+                if (si < di) listEl.insertBefore(reorderDragSrc, item.nextSibling);
+                else listEl.insertBefore(reorderDragSrc, item);
+            }
+            return false;
+        });
+    });
+}
+// ================================================================
 
 window.ui = {
     switchPage(pageId, navEl) {
@@ -1644,6 +1695,28 @@ window.dbCore = {
     },
     async deleteNode(path) {
         if (confirm("Czy na pewno chcesz to usunąć?")) { await remove(ref(db, path)); alert("Usunięto pomyślnie."); }
+    },
+
+    // ===== ZAPIS KOLEJNOŚCI ARCHIWUM =====
+    async saveArchiveOrder() {
+        const list = document.getElementById('adm-archive-manager');
+        const items = [...list.querySelectorAll('.reorder-item')];
+        const updates = {};
+        items.forEach((item, i) => { updates['archive/' + item.dataset.id + '/order'] = i; });
+        await update(ref(db), updates);
+        alert("Kolejność wyścigów zapisana!");
+        document.getElementById('btn-save-archive-order').style.display = 'none';
+    },
+
+    // ===== ZAPIS KOLEJNOŚCI GALERII =====
+    async saveGalleryOrder() {
+        const list = document.getElementById('adm-gallery-manager');
+        const items = [...list.querySelectorAll('.reorder-item')];
+        const updates = {};
+        items.forEach((item, i) => { updates['gallery/' + item.dataset.id + '/order'] = i; });
+        await update(ref(db), updates);
+        alert("Kolejność albumów zapisana!");
+        document.getElementById('btn-save-gallery-order').style.display = 'none';
     }
 };
 
@@ -1950,7 +2023,16 @@ onValue(ref(db, 'archive'), snap => {
     const arcList = document.getElementById('api-archive-list');
     const manager = document.getElementById('adm-archive-manager');
     if (!data) { arcList.innerHTML = "<p>Archiwum jest puste.</p>"; manager.innerHTML = "Brak wyścigów."; return; }
-    const entries = Object.entries(data).reverse();
+
+    // Sortuj po polu order (rosnąco), jeśli brak — po timestamp malejąco
+    const entries = Object.entries(data).sort((a, b) => {
+        const ao = a[1].order, bo = b[1].order;
+        if (ao !== undefined && bo !== undefined) return ao - bo;
+        if (ao !== undefined) return -1;
+        if (bo !== undefined) return 1;
+        return (b[1].timestamp || 0) - (a[1].timestamp || 0);
+    });
+
     arcList.innerHTML = entries.map(([id, race]) => {
         const editPart = isLoggedIn
             ? `id="arc-name-${id}" class="arc-edit-name editable-mode" onclick="ui.editArchiveName('${id}', '${(race.name||'').replace(/'/g,"\\'")}')"`
@@ -1965,11 +2047,25 @@ onValue(ref(db, 'archive'), snap => {
             </div>
         </div>`;
     }).join('');
-    manager.innerHTML = entries.map(([id, race]) => `
-        <div class="admin-list-item">
-            <span>${race.name}</span>
-            <button class="btn-action btn-danger btn-sm" onclick="dbCore.deleteNode('archive/${id}')">🗑 USUŃ</button>
-        </div>`).join('');
+
+    // Manager admina z drag handles
+    const managerEl = document.getElementById('adm-archive-manager');
+    const saveBtn = document.getElementById('btn-save-archive-order');
+    managerEl.innerHTML = `<div class="reorder-list" id="archive-reorder-list">` +
+        entries.map(([id, race]) => `
+        <div class="reorder-item" data-id="${id}">
+            <span class="reorder-handle">⠿</span>
+            <span class="reorder-label">${race.name}</span>
+            <div class="reorder-actions">
+                <button class="btn-action btn-danger btn-sm" onclick="dbCore.deleteNode('archive/${id}')">🗑</button>
+            </div>
+        </div>`).join('') + `</div>`;
+
+    if (saveBtn) saveBtn.style.display = entries.length > 1 ? 'inline-flex' : 'none';
+    const reorderList = document.getElementById('archive-reorder-list');
+    if (reorderList) initReorderList(reorderList, () => {
+        if (saveBtn) saveBtn.style.display = 'inline-flex';
+    });
 });
 
 onValue(ref(db, 'gallery'), snap => {
@@ -1979,7 +2075,16 @@ onValue(ref(db, 'gallery'), snap => {
     const albumSelect = document.getElementById('adm-entry-album');
     if (!data) { albumsGrid.innerHTML = "<p>Brak albumów w galerii.</p>"; manager.innerHTML = "Brak albumów."; albumSelect.innerHTML = '<option value="">— Wybierz album —</option>'; return; }
     window.galleryData = data;
-    const entries = Object.entries(data).reverse();
+
+    // Sortuj po polu order (rosnąco), jeśli brak — po kluczu
+    const entries = Object.entries(data).sort((a, b) => {
+        const ao = a[1].order, bo = b[1].order;
+        if (ao !== undefined && bo !== undefined) return ao - bo;
+        if (ao !== undefined) return -1;
+        if (bo !== undefined) return 1;
+        return a[0] < b[0] ? -1 : 1;
+    });
+
     albumSelect.innerHTML = '<option value="">— Wybierz album —</option>' + entries.map(([id, gal]) => `<option value="${id}">${gal.name}</option>`).join('');
     albumsGrid.innerHTML = entries.map(([id, gal]) => {
         const entryCount = gal.entries ? Object.keys(gal.entries).length : 0;
@@ -1994,14 +2099,26 @@ onValue(ref(db, 'gallery'), snap => {
             </div>
         </div>`;
     }).join('');
-    manager.innerHTML = entries.map(([id, gal]) => `
-        <div class="admin-list-item">
-            <span>${gal.name}</span>
-            <div style="display:flex;gap:8px;">
-                <button class="btn-action btn-secondary btn-sm" onclick="ui.editAlbumCover('${id}','${(gal.cover||'').replace(/'/g,"\\'")}')">🖼 OKŁADKA</button>
-                <button class="btn-action btn-danger btn-sm" onclick="dbCore.deleteNode('gallery/${id}')">🗑 USUŃ</button>
+
+    // Manager admina z drag handles
+    const saveBtn = document.getElementById('btn-save-gallery-order');
+    manager.innerHTML = `<div class="reorder-list" id="gallery-reorder-list">` +
+        entries.map(([id, gal]) => `
+        <div class="reorder-item" data-id="${id}">
+            <span class="reorder-handle">⠿</span>
+            <span class="reorder-label">${gal.name}</span>
+            <div class="reorder-actions">
+                <button class="btn-action btn-secondary btn-sm" onclick="ui.editAlbumCover('${id}','${(gal.cover||'').replace(/'/g,"\\'")}')">🖼</button>
+                <button class="btn-action btn-danger btn-sm" onclick="dbCore.deleteNode('gallery/${id}')">🗑</button>
             </div>
-        </div>`).join('');
+        </div>`).join('') + `</div>`;
+
+    if (saveBtn) saveBtn.style.display = entries.length > 1 ? 'inline-flex' : 'none';
+    const reorderList = document.getElementById('gallery-reorder-list');
+    if (reorderList) initReorderList(reorderList, () => {
+        if (saveBtn) saveBtn.style.display = 'inline-flex';
+    });
+
     if (window._currentAlbumId && data[window._currentAlbumId]) ui.openAlbum(window._currentAlbumId);
 });
 
